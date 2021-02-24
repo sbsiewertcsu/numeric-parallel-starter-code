@@ -1,0 +1,155 @@
+PING o251-01.csuchico.edu (132.241.18.12) 56(84) bytes of data.
+
+--- o251-01.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2049ms
+
+PING o251-02.csuchico.edu (132.241.18.13) 56(84) bytes of data.
+
+--- o251-02.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2045ms
+
+PING o251-03.csuchico.edu (132.241.18.14) 56(84) bytes of data.
+
+--- o251-03.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2040ms
+
+PING o251-04.csuchico.edu (132.241.18.15) 56(84) bytes of data.
+
+--- o251-04.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2037ms
+
+PING o251-05.csuchico.edu (132.241.18.16) 56(84) bytes of data.
+
+--- o251-05.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2036ms
+
+PING o251-06.csuchico.edu (132.241.18.17) 56(84) bytes of data.
+
+--- o251-06.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2032ms
+
+PING o251-07.csuchico.edu (132.241.18.18) 56(84) bytes of data.
+
+--- o251-07.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2029ms
+
+PING o251-08.csuchico.edu (132.241.18.19) 56(84) bytes of data.
+
+--- o251-08.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2027ms
+
+PING o251-09.csuchico.edu (132.241.18.25) 56(84) bytes of data.
+
+--- o251-09.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2056ms
+
+PING o251-10.csuchico.edu (132.241.18.26) 56(84) bytes of data.
+
+--- o251-10.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2053ms
+
+PING o251-11.csuchico.edu (132.241.18.27) 56(84) bytes of data.
+
+--- o251-11.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2051ms
+
+PING o251-12.csuchico.edu (132.241.18.30) 56(84) bytes of data.
+
+--- o251-12.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2049ms
+
+PING o251-13.csuchico.edu (132.241.18.33) 56(84) bytes of data.
+
+--- o251-13.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2046ms
+
+PING o251-14.csuchico.edu (132.241.18.35) 56(84) bytes of data.
+
+--- o251-14.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2044ms
+
+PING o251-15.csuchico.edu (132.241.18.36) 56(84) bytes of data.
+
+--- o251-15.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2041ms
+
+PING o251-16.csuchico.edu (132.241.18.41) 56(84) bytes of data.
+
+--- o251-16.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2032ms
+
+PING o251-17.csuchico.edu (132.241.18.43) 56(84) bytes of data.
+
+--- o251-17.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2030ms
+
+PING o251-18.csuchico.edu (132.241.18.44) 56(84) bytes of data.
+
+--- o251-18.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2028ms
+
+PING o251-19.csuchico.edu (132.241.18.45) 56(84) bytes of data.
+
+--- o251-19.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2026ms
+
+PING o251-20.csuchico.edu (132.241.18.46) 56(84) bytes of data.
+
+--- o251-20.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2055ms
+
+PING o251-21.csuchico.edu (132.241.18.47) 56(84) bytes of data.
+
+--- o251-21.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2054ms
+
+PING o251-22.csuchico.edu (132.241.18.48) 56(84) bytes of data.
+
+--- o251-22.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2052ms
+
+PING o251-23.csuchico.edu (132.241.18.94) 56(84) bytes of data.
+
+--- o251-23.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2047ms
+
+PING o251-24.csuchico.edu (132.241.18.50) 56(84) bytes of data.
+
+--- o251-24.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2045ms
+
+PING o251-25.csuchico.edu (132.241.18.52) 56(84) bytes of data.
+
+--- o251-25.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2043ms
+
+PING o251-26.csuchico.edu (132.241.18.53) 56(84) bytes of data.
+
+--- o251-26.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2041ms
+
+PING o251-27.csuchico.edu (132.241.18.54) 56(84) bytes of data.
+
+--- o251-27.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2040ms
+
+PING o251-28.csuchico.edu (132.241.18.55) 56(84) bytes of data.
+
+--- o251-28.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2038ms
+
+PING o251-29.csuchico.edu (132.241.18.56) 56(84) bytes of data.
+
+--- o251-29.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2037ms
+
+PING o251-30.csuchico.edu (132.241.18.57) 56(84) bytes of data.
+
+--- o251-30.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2034ms
+
+PING o251-31.csuchico.edu (132.241.18.49) 56(84) bytes of data.
+
+--- o251-31.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2034ms
+

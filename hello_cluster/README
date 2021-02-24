@@ -1,0 +1,69 @@
+To use the cluster, you must first set up ssh-key for machines you intend to use with no-password required.
+
+1) On ECC generate your keys:
+
+    ssh-keygen -t rsa -b 4096
+
+    Make sure you have no password when prompted - just hit Enter.
+
+2) After you have an id_rsa file, assuming it is in the defaule .ssh directory, just do:
+
+    ssh-copy-id sbsiewert@o244-01
+
+    OR
+
+    ssh-copy-id sbsiewert@o251-01
+
+    If you have a specific file, then instead do:
+
+    ssh-copy-id -i id_rsa sbsiewert@o244-01
+
+    To get it copied for one of the cluster machines.  You should only have to do this once.
+
+3) Login to that cluster machine with ssh and say "yes" when prompted.  You should only have to do this once.
+
+    Logout
+
+4) Try ssh again and you shoudl not have to enter a password now.
+
+5) In your c1_hosts or c2_hosts file, untemp (remove "#") for the cluster nodes you intend to use.
+
+6) Please use no more than 8 and start with the node that matches your birth year and birthday.
+
+ECC Cluster node use policies – Based on your birthday and year, if your year of birth is even, use “o244” nodes and if you birth year is odd, use “o251” nodes.  For POSIX shared memory threading (single node use), login to the node # that is the same as your birthday – e.g. for me, odd year, 14th day of month, so I would use “ssh o251-14”.  This should help distribute the load as we get into problems that are more CPU, I/O, and memory intensive.
+
+If you have been succesful, test the MPI greetings and you should see processes created on multiple cluster nodes.
+
+(base) sbsiewert@o251-14:~/code/hello_custer$ mpirun -n 16 -ppn 2 -f c2_hosts ./greetings
+Hello from process 0 of 16 on o244-01
+Hello from process 1 of 16 on o244-01
+
+Hello from process 2 of 16 on o244-02
+
+Hello from process 3 of 16 on o244-02
+
+Hello from process 4 of 16 on o244-03
+
+Hello from process 5 of 16 on o244-03
+
+Hello from process 6 of 16 on o244-05
+
+Hello from process 7 of 16 on o244-05
+
+Hello from process 8 of 16 on o244-01
+
+Hello from process 9 of 16 on o244-01
+
+Hello from process 10 of 16 on o244-02
+
+Hello from process 11 of 16 on o244-02
+
+Hello from process 12 of 16 on o244-03
+
+Hello from process 13 of 16 on o244-03
+
+Hello from process 14 of 16 on o244-05
+
+Hello from process 15 of 16 on o244-05
+
+This will be based upon the node names you have un-temped in your c1_hosts or c2_hosts file that you use when you run your program.
