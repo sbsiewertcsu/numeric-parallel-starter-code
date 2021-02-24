@@ -1,3 +1,7 @@
+// Basic OpenMP Fibonacci sequence generator that uses OpenMP for multi-thread speed-up
+//
+// Sam Siewert - 2/24/2021
+//
 #include <stdio.h>
 #include <time.h>
 #include <omp.h>
