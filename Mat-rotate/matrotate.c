@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#define DIMX (3)
-#define DIMY (3)
+#define DIMX (4)
+#define DIMY (4)
 
 #define max(X, Y) ((X) > (Y) ? (X) : (X))
 
