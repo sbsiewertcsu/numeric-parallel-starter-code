@@ -24,9 +24,11 @@ ping -c 10 -w 3 o251-22
 ping -c 10 -w 3 o251-23
 ping -c 10 -w 3 o251-24
 ping -c 10 -w 3 o251-25
-ping -c 10 -w 3 o251-26 # appears to not have correct passwd info
+ping -c 10 -w 3 o251-26
 ping -c 10 -w 3 o251-27
 ping -c 10 -w 3 o251-28
 ping -c 10 -w 3 o251-29
-ping -c 10 -w 3 o251-30 # down and not responding to ping
+ping -c 10 -w 3 o251-30
 ping -c 10 -w 3 o251-31
+
+sleep 3

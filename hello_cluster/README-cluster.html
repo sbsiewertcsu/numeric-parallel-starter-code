@@ -1,0 +1,224 @@
+<html>
+
+<h1>CSCI 551 - Numerical and Parallel Processing Lab Notes</h1>
+<h3>
+We develop 2 types of C/C++ parallel programs for numerical algorithms:
+<ul>
+<li> Shared Memory Parallel - using OpenMP and Pthreads (GNU GCC or Intel PS XE compilers)
+<li> Distributed Memory Parallel - using MPI (Message Passing Interface - must use Intel PS XE)
+</ul>
+</h3>
+<pre>
+For Shared Memory (OpenMP and Pthreads), you can use any Linux system that has GNU tools GCC
+compiler or ECC which has both the Intel compiler and GCC.  This can include your own <b>at
+home equipement such as the Raspberry-Pi, a Linux desktop, or Linux laptop as long as it has 2
+or more cores</b>.  You can determine how many CPU cores you have on any Linux system with the
+command "lscpu", or if that does not work, with "cat /proc/cpuinfo".  Or, you can simply log
+into ecc-linux.csuchico.edu with Powershell or MobaXterm or your favorite terminal tool and use
+ECC or one of the classroom computers (o244-01 ... o244-31 OR o251-01 ... o251-31).  The HTOP
+tool has been installed on ECC, but not the "o" computers and ECC has just 1 CPU with 2 Virtual
+cores and the other "o" nodes have 2 CPU cores, with 2 Virtual cores each.  So, on ECC, you will
+see 2 cores and on "o" nodes you will see 4 cores.  By comparison, the Raspberry-Pi 4 has 4 real
+cores!  However ECC and "o" nodes are Intel architecture and Raspberry-Pi is ARM architecture.
+
+For Distributed Memory (MPI), you MUST use a Linux cluster, which is comprised of multiple nodes
+(machines) that each run the Linux OS.  They must be networked together (e.g. gigbit Ethernet)
+of nodes.  This simplest thing to do for MPI programs is to use our ECC clusters - o244 and
+o251.
+
+On ECC, if you are compiling OpenMP or Pthreads, you can use GNU gcc or Intel icc and you simply
+need to provide the correct compile flags and libraries.
+
+See my examples in <a href="http://www.ecst.csuchico.edu/~sbsiewert/csci551/code/">code</a>.  Note the compiler flags used in the Makefiles I provide.
+
+On ECC, if you are compiling MPI code, this must use the Intel MPI compiler and you should first
+make sure you have a valid set up for the cluster with SSH key generation (covered below) and
+you should be sure to use a Makefile example for C or C++ code.
+Please note compile directives used in <a href="http://www.ecst.csuchico.edu/~sbsiewert/csci551/code/hello_cluster/">hello_cluster</a> example code.
+</pre>
+
+<h3>For OpenMP or Pthreads use GNU GCC on ECC or Home Equipment (Intel PS XE Optional)</h3>
+<h4>
+<ol>
+    <li>Any Linux machine will work for OpenMP and Pthreads, including ECC
+    <li>Intel PS XE is not required for OpenMP or Pthreads
+    <li>Start with <a href="http://www.ecst.csuchico.edu/~sbsiewert/csci551/code/hello_openmp/">hello_openmp</a> and run on ECC or any o251-01...31 or o244-01...31 machine
+    <li>OpenMP and Pthreads use only ONE node
+</ol>
+<h4>
+
+
+<h3>For MPI use the Intel Parallel Studio XE application installed on ECC</h3>
+<h4>
+<ol>
+    <li>There are 62 machines with it in OCNL 244 and 251.
+    <li>They are named o244-01 ... o244-31 and o251-01 ... o251-31
+    <li>You can only log into them remotely from ecc-linux via SSH.
+    <li>MPI can use 1 to many Nodes, each with multiple cores (scales bigger!)
+    <li>Note that Intel PS XE is REQUIRED for MPI
+    <li>INCLUDE_DIRS = -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/
+    <li>LIB_DIRS = -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib/debug -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib
+    <li>MPI C Compiler: /opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpicc
+    <li>MPI C++ Compiler: /opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpicxx
+    <li>Intel C Compiler: /opt/intel/compilers_and_libraries_2020/linux/bin/intel64/icc
+</ol>
+<h4>
+
+
+<pre>
+The cluster is maintained by Enterprise Systems and IT:
+
+Elbert Chan: <a href="mailto:EChan@csuchico.edu">EChan@csuchico.edu</a>
+Operating Systems Analyst - Enterprise Systems
+
+Todd Anrig: <a href="mailto:wtanrig@csuchico.edu">wtanrig@csuchico.edu</a>
+Information Tech Consultant - Information Tech Support Srvcs
+
+Please e-mail IT for assistance with cluster technical issues and copy Dr. Siewert [<a href="mailto:sbsiewert@csuchico.edu">sbsiewert@csuchico.edu</a>]
+</pre>
+
+<h3>NOTE on CLUSTER SSH Set-up <b>REQUIRED</b> for MPI Cluster Scaling</h3>
+<pre>
+To use the cluster, you must first set up ssh-key for machines you intend to use with
+no-password required.  If you already have a ".ssh" on ECC, but careful and save it off or
+carefully generate a new "id_rsa" saving off the old one first.
+
+Here is the procedure assuming you either have no .ssh or that you are OK just removing your
+.ssh or saving it to a backup.
+
+1) On ECC generate your keys:
+
+    ssh-keygen -t rsa -b 4096
+
+    <b>Make sure you have no password when prompted - just hit Enter for NO PASSWORD.</b>
+
+2) After you have an id_rsa file, assuming it is in the default .ssh directory, just do:
+
+    ssh-copy-id sbsiewert@o244-01
+
+    OR
+
+    ssh-copy-id sbsiewert@o251-01
+
+    If you have a specific file, then instead do:
+
+    ssh-copy-id -i id_rsa sbsiewert@o244-01
+
+    To get it copied for one of the cluster machines.  You should only have to do this once.
+
+3) Login to that cluster machine with ssh and say "yes" when prompted.  You should only have to do this once.
+
+    Logout
+
+4) Try ssh again and you should not have to enter a password now.  Overall, this looks like the following:
+
+<i>
+sbsiewert@~$ mv .ssh .ssh-old
+sbsiewert@~$ ssh-keygen -t rsa -b 4096
+Generating public/private rsa key pair.
+Enter file in which to save the key (/user/home/sbsiewert/.ssh/id_rsa):
+Created directory '/user/home/sbsiewert/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /user/home/sbsiewert/.ssh/id_rsa
+Your public key has been saved in /user/home/sbsiewert/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:UpZNB5bYbxUv8otlf4u/BNxd296K00AlFSAYEd8Vhvw sbsiewert@o244-01
+The key's randomart image is:
++---[RSA 4096]----+
+|        +B=+o+B+ |
+|        o*o++oo. |
+|        + o.o=. o|
+|       o    =oE.=|
+|      . S  o o+oo|
+|       .    .+.+.|
+|            .o..=|
+|            ..+.o|
+|            .oo+.|
++----[SHA256]-----+
+sbsiewert@~$
+
+sbsiewert@~$ ssh-copy-id sbsiewert@o244-01
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/user/home/sbsiewert/.ssh/id_rsa.pub"
+The authenticity of host 'o244-01 (132.241.18.58)' can't be established.
+ECDSA key fingerprint is SHA256:FbXqM1bSlsbgL1MxYlNuAJsj1uOnhWg76YWE4NqUkQc.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+sbsiewert@o244-01's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'sbsiewert@o244-01'"
+and check to make sure that only the key(s) you wanted were added.
+
+sbsiewert@~$ ssh o244-01
+Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-81-generic x86_64)
+
+  System information as of Fri 27 Aug 2021 11:39:03 AM PDT
+
+  System load:  0.04               Temperature:              45.0 C
+  Usage of /:   51.7% of 28.48GB   Processes:                233
+  Memory usage: 5%                 Users logged in:          1
+  Swap usage:   0%                 IPv4 address for enp0s25: 132.241.18.58
+
+**************************************************************************
+Welcome to the College of Engineering, Computer Science, and Construction
+Management.
+
+ECC Linux help: http://www.ecst.csuchico.edu/docs/
+**************************************************************************
+
+Last login: Fri Aug 27 11:18:22 2021 from 10.255.0.12
+sbsiewert@~$ "h
+</i>
+
+5) In your <a href="c1_hosts">c1_hosts</a> or <a href="c2_hosts">c2_hosts</a> file, untemp (remove "#") for the cluster nodes you intend to use.
+
+6) Please use no more than 8 and start with the node that matches your birth year and birthday.
+
+ECC Cluster node use policies "Based on your birthday and year", if your year of birth is even,
+use "o244" nodes and if you birth year is odd, use "o251" nodes.
+For POSIX shared memory threading (single node use), login to the node # that is the same as your birthday.
+E.g., for me, I was born in an odd year, on the 14th day of month, so I would use "ssh o251-14".
+This should help distribute the load as we get into problems that are more CPU, I/O, and memory intensive.
+
+If you have been succesful, test the MPI greetings and you should see processes created on multiple cluster nodes.
+
+(base) sbsiewert@o251-14:~/code/hello_custer$ mpirun -n 16 -ppn 2 -f c2_hosts ./greetings
+Hello from process 0 of 16 on o244-01
+Hello from process 1 of 16 on o244-01
+
+Hello from process 2 of 16 on o244-02
+
+Hello from process 3 of 16 on o244-02
+
+Hello from process 4 of 16 on o244-03
+
+Hello from process 5 of 16 on o244-03
+
+Hello from process 6 of 16 on o244-05
+
+Hello from process 7 of 16 on o244-05
+
+Hello from process 8 of 16 on o244-01
+
+Hello from process 9 of 16 on o244-01
+
+Hello from process 10 of 16 on o244-02
+
+Hello from process 11 of 16 on o244-02
+
+Hello from process 12 of 16 on o244-03
+
+Hello from process 13 of 16 on o244-03
+
+Hello from process 14 of 16 on o244-05
+
+Hello from process 15 of 16 on o244-05
+
+This will be based upon the node names you have un-temped in your <a href="c1_hosts">c1_hosts</a> or <a href="c2_hosts">c2_hosts</a> file
+that you use when you run your program.
+</pre>
+</html>
+

@@ -39,7 +39,8 @@ int main(int argc, char** argv)
 
   sub_length = length / comm_sz;
 
-  //printf("comm_sz=%d, length=%u, sub_length=%u\n", comm_sz, length, sub_length);
+  if(my_rank == 0)
+  printf("comm_sz=%d, length=%u, sub_length=%u\n", comm_sz, length, sub_length);
 
   // sum the sub-series for the rank for Leibniz's formula for pi/4
   for(idx = my_rank*sub_length; idx < (sub_length*(my_rank+1)); idx++)
@@ -48,7 +49,7 @@ int main(int argc, char** argv)
     local_num = -local_num;
   }
 
-  //printf("my_rank=%d, iterated up to %d, local_sum=%15.14lf\n", my_rank, idx, local_sum);
+  printf("my_rank=%d, iterated up to %d, local_sum=%15.14lf\n", my_rank, idx, local_sum);
 
 
   // sum the sub-series for the rank for Euler improved convergence of the Madhava-Leibniz's formula for pi/4
@@ -57,7 +58,7 @@ int main(int argc, char** argv)
     euler_local_sum += 2.0 / (((4.0 * (double)idx) + 1.0) * (4.0 * (double)idx + 3.0));
   }
 
-  //printf("my_rank=%d, iterated up to %d, local_sum=%15.14lf\n", my_rank, idx, local_sum);
+  printf("my_rank=%d, iterated up to %d, local_sum=%15.14lf\n", my_rank, idx, local_sum);
 
 
 
