@@ -1,0 +1,6 @@
+The file gewppoff.c is the orignial MIT example with arrays starting at 1 (offset) and no computed ZEROs
+
+The file gewpp.c is a much changed and improved C style version of the above for CSCI 551 use which computes all ZEROs
+for demonstration and round-off error analysis, adds verification of the RHS, and indexes starting at "0" as is 
+expected for all C programs.  The newer version also takes the input file for the Linear system to solve in the original
+MIT format.
