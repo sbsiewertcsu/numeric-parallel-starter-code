@@ -16,11 +16,11 @@ CFILES= timeprofiles.c timeprofiles_omp.c csvtostatic.c
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	timeprofiles timeprofiles_omp csvtostatic
+all:	timeprofiles timeprofiles_omp csvtostatic timeinterp
 
 clean:
 	-rm -f *.o *.d
-	-rm -f timeprofiles timeprofiles_omp csvtostatic
+	-rm -f timeprofiles timeprofiles_omp csvtostatic timeinterp
 
 distclean:
 	-rm -f *.o *.d
@@ -33,6 +33,9 @@ timeprofiles_omp: timeprofiles_omp.c
 	$(CC) $(LDFLAGS) $(OMP_CFLAGS) -o $@ $@.c $(LIBS)
 
 timeprofiles: timeprofiles.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o $(LIBS)
+
+timeinterp: timeinterp.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o $(LIBS)
 
 depend:
