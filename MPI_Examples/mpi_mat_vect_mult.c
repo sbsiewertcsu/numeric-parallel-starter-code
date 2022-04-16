@@ -149,13 +149,13 @@ void Get_dims(
       int       my_rank    /* in  */,
       int       comm_sz    /* in  */,
       MPI_Comm  comm       /* in  */) {
-   int local_ok = 1;
+   int local_ok = 1, rc=0;
 
    if (my_rank == 0) {
       printf("Enter the number of rows\n");
-      scanf("%d", m_p);
+      rc=scanf("%d", m_p); if(rc < 0) perror("Get_dims");
       printf("Enter the number of columns\n");
-      scanf("%d", n_p);
+      rc=scanf("%d", n_p); if(rc < 0) perror("Get_dims");
    }
    MPI_Bcast(m_p, 1, MPI_INT, 0, comm);
    MPI_Bcast(n_p, 1, MPI_INT, 0, comm);
@@ -237,7 +237,7 @@ void Read_matrix(
       int       my_rank    /* in  */,
       MPI_Comm  comm       /* in  */) {
    double* A = NULL;
-   int local_ok = 1;
+   int local_ok = 1, rc=0;
    int i, j;
 
    if (my_rank == 0) {
@@ -248,7 +248,9 @@ void Read_matrix(
       printf("Enter the matrix %s\n", prompt);
       for (i = 0; i < m; i++)
          for (j = 0; j < n; j++)
-            scanf("%lf", &A[i*n+j]);
+         {
+            rc=scanf("%lf", &A[i*n+j]); if(rc < 0) perror("Read_matrix");
+         }
       MPI_Scatter(A, local_m*n, MPI_DOUBLE, 
             local_A, local_m*n, MPI_DOUBLE, 0, comm);
       free(A);
@@ -283,7 +285,7 @@ void Read_vector(
       int       my_rank      /* in  */,
       MPI_Comm  comm         /* in  */) {
    double* vec = NULL;
-   int i, local_ok = 1;
+   int i, local_ok = 1, rc=0;
 
    if (my_rank == 0) {
       vec = malloc(n*sizeof(double));
@@ -292,7 +294,9 @@ void Read_vector(
             "Can't allocate temporary vector", comm);
       printf("Enter the vector %s\n", prompt);
       for (i = 0; i < n; i++)
-         scanf("%lf", &vec[i]);
+      {
+         rc=scanf("%lf", &vec[i]); if(rc < 0) perror("Read_vector");
+      }
       MPI_Scatter(vec, local_n, MPI_DOUBLE,
             local_vec, local_n, MPI_DOUBLE, 0, comm);
       free(vec);

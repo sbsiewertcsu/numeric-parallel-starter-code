@@ -189,14 +189,16 @@ void Get_args(int argc, char* argv[], int* global_n_p, int* local_n_p,
  */
 void Read_list(int local_A[], int local_n, int my_rank, int p,
          MPI_Comm comm) {
-   int i;
-   int *temp;
+   int i, rc=0;
+   int *temp = (int *)0;
 
    if (my_rank == 0) {
       temp = (int*) malloc(p*local_n*sizeof(int));
       printf("Enter the elements of the list\n");
       for (i = 0; i < p*local_n; i++)
-         scanf("%d", &temp[i]);
+      {
+         rc=scanf("%d", &temp[i]); if(rc < 0) perror("Read_list");
+      }
    } 
 
    MPI_Scatter(temp, local_n, MPI_INT, local_A, local_n, MPI_INT,
@@ -217,7 +219,7 @@ void Read_list(int local_A[], int local_n, int my_rank, int p,
  */
 void Print_global_list(int local_A[], int local_n, int my_rank, int p, 
       MPI_Comm comm) {
-   int* A;
+   int* A = (int *)0;
    int i, n;
 
    if (my_rank == 0) {

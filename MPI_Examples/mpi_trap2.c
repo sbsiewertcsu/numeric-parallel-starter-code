@@ -105,11 +105,11 @@ int main(void) {
  */
 void Get_input(int my_rank, int comm_sz, double* a_p, double* b_p,
       int* n_p) {
-   int dest;
+   int dest, rc=0;
 
    if (my_rank == 0) {
       printf("Enter a, b, and n\n");
-      scanf("%lf %lf %d", a_p, b_p, n_p);
+      rc=scanf("%lf %lf %d", a_p, b_p, n_p); if(rc < 0) perror("Get_input");
       for (dest = 1; dest < comm_sz; dest++) {
          MPI_Send(a_p, 1, MPI_DOUBLE, dest, 0, MPI_COMM_WORLD);
          MPI_Send(b_p, 1, MPI_DOUBLE, dest, 0, MPI_COMM_WORLD);

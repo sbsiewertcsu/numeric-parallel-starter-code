@@ -26,6 +26,7 @@
  * IPP:   Section 3.5 (pp. 117 and ff.)
  */
 #include <stdio.h>
+#include <math.h>
 
 /* We'll be using MPI routines, definitions, etc. */
 #include <mpi.h>
@@ -78,7 +79,7 @@ int main(void) {
    /* Print the result */
    if (my_rank == 0) {
       printf("With n = %d trapezoids, our estimate\n", n);
-      printf("of the integral from %f to %f = %.15e\n",
+      printf("of the integral from %f to %f = %20.15f\n",
           a, b, total_int);
    }
 
@@ -136,12 +137,13 @@ void Get_input(
       double*  b_p      /* out */,
       int*     n_p      /* out */) {
    MPI_Datatype input_mpi_t;
+   int rc=0;
 
    Build_mpi_type(a_p, b_p, n_p, &input_mpi_t);
 
    if (my_rank == 0) {
       printf("Enter a, b, and n\n");
-      scanf("%lf %lf %d", a_p, b_p, n_p);
+      rc=scanf("%lf %lf %d", a_p, b_p, n_p); if(rc < 0) perror("Get_input");
    } 
    MPI_Bcast(a_p, 1, input_mpi_t, 0, MPI_COMM_WORLD);
 
@@ -178,6 +180,36 @@ double Trap(
    return estimate;
 } /*  Trap  */
 
+#include "ex3accel.h"
+//#include "ex3vel.h"
+#include <stdlib.h>
+
+// table look-up for function profile given and velocity profile determined
+double table_function(int timeidx)
+{
+    long unsigned int tsize = sizeof(DefaultProfile) / sizeof(double);
+
+    // Check array bounds for look-up table
+    if(timeidx > tsize)
+    {
+        printf("timeidx=%d exceeds table size = %lu and range %d to %lu\n", timeidx, tsize, 0, tsize-1);
+        exit(-1);
+    }
+
+    return DefaultProfile[timeidx];
+}
+
+
+double table_interp(double time)
+{
+    int timeidx = (int)time;
+    int timeidx_next = ((int)time)+1;
+    double delta_t = time - (double)((int)time);
+
+    return ( table_function(timeidx) + ( (table_function(timeidx_next) - table_function(timeidx)) * delta_t));
+
+}
+
 
 /*------------------------------------------------------------------
  * Function:    f
@@ -185,5 +217,9 @@ double Trap(
  * Input args:  x
  */
 double f(double x /* in */) {
-   return x*x;
+   //return x*x;
+   return sin(x);
+
+   // replace this with linear interpolation of any function such as acceleration or velocity from a model
+   // return table_interp(x);
 } /* f */

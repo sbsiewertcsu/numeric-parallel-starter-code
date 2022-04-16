@@ -132,12 +132,12 @@ void Read_n(
       int       my_rank    /* in  */, 
       int       comm_sz    /* in  */,
       MPI_Comm  comm       /* in  */) {
-   int local_ok = 1;
+   int local_ok = 1, rc=0;
    char *fname = "Read_n";
    
    if (my_rank == 0) {
       printf("What's the order of the vectors?\n");
-      scanf("%d", n_p);
+      rc=scanf("%d", n_p); if(rc < 0) perror("Read_n");
    }
    MPI_Bcast(n_p, 1, MPI_INT, 0, comm);
    if (*n_p <= 0 || *n_p % comm_sz != 0) local_ok = 0;
@@ -204,7 +204,7 @@ void Read_vector(
       MPI_Comm  comm        /* in  */) {
 
    double* a = NULL;
-   int i;
+   int i, rc=0;
    int local_ok = 1;
    char* fname = "Read_vector";
 
@@ -215,7 +215,9 @@ void Read_vector(
             comm);
       printf("Enter the vector %s\n", vec_name);
       for (i = 0; i < n; i++)
-         scanf("%lf", &a[i]);
+      {
+         rc=scanf("%lf", &a[i]); if(rc < 0) perror("Read_vector");
+      }
       MPI_Scatter(a, local_n, MPI_DOUBLE, local_a, local_n, MPI_DOUBLE, 0,
          comm);
       free(a);
