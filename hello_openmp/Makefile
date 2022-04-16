@@ -5,12 +5,13 @@ CC = gcc
 
 CDEFS=
 CFLAGS= -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
+CFLAGS2= -O0 -g -Wall $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= hello_omp omppi fibsum fib
+PRODUCT= hello_omp hello_pthread omppi fibsum fib piseries piseriesompfunct
 
 HFILES= 
-CFILES= hello_omp.c omppi.c fibsum.c fib.c
+CFILES= hello_omp.c omppi.c fibsum.c fib.c piseries.c piseriesompfunct.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
@@ -24,6 +25,12 @@ clean:
 fib:	fib.c
 	$(CC) $(CFLAGS) -o $@ fib.c
 
+piseriesompfunct:	piseriesompfunct.c
+	$(CC) $(CFLAGS) -o $@ piseriesompfunct.c -lm
+
+piseries:	piseries.c
+	$(CC) $(CFLAGS) -o $@ piseries.c
+
 fibsum:	fibsum.c
 	$(CC) $(CFLAGS) -o $@ fibsum.c
 
@@ -32,3 +39,6 @@ omppi:	omppi.c
 
 hello_omp:	hello_omp.c
 	$(CC) $(CFLAGS) -o $@ hello_omp.c
+
+hello_pthread:	hello_pthread.c
+	$(CC) $(CFLAGS2) -o $@ hello_pthread.c -lpthread -lrt
