@@ -31,7 +31,7 @@ double table_accel(int timeidx);
 double faccel(double time);
 
 // This is the number of interpolation steps (data to generate) between table data values
-#define STEPS_PER_SEC (100)
+#define STEPS_PER_SEC (10)
 
 void main(int argc, char *argv[])
 {

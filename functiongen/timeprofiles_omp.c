@@ -19,8 +19,8 @@
 // this may not be known.
 
 //#include "ex3accel.h"
-//#include "ex3.h"
-#include "ex4.h"
+#include "ex3.h"
+//#include "ex4.h"
 //#include "ex6lin.h"
 //#include "ex6nonlin.h"
 
@@ -84,8 +84,8 @@ void main(int argc, char *argv[])
         printf("Will use default time profile\n");
     }
 
-    // Right Riemann sum test to match spreadsheet with shared data approach
-    printf("\n\nSINGLE THREAD: Right Riemann sum test for table with %d elements\n", tsize);
+    // Left Riemann sum test to match spreadsheet with shared data approach
+    printf("\n\nSINGLE THREAD: Left Riemann sum test for table with %d elements\n", tsize);
     clock_gettime(CLOCK_MONOTONIC, &start);
     VelProfile[0] = 0.0; VelStep=0;
     PosProfile[0] = 0.0; PosStep=0;
@@ -98,7 +98,7 @@ void main(int argc, char *argv[])
     //
     for(istep=1; istep < integration_steps; istep++)
     {
-	    // for Right Riemann take acceleration at current time and add to previous value
+	    // for Left Riemann take acceleration at current time and add to previous value
 	    time = (double)istep * dt;
 
 	    // Note that velocity can be determined from profile or from math model for acceleration
@@ -142,11 +142,11 @@ void main(int argc, char *argv[])
     }
 
 
-    // Right Riemann sum test to match spreadsheet with shared data approach
+    // Left Riemann sum test to match spreadsheet with shared data approach
     //
     // Potential to speed up with OpenMP or Pthreads
     //
-    printf("\n\nTHREADED FOR LOOP: Right Riemann sum test for table with %d elements\n", tsize);
+    printf("\n\nTHREADED FOR LOOP: Left Riemann sum test for table with %d elements\n", tsize);
     clock_gettime(CLOCK_MONOTONIC, &start);
     VelStep=0.0; VelProfile[0]=VelStep;
     PosStep=0.0; PosProfile[0]=PosStep;
@@ -204,11 +204,11 @@ void main(int argc, char *argv[])
     }
 
 
-    // Right Riemann sum test to match spreadsheet with abstracted integration function
+    // Left Riemann sum test to match spreadsheet with abstracted integration function
     //
     // Potential to speed up with OpenMP or Pthreads
     //
-    printf("\n\nTHREADED INTEGRATOR FUNCTION: Right Riemann sum test for table with %d elements\n", tsize);
+    printf("\n\nTHREADED INTEGRATOR FUNCTION: Left Riemann sum test for table with %d elements\n", tsize);
     clock_gettime(CLOCK_MONOTONIC, &start);
     VelStep=0.0; VelProfile[0]=VelStep;
     PosStep=0.0; PosProfile[0]=PosStep;

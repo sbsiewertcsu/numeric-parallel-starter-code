@@ -18,8 +18,8 @@
 // this may not be known.
 
 //#include "ex3accel.h"
-//#include "ex3.h"
-#include "ex4.h"
+#include "ex3.h"
+//#include "ex4.h"
 //#include "ex6lin.h"
 //#include "ex6nonlin.h"
 
@@ -122,8 +122,8 @@ void main(int argc, char *argv[])
     //printf("A[%d]=%015.14lf\n", 1801, table_accel(1802));
 
 
-    // Right Riemann sum test to match spreadsheet with shared data approach
-    printf("\n\nRight Riemann sum test for table with %d elements\n", tsize);
+    // Left Riemann sum test to match spreadsheet with shared data approach
+    printf("\n\nLeft Riemann sum test for table with %d elements\n", tsize);
     clock_gettime(CLOCK_MONOTONIC, &start);
     VelProfile[0] = 0.0; VelStep=0;
     PosProfile[0] = 0.0; PosStep=0;
@@ -136,7 +136,7 @@ void main(int argc, char *argv[])
     //
     for(istep=1; istep < integration_steps; istep++)
     {
-	    // for Right Riemann take acceleration at current time and add to previous value
+	    // for Left Riemann take acceleration at current time and add to previous value
 	    time = (double)istep * dt;
 
 	    // Note that velocity can be determined from profile or from math model for acceleration
@@ -182,19 +182,19 @@ void main(int argc, char *argv[])
 
     // **** 2 PART SEQUENTIAL SHARED DATA INTEGRATION
     //
-    // Right Riemann sum test to match spreadsheet with integration in 2 parts
+    // Left Riemann sum test to match spreadsheet with integration in 2 parts
     // to suggest how one might use MPI with ranks to divide up work.
     //
 
     // Rank 0 would do the left half of the integration 
-    printf("\n\nRight Riemann sum test for half-table with %d elements and %lu steps\n", tsize/2, integration_steps/2);
+    printf("\n\nLeft Riemann sum test for half-table with %d elements and %lu steps\n", tsize/2, integration_steps/2);
     VelProfile[0] = 0.0; VelStep=0;
     PosProfile[0] = 0.0; PosStep=0;
     idx=0;
 
     for(istep=1; istep <= integration_steps/2; istep++)
     {
-	    // for Right Riemann take acceleration at current time and add to previous value
+	    // for Left Riemann take acceleration at current time and add to previous value
 	    time = (double)istep * dt;
 
 	    // Note that velocity can be determined from profile or from math model for acceleration
@@ -230,11 +230,11 @@ void main(int argc, char *argv[])
     PosProfile[tsize/2] = PosStep;        // Pos[start]
     idx=tsize/2;
 
-    printf("Right Riemann sum test for half-table with %d elements and %lu steps starting at time=%lf\n", tsize/2, integration_steps/2, time);
+    printf("Left Riemann sum test for half-table with %d elements and %lu steps starting at time=%lf\n", tsize/2, integration_steps/2, time);
 
     for(istep=(integration_steps/2)+1; istep < integration_steps; istep++)
     {
-	    // for Right Riemann take acceleration at current time and add to previous value
+	    // for Left Riemann take acceleration at current time and add to previous value
 	    time = (double)istep * dt;
 
 	    // Note that velocity can be determined from profile or from math model for acceleration
@@ -275,7 +275,7 @@ void main(int argc, char *argv[])
 
     // **** 2 PART, 2 PHASE SEQUENTIAL SHARED DATA INTEGRATION
     //
-    // Right Riemann sum test to match spreadsheet with integration PHASES in 2 parts
+    // Left Riemann sum test to match spreadsheet with integration PHASES in 2 parts
     // to suggest how one might use MPI with ranks to divide up work.
     //
     // This provides speed-up because I can do all velocity integration in parallel
@@ -293,7 +293,7 @@ void main(int argc, char *argv[])
     // PARALLEL BEGIN
     //
     // Rank 0 would do the left half of the integration as before but just acceleration first
-    printf("\n\nRight Riemann VELOCITY sum test for half-table with %d elements and %lu steps\n", tsize/2, integration_steps/2);
+    printf("\n\nLeft Riemann VELOCITY sum test for half-table with %d elements and %lu steps\n", tsize/2, integration_steps/2);
     VelProfile[0] = 0.0; VelStep=0.0;
     idx=0;
 
@@ -314,7 +314,7 @@ void main(int argc, char *argv[])
 
 
     // Rank 1 would do the right half of the integration but we must adjust for starting conditions
-    printf("\nRight Riemann VELOCITY sum test for half-table with %d elements and %lu steps\n", tsize/2, integration_steps/2);
+    printf("\nLeft Riemann VELOCITY sum test for half-table with %d elements and %lu steps\n", tsize/2, integration_steps/2);
     VelProfile[tsize/2] = 0 + (faccel(time) * dt); VelStep=0.0;
     idx=tsize/2;
 
@@ -351,7 +351,7 @@ void main(int argc, char *argv[])
     // PARALLEL BEGIN
     //
     // Rank 0 would do the left half of the integration as before but just velocity now
-    printf("\n\nRight Riemann POSITION sum test for half-table with %d elements and %lu steps\n", tsize/2, integration_steps/2);
+    printf("\n\nLeft Riemann POSITION sum test for half-table with %d elements and %lu steps\n", tsize/2, integration_steps/2);
     PosProfile[0] = 0.0; PosStep=0;
     idx=0;
 
@@ -372,7 +372,7 @@ void main(int argc, char *argv[])
 
 
     // Rank 1 would do the right half of the integration but we must adjust for starting conditions
-    printf("Right Riemann VELOCITY sum test for half-table with %d elements\n", tsize/2);
+    printf("Left Riemann VELOCITY sum test for half-table with %d elements\n", tsize/2);
     PosProfile[tsize/2] = 0 + (fvel(time) * dt); PosStep=0.0;
     idx=tsize/2;
 

@@ -5,7 +5,7 @@
 #define VALUES_PER_LINE (9)
 
 
-double accel[NUM_1_HZ_ACCEL_VALUES];
+double inputdata[NUM_1_HZ_ACCEL_VALUES];
 
 
 int main(int argc, char *argv[])
@@ -37,11 +37,16 @@ int main(int argc, char *argv[])
 
     for(int idx=0; idx < NUM_1_HZ_ACCEL_VALUES; idx++)
     {
-        // read Excel CSV format file with accel values that are 15 digits < 9.99999999999999 m/sec
-        rc=fscanf(fin, "%lf\n", &accel[idx]);
+        // read Excel CSV format file with inputdata values that are 15 digits of precision with a range
+        // up to 5 leading digits, for a total field width of 20, so values should not be larger than 
+        // 99,999.999999999999999
+        //
+        rc=fscanf(fin, "%lf\n", &inputdata[idx]);
 
-        if((idx % 100) == 0) printf("a[%d]=%015.14lf\n", idx, accel[idx]);
-        fprintf(fout, "%015.14lf, ", accel[idx]); 
+        if((idx % 100) == 0)
+            printf("a[%d]=%20.15lf\n", idx, inputdata[idx]);
+
+        fprintf(fout, "%20.15lf, ", inputdata[idx]); 
 
         if((idx > 0) && ((idx+1) % VALUES_PER_LINE) == 0) fprintf(fout, "\n");
     }
