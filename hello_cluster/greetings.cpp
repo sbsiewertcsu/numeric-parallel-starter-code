@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const int MAX_STRING = 256;
+const int MAX_STRING = 1024;
 
 int main(void)
 {
