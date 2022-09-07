@@ -24,7 +24,7 @@ int main(void)
 
                 MPI_Get_processor_name(nodename, &namelen);
 
-                sprintf(greeting, "Hello from process %d of %d on %s\n", my_rank, comm_sz, nodename);
+                sprintf(greeting, "Hello from process %d of %d on %s", my_rank, comm_sz, nodename);
                 MPI_Send(greeting, strlen(greeting)+1, MPI_CHAR, 0, 0, MPI_COMM_WORLD);
         }
         else
@@ -33,7 +33,7 @@ int main(void)
 
                 MPI_Get_processor_name(nodename, &namelen);
 
-                printf("Hello from process %d of %d on %s\n", my_rank, comm_sz, nodename);
+                printf("Hello from process %d of %d on %s", my_rank, comm_sz, nodename);
 
                 for(int q=1; q < comm_sz; q++)
                 {
