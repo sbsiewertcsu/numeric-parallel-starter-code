@@ -4,11 +4,14 @@ CC = gcc
 CPP = g++
 
 CDEFS=
+
 #CFLAGS= -O3 -msse3 $(INCLUDE_DIRS) $(CDEFS)
-CFLAGS= -O3 -msse3 -malign-double $(INCLUDE_DIRS) $(CDEFS)
+#CFLAGS= -O3 -msse3 -malign-double $(INCLUDE_DIRS) $(CDEFS)
+
+CFLAGS= -O0 $(INCLUDE_DIRS) $(CDEFS)
 LIBS= -lpthread
 
-PRODUCT=erast erastsimp pinum largestprime
+PRODUCT=erast pinum largestprime erastsimp
 
 HFILES= 
 CFILES= erast.c
