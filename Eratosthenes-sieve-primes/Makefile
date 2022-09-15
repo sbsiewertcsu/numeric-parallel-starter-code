@@ -3,11 +3,12 @@ LIB_DIRS =
 CC = g++
 
 CDEFS=
-CFLAGS= -O3 -msse3 $(INCLUDE_DIRS) $(CDEFS)
+CFLAGS= -O0 $(INCLUDE_DIRS) $(CDEFS)
 #CFLAGS= -O3 -msse3 -malign-double $(INCLUDE_DIRS) $(CDEFS)
 
 
 all:	eratos eratositerator eratosrecursive
+#all:	eratos
 
 clean:
 	-rm -f *.o *.NEW *~

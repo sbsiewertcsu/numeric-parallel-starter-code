@@ -40,7 +40,7 @@ int main(void)
 	// Create list consecutive integers from 2 to MAX: (2, 3, 4, ..., MAX).	
 	intlist_t *intlist;
 
-	if( !( ( intlist = new intlist_t [MAX] ) > 0) )
+	if( ( intlist = new intlist_t [MAX] ) == nullptr )
     {
 		cout << "new failed\n"; 
 		exit(-1);

@@ -71,7 +71,7 @@ int main(void)
         cout << "max uint = " << (0xFFFFFFFF) << "\n";
         cout << "max long long = " << (0xFFFFFFFFFFFFFFFFULL) << "\n";
 
-        if( !( ( isprime= new unsigned char[(((size_t)(MAX/(CODE_LENGTH))+1))] ) > 0) )
+        if( (isprime= new unsigned char[(((size_t)(MAX/(CODE_LENGTH))+1))])  == nullptr )
         {
             cout << "new failed\n"; 
             exit(-1);
