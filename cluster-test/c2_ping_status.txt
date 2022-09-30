@@ -1,0 +1,245 @@
+PING o244-01.csuchico.edu (132.241.18.58) 56(84) bytes of data.
+64 bytes from o244-01.csuchico.edu (132.241.18.58): icmp_seq=1 ttl=61 time=31.2 ms
+64 bytes from o244-01.csuchico.edu (132.241.18.58): icmp_seq=2 ttl=61 time=31.0 ms
+64 bytes from o244-01.csuchico.edu (132.241.18.58): icmp_seq=3 ttl=61 time=30.3 ms
+
+--- o244-01.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.348/30.854/31.248/0.375 ms
+PING o244-02.csuchico.edu (132.241.18.59) 56(84) bytes of data.
+64 bytes from o244-02.csuchico.edu (132.241.18.59): icmp_seq=1 ttl=61 time=30.7 ms
+64 bytes from o244-02.csuchico.edu (132.241.18.59): icmp_seq=2 ttl=61 time=30.0 ms
+64 bytes from o244-02.csuchico.edu (132.241.18.59): icmp_seq=3 ttl=61 time=30.7 ms
+
+--- o244-02.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.011/30.474/30.722/0.328 ms
+PING o244-03.csuchico.edu (132.241.18.60) 56(84) bytes of data.
+64 bytes from o244-03.csuchico.edu (132.241.18.60): icmp_seq=1 ttl=61 time=30.8 ms
+64 bytes from o244-03.csuchico.edu (132.241.18.60): icmp_seq=2 ttl=61 time=30.4 ms
+64 bytes from o244-03.csuchico.edu (132.241.18.60): icmp_seq=3 ttl=61 time=31.4 ms
+
+--- o244-03.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 30.401/30.852/31.393/0.409 ms
+PING o244-04.csuchico.edu (132.241.18.61) 56(84) bytes of data.
+64 bytes from o244-04.csuchico.edu (132.241.18.61): icmp_seq=1 ttl=61 time=30.5 ms
+64 bytes from o244-04.csuchico.edu (132.241.18.61): icmp_seq=2 ttl=61 time=30.1 ms
+64 bytes from o244-04.csuchico.edu (132.241.18.61): icmp_seq=3 ttl=61 time=30.5 ms
+
+--- o244-04.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.114/30.370/30.515/0.181 ms
+PING o244-05.csuchico.edu (132.241.18.62) 56(84) bytes of data.
+64 bytes from o244-05.csuchico.edu (132.241.18.62): icmp_seq=1 ttl=61 time=30.2 ms
+64 bytes from o244-05.csuchico.edu (132.241.18.62): icmp_seq=2 ttl=61 time=30.4 ms
+64 bytes from o244-05.csuchico.edu (132.241.18.62): icmp_seq=3 ttl=61 time=30.4 ms
+
+--- o244-05.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.242/30.372/30.446/0.092 ms
+PING o244-06.csuchico.edu (132.241.18.63) 56(84) bytes of data.
+64 bytes from o244-06.csuchico.edu (132.241.18.63): icmp_seq=1 ttl=61 time=30.4 ms
+64 bytes from o244-06.csuchico.edu (132.241.18.63): icmp_seq=2 ttl=61 time=30.8 ms
+64 bytes from o244-06.csuchico.edu (132.241.18.63): icmp_seq=3 ttl=61 time=34.5 ms
+
+--- o244-06.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 30.380/31.923/34.547/1.865 ms
+PING o244-07.csuchico.edu (132.241.18.64) 56(84) bytes of data.
+64 bytes from o244-07.csuchico.edu (132.241.18.64): icmp_seq=1 ttl=61 time=30.0 ms
+64 bytes from o244-07.csuchico.edu (132.241.18.64): icmp_seq=2 ttl=61 time=30.8 ms
+64 bytes from o244-07.csuchico.edu (132.241.18.64): icmp_seq=3 ttl=61 time=30.5 ms
+
+--- o244-07.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.046/30.462/30.809/0.315 ms
+PING o244-08.csuchico.edu (132.241.18.65) 56(84) bytes of data.
+64 bytes from o244-08.csuchico.edu (132.241.18.65): icmp_seq=1 ttl=61 time=30.1 ms
+64 bytes from o244-08.csuchico.edu (132.241.18.65): icmp_seq=2 ttl=61 time=30.1 ms
+64 bytes from o244-08.csuchico.edu (132.241.18.65): icmp_seq=3 ttl=61 time=33.6 ms
+
+--- o244-08.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 30.081/31.269/33.635/1.673 ms
+PING o244-09.csuchico.edu (132.241.18.66) 56(84) bytes of data.
+64 bytes from o244-09.csuchico.edu (132.241.18.66): icmp_seq=1 ttl=61 time=30.5 ms
+64 bytes from o244-09.csuchico.edu (132.241.18.66): icmp_seq=2 ttl=61 time=30.6 ms
+64 bytes from o244-09.csuchico.edu (132.241.18.66): icmp_seq=3 ttl=61 time=30.2 ms
+
+--- o244-09.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.185/30.424/30.566/0.170 ms
+PING o244-10.csuchico.edu (132.241.18.67) 56(84) bytes of data.
+64 bytes from o244-10.csuchico.edu (132.241.18.67): icmp_seq=1 ttl=61 time=31.1 ms
+64 bytes from o244-10.csuchico.edu (132.241.18.67): icmp_seq=2 ttl=61 time=30.6 ms
+64 bytes from o244-10.csuchico.edu (132.241.18.67): icmp_seq=3 ttl=61 time=30.6 ms
+
+--- o244-10.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.577/30.780/31.140/0.255 ms
+PING o244-11.csuchico.edu (132.241.18.68) 56(84) bytes of data.
+64 bytes from o244-11.csuchico.edu (132.241.18.68): icmp_seq=1 ttl=61 time=30.3 ms
+64 bytes from o244-11.csuchico.edu (132.241.18.68): icmp_seq=2 ttl=61 time=31.0 ms
+64 bytes from o244-11.csuchico.edu (132.241.18.68): icmp_seq=3 ttl=61 time=30.7 ms
+
+--- o244-11.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.281/30.643/30.972/0.283 ms
+PING o244-12.csuchico.edu (132.241.18.69) 56(84) bytes of data.
+64 bytes from o244-12.csuchico.edu (132.241.18.69): icmp_seq=1 ttl=61 time=30.4 ms
+64 bytes from o244-12.csuchico.edu (132.241.18.69): icmp_seq=2 ttl=61 time=30.4 ms
+64 bytes from o244-12.csuchico.edu (132.241.18.69): icmp_seq=3 ttl=61 time=30.5 ms
+
+--- o244-12.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.398/30.451/30.526/0.054 ms
+PING o244-13.csuchico.edu (132.241.18.70) 56(84) bytes of data.
+64 bytes from o244-13.csuchico.edu (132.241.18.70): icmp_seq=1 ttl=61 time=30.7 ms
+64 bytes from o244-13.csuchico.edu (132.241.18.70): icmp_seq=2 ttl=61 time=30.7 ms
+64 bytes from o244-13.csuchico.edu (132.241.18.70): icmp_seq=3 ttl=61 time=30.5 ms
+
+--- o244-13.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 30.504/30.632/30.725/0.093 ms
+PING o244-14.csuchico.edu (132.241.18.71) 56(84) bytes of data.
+64 bytes from o244-14.csuchico.edu (132.241.18.71): icmp_seq=1 ttl=61 time=30.2 ms
+64 bytes from o244-14.csuchico.edu (132.241.18.71): icmp_seq=2 ttl=61 time=30.9 ms
+64 bytes from o244-14.csuchico.edu (132.241.18.71): icmp_seq=3 ttl=61 time=31.4 ms
+
+--- o244-14.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.242/30.843/31.436/0.487 ms
+PING o244-15.csuchico.edu (132.241.18.72) 56(84) bytes of data.
+64 bytes from o244-15.csuchico.edu (132.241.18.72): icmp_seq=1 ttl=61 time=30.0 ms
+64 bytes from o244-15.csuchico.edu (132.241.18.72): icmp_seq=2 ttl=61 time=30.6 ms
+64 bytes from o244-15.csuchico.edu (132.241.18.72): icmp_seq=3 ttl=61 time=30.6 ms
+
+--- o244-15.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 29.963/30.398/30.638/0.308 ms
+PING o244-16.csuchico.edu (132.241.18.73) 56(84) bytes of data.
+64 bytes from o244-16.csuchico.edu (132.241.18.73): icmp_seq=1 ttl=61 time=30.8 ms
+64 bytes from o244-16.csuchico.edu (132.241.18.73): icmp_seq=2 ttl=61 time=30.3 ms
+64 bytes from o244-16.csuchico.edu (132.241.18.73): icmp_seq=3 ttl=61 time=30.4 ms
+
+--- o244-16.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 30.345/30.502/30.765/0.187 ms
+PING o244-17.csuchico.edu (132.241.18.74) 56(84) bytes of data.
+64 bytes from o244-17.csuchico.edu (132.241.18.74): icmp_seq=1 ttl=61 time=30.4 ms
+64 bytes from o244-17.csuchico.edu (132.241.18.74): icmp_seq=2 ttl=61 time=30.6 ms
+64 bytes from o244-17.csuchico.edu (132.241.18.74): icmp_seq=3 ttl=61 time=30.2 ms
+
+--- o244-17.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.208/30.405/30.580/0.152 ms
+PING o244-18.csuchico.edu (132.241.18.75) 56(84) bytes of data.
+64 bytes from o244-18.csuchico.edu (132.241.18.75): icmp_seq=1 ttl=61 time=29.8 ms
+64 bytes from o244-18.csuchico.edu (132.241.18.75): icmp_seq=2 ttl=61 time=30.8 ms
+64 bytes from o244-18.csuchico.edu (132.241.18.75): icmp_seq=3 ttl=61 time=30.6 ms
+
+--- o244-18.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 29.754/30.390/30.836/0.461 ms
+PING o244-19.csuchico.edu (132.241.18.76) 56(84) bytes of data.
+64 bytes from o244-19.csuchico.edu (132.241.18.76): icmp_seq=1 ttl=61 time=30.1 ms
+64 bytes from o244-19.csuchico.edu (132.241.18.76): icmp_seq=2 ttl=61 time=30.2 ms
+64 bytes from o244-19.csuchico.edu (132.241.18.76): icmp_seq=3 ttl=61 time=30.0 ms
+
+--- o244-19.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.038/30.095/30.166/0.053 ms
+PING o244-20.csuchico.edu (132.241.18.77) 56(84) bytes of data.
+64 bytes from o244-20.csuchico.edu (132.241.18.77): icmp_seq=1 ttl=61 time=30.6 ms
+64 bytes from o244-20.csuchico.edu (132.241.18.77): icmp_seq=2 ttl=61 time=30.9 ms
+64 bytes from o244-20.csuchico.edu (132.241.18.77): icmp_seq=3 ttl=61 time=30.4 ms
+
+--- o244-20.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 30.421/30.625/30.904/0.204 ms
+PING o244-21.csuchico.edu (132.241.18.78) 56(84) bytes of data.
+64 bytes from o244-21.csuchico.edu (132.241.18.78): icmp_seq=1 ttl=61 time=31.1 ms
+64 bytes from o244-21.csuchico.edu (132.241.18.78): icmp_seq=2 ttl=61 time=30.1 ms
+64 bytes from o244-21.csuchico.edu (132.241.18.78): icmp_seq=3 ttl=61 time=31.0 ms
+
+--- o244-21.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.145/30.740/31.125/0.426 ms
+PING o244-22.csuchico.edu (132.241.18.79) 56(84) bytes of data.
+
+--- o244-22.csuchico.edu ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2025ms
+
+PING o244-23.csuchico.edu (132.241.18.80) 56(84) bytes of data.
+64 bytes from o244-23.csuchico.edu (132.241.18.80): icmp_seq=1 ttl=61 time=30.6 ms
+64 bytes from o244-23.csuchico.edu (132.241.18.80): icmp_seq=2 ttl=61 time=30.6 ms
+64 bytes from o244-23.csuchico.edu (132.241.18.80): icmp_seq=3 ttl=61 time=33.5 ms
+
+--- o244-23.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.599/31.564/33.464/1.343 ms
+PING o244-24.csuchico.edu (132.241.18.81) 56(84) bytes of data.
+64 bytes from o244-24.csuchico.edu (132.241.18.81): icmp_seq=1 ttl=61 time=30.5 ms
+64 bytes from o244-24.csuchico.edu (132.241.18.81): icmp_seq=2 ttl=61 time=30.4 ms
+64 bytes from o244-24.csuchico.edu (132.241.18.81): icmp_seq=3 ttl=61 time=31.5 ms
+
+--- o244-24.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.411/30.795/31.480/0.485 ms
+PING o244-25.csuchico.edu (132.241.18.82) 56(84) bytes of data.
+64 bytes from o244-25.csuchico.edu (132.241.18.82): icmp_seq=1 ttl=61 time=30.2 ms
+64 bytes from o244-25.csuchico.edu (132.241.18.82): icmp_seq=2 ttl=61 time=30.6 ms
+64 bytes from o244-25.csuchico.edu (132.241.18.82): icmp_seq=3 ttl=61 time=30.6 ms
+
+--- o244-25.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.214/30.468/30.630/0.182 ms
+PING o244-26.csuchico.edu (132.241.18.83) 56(84) bytes of data.
+64 bytes from o244-26.csuchico.edu (132.241.18.83): icmp_seq=1 ttl=61 time=30.4 ms
+64 bytes from o244-26.csuchico.edu (132.241.18.83): icmp_seq=2 ttl=61 time=33.8 ms
+64 bytes from o244-26.csuchico.edu (132.241.18.83): icmp_seq=3 ttl=61 time=30.8 ms
+
+--- o244-26.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 30.414/31.666/33.774/1.499 ms
+PING o244-27.csuchico.edu (132.241.18.84) 56(84) bytes of data.
+64 bytes from o244-27.csuchico.edu (132.241.18.84): icmp_seq=1 ttl=61 time=30.5 ms
+64 bytes from o244-27.csuchico.edu (132.241.18.84): icmp_seq=2 ttl=61 time=30.5 ms
+64 bytes from o244-27.csuchico.edu (132.241.18.84): icmp_seq=3 ttl=61 time=30.7 ms
+
+--- o244-27.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.474/30.563/30.676/0.084 ms
+PING o244-28.csuchico.edu (132.241.18.85) 56(84) bytes of data.
+64 bytes from o244-28.csuchico.edu (132.241.18.85): icmp_seq=1 ttl=61 time=30.4 ms
+64 bytes from o244-28.csuchico.edu (132.241.18.85): icmp_seq=2 ttl=61 time=30.4 ms
+64 bytes from o244-28.csuchico.edu (132.241.18.85): icmp_seq=3 ttl=61 time=30.8 ms
+
+--- o244-28.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.411/30.552/30.810/0.182 ms
+PING o244-29.csuchico.edu (132.241.18.86) 56(84) bytes of data.
+64 bytes from o244-29.csuchico.edu (132.241.18.86): icmp_seq=1 ttl=61 time=31.4 ms
+64 bytes from o244-29.csuchico.edu (132.241.18.86): icmp_seq=2 ttl=61 time=31.5 ms
+64 bytes from o244-29.csuchico.edu (132.241.18.86): icmp_seq=3 ttl=61 time=30.4 ms
+
+--- o244-29.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 30.440/31.111/31.539/0.480 ms
+PING o244-30.csuchico.edu (132.241.18.87) 56(84) bytes of data.
+64 bytes from o244-30.csuchico.edu (132.241.18.87): icmp_seq=1 ttl=61 time=30.5 ms
+64 bytes from o244-30.csuchico.edu (132.241.18.87): icmp_seq=2 ttl=61 time=30.8 ms
+64 bytes from o244-30.csuchico.edu (132.241.18.87): icmp_seq=3 ttl=61 time=30.6 ms
+
+--- o244-30.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 30.548/30.627/30.764/0.096 ms
+PING o244-31.csuchico.edu (132.241.18.88) 56(84) bytes of data.
+64 bytes from o244-31.csuchico.edu (132.241.18.88): icmp_seq=1 ttl=61 time=30.4 ms
+64 bytes from o244-31.csuchico.edu (132.241.18.88): icmp_seq=2 ttl=61 time=30.6 ms
+64 bytes from o244-31.csuchico.edu (132.241.18.88): icmp_seq=3 ttl=61 time=30.2 ms
+
+--- o244-31.csuchico.edu ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 30.232/30.419/30.601/0.150 ms

@@ -1,0 +1,36 @@
+o251-01
+o251-02
+o251-03
+o251-04
+o251-05
+o251-06
+o251-07
+o251-08
+o251-09
+o251-10
+o251-11
+o251-12
+o251-13
+# my birthyear is odd, so I'm on cluster 251,
+# using my birthdate node and 7 adjacent nodes
+o251-14
+# The host below is not responsive right now - but, it is reachable via ping or SSH
+#o251-15
+o251-16
+o251-17
+# The host below is down right now - not reachable via ping or SSH
+#o251-18
+o251-19
+o251-20
+o251-21
+o251-22
+# The host below is not responsive right now - but, it is reachable via ping or SSH
+#o251-23
+o251-24
+o251-25
+o251-26
+o251-27
+o251-28
+o251-29
+o251-30
+o251-31
