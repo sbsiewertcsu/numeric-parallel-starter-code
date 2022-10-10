@@ -1,0 +1,3 @@
+This code is some basic pthread starter code.
+
+It is similar to the same for OpenMP and MPI, also similarly named hello_omp, and hello_cluster.
