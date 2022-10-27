@@ -15,8 +15,15 @@ void main(int argc, char *argv[])
     {
         sscanf(argv[1], "%d", &dim);
     }
+    else
+    {
+        printf("Using default dimension of 10...\n");
+    }
 
-    // initialize random coeff generator
+    // Initialize random coeff generator - generally unlikely to lead to ill-conditioned
+    // system where one row is a simple multiple of another.
+    //
+    // Could be improved with a check for this, but probability of this is diminishingly small.
     elapsedsec=time((time_t *)0);
     srand((unsigned int)elapsedsec);
 
