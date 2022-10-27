@@ -3,7 +3,9 @@
 #include <math.h>
 #include <time.h>
 
-#define MAX_DIM (10000)
+//#define MAX_DIM (10000) // can cause a linking error, e.g., on ecc-linux
+
+#define MAX_DIM (1000)
 #define DEFAULT_DIM (1000)
 
 // Function Prototypes
@@ -183,7 +185,7 @@ void mmult(int n, double A[][MAX_DIM], double B[][MAX_DIM])
     double temp;
 
     // for all rows - this loop speeds-up well with OpenMP
-//#pragma omp parallel for num_threads(thread_count) private(row_idx, col_jdx) shared(n)
+#pragma omp parallel for num_threads(thread_count) private(row_idx, col_jdx, coeff_idx) shared(n)
     for (row_idx=0; row_idx < n; ++row_idx)
     {
         for (col_jdx=0; col_jdx < n; ++col_jdx)
