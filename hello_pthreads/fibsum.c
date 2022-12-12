@@ -1,14 +1,30 @@
-// Basic Pthread Fibonacci sequence generator for multi-thread speed-up
-//
-// Sam Siewert - 1/27/22
-//
+#include <pthread.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include <omp.h>
 
-unsigned int fibc(unsigned int n)
+#define NUM_THREADS 4
+
+typedef struct
 {
-    unsigned int f=0, f0=0, f1=1, i=1;
+    int threadIdx;
+    int thread_count;
+    unsigned long long local_fibnum;
+} threadParams_t;
+
+
+// POSIX thread declarations and scheduling attributes
+//
+pthread_t threads[NUM_THREADS];
+threadParams_t threadParams[NUM_THREADS];
+
+int global_iterations=10000000;
+unsigned int global_fibcnt=32;
+
+
+unsigned long long int fibc(unsigned int n)
+{
+    unsigned long long int f=0, f0=0, f1=1, i=1;
 
     // the fibonacci sequence has inherent data dependencies
     do
@@ -22,56 +38,73 @@ unsigned int fibc(unsigned int n)
     return f;
 }
 
+
+void *fib_wrapper_thread(void *threadp)
+{
+    threadParams_t *threadParams = (threadParams_t *)threadp;
+    int my_rank = threadParams->threadIdx;
+    int thread_count = threadParams->thread_count;
+
+    threadParams->local_fibnum=fibc(global_fibcnt);
+    printf("Pthread %d of %d with fib(%u)=%llu\n", my_rank, thread_count, global_fibcnt, threadParams->local_fibnum);
+
+    return((void *)0);
+}
+
+
 int main(int argc, char *argv[])
 {
-  int iterations=10000000;
-  unsigned int g_fibcnt=32, g_fibnum;
-  int thread_count=2;
+  unsigned int g_fibcnt=32;
+  unsigned long long int g_fibnum=0;
+  int thread_count = NUM_THREADS, idx=0;
+  double g_fibsum=0.0;
 
   struct timespec start, end;
   double fstart, fend;
 
-  double g_fibsum=0.0;
+  if (argc == 2)
+  {
+      sscanf(argv[1], "%u", &g_fibcnt);
+      printf("will compute Fibonacci of %u\n", g_fibcnt);
+  }
+  else
+      printf("will compute Fibonacci of %u\n", g_fibcnt);
 
-  if(argc == 1)
-  {
-    printf("will add up fib(32)/%lf for %d iterations\n", (double)iterations, iterations);
-  }
-  else if (argc == 2)
-  {
-      sscanf(argv[1], "%d", &iterations);
-      printf("will add up fib(32)/%lf for %d iterations\n", (double)iterations, iterations);
-  }
-  else if (argc == 3)
-  {
-      sscanf(argv[1], "%d", &iterations);
-      sscanf(argv[2], "%u", &g_fibcnt);
-      printf("will add up fib(%u)/%lf for %d iterations\n", g_fibcnt, (double)iterations, iterations);
-  }
 
 
   clock_gettime(CLOCK_MONOTONIC, &start);
+
   // parallel BEGIN
 
-  for(int idx=0; idx < iterations; idx++)
-  {
-      unsigned int fibcnt=g_fibcnt;
-      unsigned int fibnum;
+   for(idx=0; idx < thread_count; idx++)
+   {
+       threadParams[idx].threadIdx=idx;
+       threadParams[idx].thread_count=thread_count;
 
-      fibnum=fibc(fibcnt);
-      g_fibnum=fibnum;
+       pthread_create(&threads[idx],   // pointer to thread descriptor
+                      (void *)0,     // use default attributes
+                      fib_wrapper_thread, // thread function entry point
+                      (void *)&(threadParams[idx]) // parameters to pass in
+                     );
 
-      g_fibsum += (double)fibnum / (double)iterations;
+   }
 
-      //printf("fibnum = %u for thread %d\n", fibnum, omp_get_thread_num());
-  }
+   for(idx=0;idx<NUM_THREADS;idx++)
+   {
+       pthread_join(threads[idx], NULL);
+
+       // Take the fibonacci from any of thread results since they all should be the same
+       g_fibnum = threadParams[idx].local_fibnum;
+
+       g_fibsum += g_fibnum;
+   }
 
   // parallel END
-  clock_gettime(CLOCK_MONOTONIC, &end);
 
+  clock_gettime(CLOCK_MONOTONIC, &end);
 
   fstart=start.tv_sec + (start.tv_nsec / 1000000000.0);
   fend=end.tv_sec + (end.tv_nsec / 1000000000.0);
 
-  printf("fibsum = %lf (%u) in %lf seconds with threads=%d\n", g_fibsum, g_fibnum, fend-fstart, thread_count);
+  printf("g_fibnum=%llu with fibsum of %lf (%lf) in %lf seconds\n", g_fibnum, g_fibsum, (g_fibsum/NUM_THREADS), fend-fstart);
 }
