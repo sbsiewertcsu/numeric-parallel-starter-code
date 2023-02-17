@@ -1,2 +1,3 @@
 1) Basic example of square matrix rotation - DEMO
 2) Basic example of reading in and writing out a PGM file
+3) Basic example of reading all of the file names in a directory (alternative to hard coding card file names)

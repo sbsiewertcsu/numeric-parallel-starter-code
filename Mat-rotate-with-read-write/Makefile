@@ -7,22 +7,25 @@ CFLAGS= -O0 $(INCLUDE_DIRS) $(CDEFS)
 LIBS= 
 
 HFILES= 
-CFILES= matrotate.c
+CFILES= matrotate.c dirlist.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	matrotate
+all:	matrotate dirlist
 
 clean:
 	-rm -f *.o *.d
-	-rm -f matrotate matrotate2
+	-rm -f matrotate dirlist
 
 distclean:
 	-rm -f *.o *.d
-	-rm -f matrotate matrotate2
+	-rm -f matrotate dirlist
 
 matrotate: matrotate.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
+
+dirlist: dirlist.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
 
 depend:
