@@ -180,8 +180,8 @@ double Trap(
    return estimate;
 } /*  Trap  */
 
-#include "ex3accel.h"
-//#include "ex3vel.h"
+//#include "ex4accel.h"
+#include "ex4vel.h"
 #include <stdlib.h>
 
 // table look-up for function profile given and velocity profile determined
@@ -218,8 +218,8 @@ double table_interp(double time)
  */
 double f(double x /* in */) {
    //return x*x;
-   return sin(x);
+   //return sin(x);
 
    // replace this with linear interpolation of any function such as acceleration or velocity from a model
-   // return table_interp(x);
+   return table_interp(x);
 } /* f */

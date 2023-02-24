@@ -41,8 +41,8 @@ double LeftRiemann(double left_endpt, double right_endpt, int rect_count,
    double base_len);    
 
 /* Function we're integrating */
-double ex4_accel(double time);
-double ex4_vel(double time);
+double ex3_accel(double time);
+double ex3_vel(double time);
 double funct_to_integrate(double x); 
 
 int main(void) {
@@ -189,13 +189,13 @@ double LeftRiemann(
  */
 double funct_to_integrate(double x) 
 {
-    return sin(x);
-    //return(ex4_accel(x));
-    //return(ex4_vel(x));
+    //return sin(x);
+    //return(ex3_accel(x));
+    return(ex3_vel(x));
 }
 
 
-double ex4_accel(double time)
+double ex3_accel(double time)
 {
     // computation of time scale for 1800 seconds
     static double tscale=1800.0/(2.0*M_PI);
@@ -208,7 +208,7 @@ double ex4_accel(double time)
 
 
 // determined based on known anti-derivative of ex4_accel function
-double ex4_vel(double time)
+double ex3_vel(double time)
 {
     // computation of time scale for 1800 seconds
     static double tscale=1800.0/(2.0*M_PI);
@@ -220,7 +220,7 @@ double ex4_vel(double time)
 
 
 // determined based on known anti-derivative of ex4_vel function
-double ex4_pos(double time)
+double ex3_pos(double time)
 {
     // computation of time scale for 1800 seconds
     static double tscale=1800.0/(2.0*M_PI);
