@@ -8,10 +8,10 @@ CDEFS=
 CFLAGS= -g -Wall $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= greetings greetingscpp ranksum ranksumfan ranksumtree ranksumbutterfly ranksumall ranksumreduce ranksumallreduce rankscattergather piseriesreduce
+PRODUCT= greetings greetingscpp ranksum ranksumfan ranksumtree ranksumbutterfly ranksumall ranksumreduce ranksumallreduce rankscattergather piseriesreduce compare
 
 HFILES= 
-CFILES= greetings.c ranksum.c ranksumfan.c ranksumtree.c ranksumbutterfly.c ranksumall.c ranksumreduce.c ranksumallreduce.c rankscattergather.c piseriesreduce.c
+CFILES= greetings.c ranksum.c ranksumfan.c ranksumtree.c ranksumbutterfly.c ranksumall.c ranksumreduce.c ranksumallreduce.c rankscattergather.c piseriesreduce.c compare.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
@@ -54,3 +54,6 @@ greetingscpp:	greetings.cpp
 
 greetings:	greetings.c
 	$(CC) $(CFLAGS) -o $@ greetings.c $(LIB_DIRS)
+
+compare:	compare.c
+	$(CC) $(CFLAGS) -o $@ compare.c $(LIB_DIRS)
