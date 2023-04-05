@@ -5,8 +5,8 @@
 
 //#define MAX_DIM (10000) // can cause a linking error, e.g., on ecc-linux
 
-#define MAX_DIM (1000)
-#define DEFAULT_DIM (1000)
+#define MAX_DIM (2000)
+#define DEFAULT_DIM (2000)
 
 // Function Prototypes
 void  matrix_print (int nr, int nc, double A[][MAX_DIM]);
@@ -165,6 +165,11 @@ void vmult(int n, double A[][MAX_DIM], double x[MAX_DIM])
         // which should be the RHS
         for (col_jdx=0; col_jdx < n; ++col_jdx)
         {
+            // A is the coefficient matrix
+            // x is  the solution column vector (here it is a row vector)
+            //
+            // We index x with the column index because a column vector is the 
+            // transpose of a row vector.
             temp += A[row_idx][col_jdx] * x[col_jdx];
         }
         rhs[row_idx]=temp;
