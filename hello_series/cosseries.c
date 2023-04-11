@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 
   if (argc < 4)
   {
-    printf ( "usage: expseries x <number threads> <iterations> \n " );
+    printf ( "usage: cosseries x <number threads> <iterations>\n " );
     exit(-1);
   }
   else
@@ -35,6 +35,11 @@ int main(int argc, char* argv[])
     sscanf(argv[1], "%lf", &x);
     sscanf(argv[2], "%d", &thread_count);
     sscanf(argv[3], "%d", &iterations);
+
+    printf("x=%lf, cos(x)=%lf, n periods = %d, adjusted x = %lf\n", x, cos(x), (unsigned int)(x/(2.0*M_PI)), (x - (double)((unsigned int)(x/(2.0*M_PI)))*M_PI));
+
+    x = x - (double)((unsigned int)(x/(2.0*M_PI)))*M_PI;
+
   }
 
   printf("DBL_EPSILON = %le\n", DBL_EPSILON);

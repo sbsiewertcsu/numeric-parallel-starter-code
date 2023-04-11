@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
   if (argc < 4)
   {
-    printf ( "usage: expseries x <number threads> <iterations> \n " );
+    printf ( "usage: expseries x <number threads> <iterations>\n " );
     exit(-1);
   }
   else
