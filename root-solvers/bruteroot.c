@@ -39,15 +39,16 @@ double f(double x)
 
 int main(void)
 {
-    unsigned int itr, maxitr, rootfound=0, total_itr=0;
+    unsigned long long itr, maxitr, total_itr=0;
+    unsigned int rootfound=0;
     double max_error=0.0;
     double step=2.0*DBL_EPSILON, x0, x1, xfinal, sign_changed=0, start;
 
     printf("\nEnter x0 start, xfinal end, step size and maximum iterations to search for each root on sub-interval of 1.0\n");
-    scanf("%lf %lf %lf %d", &x0, &xfinal, &step, &maxitr);
+    scanf("%lf %lf %lf %lld", &x0, &xfinal, &step, &maxitr);
     start=x0;
 
-    printf("\nWill step at %lf from %lf to %lf to find each root, with %d total search steps\n\n",
+    printf("\nWill step at %lf from %lf to %lf to find each root, with %lld total search steps\n\n",
            step, x0, xfinal, (((unsigned)(xfinal-x0)+1)*maxitr));
     printf("Starting search:\n");
 
@@ -63,7 +64,7 @@ int main(void)
 
             if(sign_changed < 0.0)
             {
-                printf("\n*** Sign change at %3d iterations: estimated root at %16.15lf, f[root]=%16.15lf\n",
+                printf("\n*** Sign change at %lld iterations: estimated root at %16.15lf, f[root]=%16.15lf\n",
                        total_itr+itr, (x1+x0)/2.0, f((x1+x0)/2.0));
                 if(fabs(f((x1+x0)/2.0)) > max_error) max_error=fabs(f((x1+x0)/2.0));
                 rootfound++;
@@ -80,7 +81,7 @@ int main(void)
 
         // Indicate searching progress
         printf(".");
-        //printf("Continuing serach after %d total iterations\n", total_itr);
+        fflush(stdout);
 
         x0=x1;
         itr=1;
@@ -91,11 +92,11 @@ int main(void)
 
     if(!rootfound)
     {
-        printf("After %d iterations: No solution (zero crossing) found on interval %lf to %lf\n", itr, start, x0);
+        printf("After %lld iterations: No solution (zero crossing) found on interval %lf to %lf\n", itr, start, x0);
     }
     else
     {
-        printf("%d roots found on interval %lf to %lf, with max error=%lf in %d iterations\n",
+        printf("%d roots found on interval %lf to %lf, with max error=%lf in %lld iterations\n",
                rootfound, start, x0, max_error, total_itr);
     }
 
