@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <float.h>
+#include <time.h>
 
 // First model a function with desmos.com for example to "see" roots
 // 
@@ -41,8 +42,10 @@ int main(void)
 {
     unsigned long long itr, maxitr, total_itr=0;
     unsigned int rootfound=0;
-    double max_error=0.0;
+    double max_error=0.0, fstart=0.0, fstop=0.0;
     double step=2.0*DBL_EPSILON, x0, x1, xfinal, sign_changed=0, start;
+    struct timespec start_t, stop_t;
+
 
     printf("\nEnter x0 start, xfinal end, step size and maximum iterations to search for each root on sub-interval of 1.0\n");
     scanf("%lf %lf %lf %lld", &x0, &xfinal, &step, &maxitr);
@@ -51,6 +54,9 @@ int main(void)
     printf("\nWill step at %lf from %lf to %lf to find each root, with %lld total search steps\n\n",
            step, x0, xfinal, (((unsigned)(xfinal-x0)+1)*maxitr));
     printf("Starting search:\n");
+    clock_gettime(CLOCK_MONOTONIC, &start_t);
+    fstart = (double)start_t.tv_sec  + (double)start_t.tv_nsec / 1000000000.0;
+
 
     do // while there are potentially more roots on the search interval
     {
@@ -88,7 +94,9 @@ int main(void)
 
     } while((x0 <  xfinal) && (itr < maxitr)); // exit outter loop search for all roots if end reached or max iterations
 
-    printf("\n\nSearch Results:\n");
+    clock_gettime(CLOCK_MONOTONIC, &stop_t);
+    fstop = (double)stop_t.tv_sec  + (double)stop_t.tv_nsec / 1000000000.0;
+    printf("\n\nSearch Results (competed in %lf milliseconds):\n", (fstop-fstart)*1000.0);
 
     if(!rootfound)
     {
