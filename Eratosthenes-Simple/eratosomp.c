@@ -71,7 +71,7 @@ void print_isprime(void)
 
 int main(void)
 {
-    int thread_count=4;
+    int thread_count=1;
     unsigned long long int i, j;
     unsigned long long int p=2;
     unsigned int cnt=0;
