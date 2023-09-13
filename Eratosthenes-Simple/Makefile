@@ -3,7 +3,8 @@ LIB_DIRS =
 CC=gcc
 
 CDEFS=
-CFLAGS= -O0 -g -fopenmp $(INCLUDE_DIRS) $(CDEFS)
+#CFLAGS= -O0 -g -fopenmp $(INCLUDE_DIRS) $(CDEFS)
+CFLAGS= -O2 -g -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 LIBS= 
 
 HFILES= 

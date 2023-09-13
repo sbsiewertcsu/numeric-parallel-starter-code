@@ -18,6 +18,10 @@
 //unsigned char isprime[(MAX/(CODE_LENGTH))+1];
 unsigned char *isprime;
 
+// List of the primes - assumes that at most 10% of numbers are prime
+#define MAX_PRIMES (100000000)
+unsigned int primelist[MAX_PRIMES];
+
 int chk_isprime(unsigned long long int i)
 {
     unsigned long long int idx;
@@ -71,11 +75,13 @@ void print_isprime(void)
 
 int main(void)
 {
-    int thread_count=1;
+    int thread_count=8;
     unsigned long long int i, j;
     unsigned long long int p=2;
     unsigned int cnt=0;
+    unsigned int list_cnt=0;
     unsigned long long int thread_idx=0;
+    unsigned long long int sp=0;
 	int idx=0, ridx=0, primechk;
 
     printf("max uint = %u\n", (0xFFFFFFFF));
@@ -110,7 +116,10 @@ int main(void)
         //printf("isprime=%d\n", primechk); 
     }
 
-    // will all be TRUE here or 0xFF
+    // will all be TRUE here or 0xFF for all except 0 & 1 so  0xFC for index=0
+    //
+    // for all other number bit array locations, we start out assuming they are prime,
+    // so bit=1, and as we mark them non-prime, we flip that bit to bit=0
     //print_isprime();
 
 
@@ -136,14 +145,33 @@ int main(void)
             if(chk_isprime(j)) 
             { 
                 p=j; 
-                break;  // issue for speed-up with OpenMP
+                break;  // issue for speed-up with OpenMP, pragma won't work as coded
             }
         }
 
     }
 
 
-#pragma omp parallel for num_threads(thread_count)
+// Note that a reduction on the global cnt variable is necessary for correct results
+//
+// This works because addition is commutative.
+// 
+// A quick review of math properties:
+// 1) Commutative - https://en.wikipedia.org/wiki/Commutative_property, means we can add up
+//    cnt that each thread has a copy of in any order we want by reducing at the end
+// 2) Associative - https://en.wikipedia.org/wiki/Associative_property has to do with order
+//    of the application of operators, which can be disambiguated using parenthesis
+// 3) Distributive - https://en.wikipedia.org/wiki/Distributive_property which has to do with
+//    multiplying a number by a grouped sum, whereby 3x(1+2)=3+6=9 for example.
+//
+// In parallel programming, we often make use of the commutative property to "reduce" results
+// where partial results are determined by each thread and must be merged into a single result.
+//
+// Examples similar to summing are MAX and MIN. Reduction only works for operations that are in
+// fact commutative (can be applied to results arranged in any order).  If this is not true, the
+// results may be corrupted and we might need to use omp critical to serialize.
+//
+#pragma omp parallel for num_threads(thread_count) reduction(+:cnt)
     for(i=0; i<MAX+1; i++)
     {
         if(chk_isprime(i))
@@ -153,7 +181,39 @@ int main(void)
         }
     }
 
+    // Can't thread this as the cnt is global and indexes the list of primes
+    // unless we use omp critical, but that would serialize
+    // for demonstration we just do the loop again with no threading and save off
+    // each prime.
+    //
+    // For time comparison, comment this out, but for use with factoring a large
+    // SP = P1 x P2, the list of primes is necessary for search.
+    //
+    for(i=0; i<MAX+1; i++)
+    {
+        if(chk_isprime(i))
+        { 
+            primelist[list_cnt]=i;
+            list_cnt++; 
+            //printf("i=%llu\n", i); 
+        }
+    }
+
+
     printf("\nNumber of primes [0..%llu]=%u\n\n", MAX, cnt);
+
+    printf("List of primes (skipping by millions) is:\n");
+    for(i=0; i<cnt+1; i++)
+        if((i % 1000000) == 0) printf("%u\n", primelist[i]);
+
+    // Let's now compute an example large semi-prime
+    sp = ((unsigned long long)primelist[1000000]) * ((unsigned long long)primelist[50000000]);
+
+    printf("Example large SP is %llu, factored into p1=%u, p2=%u\n", 
+           sp, primelist[1000000], primelist[50000000]);
+
+    printf("Now we could use the primelist and search for the first prime where (sp mod p1) == 0\n");
+    printf("Once we find the first zero modulo, then p2 = sp / p1 and we have our factors!\n");
 
     return (i);
 }
