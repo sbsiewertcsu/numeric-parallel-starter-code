@@ -71,6 +71,7 @@ void print_isprime(void)
 
 int main(void)
 {
+    int thread_count=4;
     unsigned long long int i, j;
     unsigned long long int p=2;
     unsigned int cnt=0;
@@ -96,11 +97,13 @@ int main(void)
     // 0 & 1 not prime, 2 is prime, 3 is prime, assume others prime to start
     isprime[0]=0xFC; 
 
+#pragma omp parallel for num_threads(thread_count)
     for(i=2; i<MAX; i++) 
     {
         set_isprime(i, 1); 
     }
   
+#pragma omp parallel for num_threads(thread_count)
     for(i=0; i<MAX; i++) 
     { 
         primechk = chk_isprime(i);
@@ -120,6 +123,7 @@ int main(void)
         // simple to compose into a grid of invalidations
         //
 
+#pragma omp parallel for num_threads(thread_count)
         for(j=2*p; j<MAX+1; j+=p)
         {
             //printf("j=%llu\n", j);
@@ -138,6 +142,8 @@ int main(void)
 
     }
 
+
+#pragma omp parallel for num_threads(thread_count)
     for(i=0; i<MAX+1; i++)
     {
         if(chk_isprime(i))

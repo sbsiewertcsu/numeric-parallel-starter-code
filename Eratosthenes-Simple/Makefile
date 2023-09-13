@@ -3,7 +3,7 @@ LIB_DIRS =
 CC=gcc
 
 CDEFS=
-CFLAGS= -O0 -g $(INCLUDE_DIRS) $(CDEFS)
+CFLAGS= -O0 -g -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 LIBS= 
 
 HFILES= 
@@ -12,11 +12,14 @@ CFILES= eratos.c
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	eratos
+all:	eratos eratosomp
 
 clean:
 	-rm -f *.o *.d
-	-rm -f eratos
+	-rm -f eratos eratosomp
+
+eratosomp: eratosomp.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
 
 eratos: eratos.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
