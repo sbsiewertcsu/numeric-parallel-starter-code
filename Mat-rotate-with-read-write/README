@@ -1,6 +1,7 @@
 1) Basic example of square matrix rotation - DEMO
 2) Basic example of reading in and writing out a PGM file
 3) Basic example of reading all of the file names in a directory (alternative to hard coding card file names)
+4) Alternate example to modify the header to output a SQUARE 920x920 card image, which can help with the verification of proper rotation for the symmetric playing cards.
 
 NOTE: the "fast" versions of the read and write read or write a whole row of pixel data in one I/O call, which for us, will be almost 100x times faster for 920x690 or 690x920 images fit into a 920x920 square array.
 

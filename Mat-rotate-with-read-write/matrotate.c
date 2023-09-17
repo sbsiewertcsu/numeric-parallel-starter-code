@@ -29,6 +29,7 @@ void demoRotate(int square_size);
 
 // PGM file utilities with simple byte by byte I/O
 void readPGMHeaderSimple(int fdin, char *header);
+void printPGMHeader(char *header);
 void readPGMDataSimple(int fdin, unsigned char Mat[][SQDIM]);
 void writePGMSimple(int fdout, char *header, unsigned char Mat[][SQDIM]);
 
@@ -36,6 +37,7 @@ void writePGMSimple(int fdout, char *header, unsigned char Mat[][SQDIM]);
 void readPGMHeaderFast(int fdin, char *header);
 void readPGMDataFast(int fdin, unsigned char Mat[][SQDIM]);
 void writePGMFast(int fdout, char *header, unsigned char Mat[][SQDIM]);
+void writePGMFastSquare(int fdout, char *header, unsigned char Mat[][SQDIM]);
 
 
 int main(int argc, char *argv[])
@@ -64,8 +66,9 @@ int main(int argc, char *argv[])
          }
     }
 
-    // Determine playing card type based upon filename.  Using filename convention is the most reasonable
-    // approach, otherwise we could use color as a indicator with PPM.
+    // Determine playing card type based upon filename.  Using filename convention is the most
+    // simple and reasonable approach, otherwise we could use color and markings as indicators
+    // with PPM, but this is not necessary and is more of an image processing challenge.
     //     Value: A=Ace, 2-10, J=Jack, Q=Queen, K=King
     //     Suit:  D=Diamonds, H=Hearts, S=Spades, C=Clubs
     //     if the PGM is for a club or spade (black and white), note that it must be rotated RIGHT
@@ -78,9 +81,15 @@ int main(int argc, char *argv[])
     readPGMDataFast(fdin, P);
     close(fdin);
 
+    // Update header to be square 920x920
+    header[26]='9'; header[27]='2'; header[28]='0';
+    printf("\nUpdated SQUARE HEADER:\n");
+    printPGMHeader(header);
+
     // write out modified PGM data here
     //writePGMSimple(fdout, header, P);
-    writePGMFast(fdout, header, P);
+    //writePGMFast(fdout, header, P);
+    writePGMFastSquare(fdout, header, P);
     close(fdout);
 
     printf("Read and then write of unmodified PGM done\n");
@@ -186,6 +195,11 @@ void readPGMHeaderSimple(int fdin, char *header)
 
 }
 
+void printPGMHeader(char *header)
+{
+    printf("%s", header);
+}
+
 void readPGMDataSimple(int fdin, unsigned char Mat[][SQDIM])
 {
     int bytesRead, bytesLeft, bytesWritten;
@@ -220,7 +234,7 @@ void readPGMDataFast(int fdin, unsigned char Mat[][SQDIM])
     // read in whole rows at a time to speed up
     for(rowIdx = 0; rowIdx < DIMY; rowIdx++)
     {
-        bytesRead=read(fdin, (void *)&P[rowIdx][0], DIMX-1);
+        bytesRead=read(fdin, (void *)&P[rowIdx][0], DIMX);
     }
 
 }
@@ -266,7 +280,32 @@ void writePGMFast(int fdout, char *header, unsigned char Mat[][SQDIM])
 
     for(rowIdx = 0; rowIdx < DIMY; rowIdx++)
     {
-        bytesWritten=write(fdout, (void *)&P[rowIdx][0], DIMX-1);
+        bytesWritten=write(fdout, (void *)&P[rowIdx][0], DIMX);
+    }
+}
+
+void writePGMFastSquare(int fdout, char *header, unsigned char Mat[][SQDIM])
+{
+    int bytesRead, bytesLeft, bytesWritten;
+    int rowIdx, colIdx;
+
+    printf("Would write out a header and data here\n");
+    bytesLeft=38;
+
+    bytesWritten=write(fdout, (void *)header, bytesLeft);
+    
+    printf("wrote %d bytes for header\n", bytesWritten);
+
+    // now write out all of the data
+    bytesWritten=0;
+
+    for(rowIdx = 0; rowIdx < SQDIM; rowIdx++)
+    {
+        bytesWritten=write(fdout, (void *)&P[rowIdx][0], SQDIM);
+        if(bytesWritten < SQDIM)
+        {
+            printf("ERROR in write\n"); exit(-1);
+        }
     }
 }
 
