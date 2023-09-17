@@ -1,3 +1,18 @@
 1) Basic example of square matrix rotation - DEMO
 2) Basic example of reading in and writing out a PGM file
 3) Basic example of reading all of the file names in a directory (alternative to hard coding card file names)
+
+NOTE: the "fast" versions of the read and write read or write a whole row of pixel data in one I/O call, which for us, will be almost 100x times faster for 920x690 or 690x920 images fit into a 920x920 square array.
+
+So, read and write of a single card that takes say 3 seconds, will take maybe 0.03 or less, so all 52 cards will go from taking 156 seconds to 1.56 seconds!
+
+To make this even faster, read in all 52 cards at once into a triple dimension array.
+
+You have plent of memory to to do this:
+
+PGM: 920x920x1 x 52 cards = 42 Mbytes
+PPM: 920x920x3 x 52 cards = 126 Mbytes
+
+So, you can for example combine dirlist code with the fast I/O read and write PGM code and read and write all cards found in /tmp/mycards!
+
+This will get you around the I/O bottleneck so you can complete the whole exercise of rotating each and every playing card in less than 3 seconds!

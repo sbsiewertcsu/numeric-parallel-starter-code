@@ -74,11 +74,13 @@ int main(int argc, char *argv[])
 
     // read in the PGM data here
     readPGMHeaderSimple(fdin, header);
-    readPGMDataSimple(fdin, P);
+    //readPGMDataSimple(fdin, P);
+    readPGMDataFast(fdin, P);
     close(fdin);
 
     // write out modified PGM data here
-    writePGMSimple(fdout, header, P);
+    //writePGMSimple(fdout, header, P);
+    writePGMFast(fdout, header, P);
     close(fdout);
 
     printf("Read and then write of unmodified PGM done\n");
@@ -204,6 +206,26 @@ void readPGMDataSimple(int fdin, unsigned char Mat[][SQDIM])
 
 }
 
+
+void readPGMDataFast(int fdin, unsigned char Mat[][SQDIM])
+{
+    int bytesRead, bytesLeft, bytesWritten;
+    int rowIdx, colIdx;
+
+    printf("Reading PGM data here\n");
+
+    // now read in all of the data
+    bytesRead=0;
+
+    // read in whole rows at a time to speed up
+    for(rowIdx = 0; rowIdx < DIMY; rowIdx++)
+    {
+        bytesRead=read(fdin, (void *)&P[rowIdx][0], DIMX-1);
+    }
+
+}
+
+
 void writePGMSimple(int fdout, char *header, unsigned char Mat[][SQDIM])
 {
     int bytesRead, bytesLeft, bytesWritten;
@@ -216,16 +238,38 @@ void writePGMSimple(int fdout, char *header, unsigned char Mat[][SQDIM])
     
     printf("wrote %d bytes for header\n", bytesWritten);
 
-    // now read in all of the data
+    // now write out all of the data
     bytesWritten=0;
 
-    for(rowIdx = 0; rowIdx < 920; rowIdx++)
+    for(rowIdx = 0; rowIdx < DIMY; rowIdx++)
     {
-        for(colIdx = 0; colIdx < 690; colIdx++)
+        for(colIdx = 0; colIdx < DIMX; colIdx++)
             bytesWritten=write(fdout, (void *)&P[rowIdx][colIdx], 1);
             bytesWritten++;
     }
 }
+
+void writePGMFast(int fdout, char *header, unsigned char Mat[][SQDIM])
+{
+    int bytesRead, bytesLeft, bytesWritten;
+    int rowIdx, colIdx;
+
+    printf("Would write out a header and data here\n");
+    bytesLeft=38;
+
+    bytesWritten=write(fdout, (void *)header, bytesLeft);
+    
+    printf("wrote %d bytes for header\n", bytesWritten);
+
+    // now write out all of the data
+    bytesWritten=0;
+
+    for(rowIdx = 0; rowIdx < DIMY; rowIdx++)
+    {
+        bytesWritten=write(fdout, (void *)&P[rowIdx][0], DIMX-1);
+    }
+}
+
 
 void demoRotate(int square_size)
 {

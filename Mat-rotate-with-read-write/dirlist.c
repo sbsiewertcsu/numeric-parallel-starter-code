@@ -17,14 +17,15 @@ int main()
 {
     struct dirent *dp;
     char *fullpath;
-    const char *path="./"; // Directory target
+    const char *path="./../cards_3x4_ppm"; // Directory target
     DIR *dir = opendir(path); // Open the directory - dir contains a pointer to manage the dir
 
+    printf("\nUse of readdir to find all card file names in a directory\n");
     while (dp=readdir(dir)) // if dp is null, there's no more content to read
     {
 
         // Simple name
-        printf("%s\n", dp->d_name);
+        // printf("%s\n", dp->d_name);
 
         // Full path name
         fullpath = pathcat(path, dp->d_name);
@@ -35,8 +36,9 @@ int main()
 
     closedir(dir); // close the handle (pointer)
 
-    // Now demonstrated listing all hard-coded array card file names
+    // Now here we demonstrate listing all hard-coded array card file names
     //
+    printf("\n\nSimple use of a pre-filled array of card names rather than directory read\n");
     for(int idx=0; idx < 52; idx++)
         printf("%s\n", cardfilelist[idx]);
 
