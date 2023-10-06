@@ -20,7 +20,7 @@ long int incThread(void)
 
     for(i=0; i<COUNT; i++)
     {
-//#pragma omp critical
+#pragma omp critical
         gsum=gsum+i;
 
         lsum=lsum+i;
@@ -41,7 +41,7 @@ long int decThread(void)
 
     for(i=0; i<COUNT; i++)
     {
-//#pragma omp critical
+#pragma omp critical
         gsum=gsum-i;
 
         lsum=lsum-i;
@@ -59,7 +59,6 @@ int main (int argc, char *argv[])
    int thread_count=8;
    long int suminc=0, sumdec=0;
 
-//#pragma omp parallel num_threads(thread_count)
 #pragma omp parallel num_threads(thread_count) reduction(+: gsumreduce)
    {
       suminc += incThread();
