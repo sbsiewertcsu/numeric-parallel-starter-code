@@ -4,14 +4,14 @@ LIB_DIRS =
 CC = gcc
 
 CDEFS=
-CFLAGS= -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
+CFLAGS= -O0 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 CFLAGS2= -O0 -g -Wall $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= hello_omp hello_pthread omppi fibsum fib piseries piseriesompfunct
+PRODUCT= hello_omp hello_pthread omppi fibsum fib piseries piseriesompfunct incdec
 
 HFILES= 
-CFILES= hello_omp.c omppi.c fibsum.c fib.c piseries.c piseriesompfunct.c
+CFILES= hello_omp.c omppi.c fibsum.c fib.c piseries.c piseriesompfunct.c incdec.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
@@ -21,6 +21,9 @@ all:	${PRODUCT}
 clean:
 	-rm -f *.o *.NEW *~
 	-rm -f ${PRODUCT} ${DERIVED} ${GARBAGE}
+
+incdec:	incdec.c
+	$(CC) $(CFLAGS) -fopenmp -o $@ incdec.c
 
 fib:	fib.c
 	$(CC) $(CFLAGS) -o $@ fib.c
