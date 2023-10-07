@@ -36,6 +36,7 @@ void *incThread(void *threadp)
         agsum=agsum+i;
         printf("Increment thread idx=%d, gsum=%d,  agsum=%d\n", threadParams->threadIdx, gsum, agsum);
     }
+    return (void *)0;
 }
 
 
@@ -50,6 +51,7 @@ void *decThread(void *threadp)
         agsum=agsum-i;
         printf("Decrement thread idx=%d, gsum=%d, agsum=%d\n", threadParams->threadIdx, gsum, agsum);
     }
+    return (void *)0;
 }
 
 
@@ -57,7 +59,6 @@ void *decThread(void *threadp)
 
 int main (int argc, char *argv[])
 {
-   int rc;
    int i=0;
 
    threadParams[i].threadIdx=i;
