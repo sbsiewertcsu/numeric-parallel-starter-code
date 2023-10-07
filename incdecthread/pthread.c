@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <sched.h>
 
+#include <stdatomic.h>
+
 #define COUNT  1000
 
 typedef struct
@@ -20,6 +22,9 @@ threadParams_t threadParams[2];
 // Unsafe global
 int gsum=0;
 
+// Safer ATOMIC global
+atomic_int agsum=0;
+
 void *incThread(void *threadp)
 {
     int i;
@@ -28,7 +33,8 @@ void *incThread(void *threadp)
     for(i=0; i<COUNT; i++)
     {
         gsum=gsum+i;
-        printf("Increment thread idx=%d, gsum=%d\n", threadParams->threadIdx, gsum);
+        agsum=agsum+i;
+        printf("Increment thread idx=%d, gsum=%d,  agsum=%d\n", threadParams->threadIdx, gsum, agsum);
     }
 }
 
@@ -41,7 +47,8 @@ void *decThread(void *threadp)
     for(i=0; i<COUNT; i++)
     {
         gsum=gsum-i;
-        printf("Decrement thread idx=%d, gsum=%d\n", threadParams->threadIdx, gsum);
+        agsum=agsum-i;
+        printf("Decrement thread idx=%d, gsum=%d, agsum=%d\n", threadParams->threadIdx, gsum, agsum);
     }
 }
 
