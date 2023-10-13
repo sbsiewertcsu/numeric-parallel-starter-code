@@ -14,7 +14,8 @@
 // a second.
 
 //#include "ex3accel.h"
-#include "ex6lin.h"
+//#include "ex6lin.h"
+#include "ex4.h"
 
 // table look-up for acceleration profile given and velocity profile determined
 //
@@ -63,7 +64,7 @@ void main(int argc, char *argv[])
     //
     printf("Number of values in profile = %lu for 1801 expected\n", sizeof(DefaultProfile)/sizeof(double));
 
-    for(idx=0; idx <= (STEPS_PER_SEC*1800); idx++)
+    for(idx=0; idx <= (steps_per_sec*1800); idx++)
     {
         // time you would use in your integrator and faccel(time) is the fuction to integrate
         time = 0.0 + (dt*(double)idx);
