@@ -17,10 +17,15 @@
 * LAST REVISED: 07/03/19
 *
 * Tested to be used as an example in CSCI 551
-* Sam Siewert, 10/17/23
+* From - https://hpc-tutorials.llnl.gov/mpi/, https://hpc-tutorials.llnl.gov/mpi/examples/mpi_array.c
+
+* Revisions by Sam Siewert, 10/17/23
 *
 * 1) Warning removed - unused "rc" integer in main removed
 * 2) Basic format refactoring
+*
+* Potentially useful example for the distribution of an array of values used as an LUT in a divide and
+* conquer integration problem.
 *
 ****************************************************************************/
 #include "mpi.h"
