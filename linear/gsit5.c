@@ -23,7 +23,7 @@
 #include<math.h>
 
 // Note that this GSIT demonstration only works for specific dimension problems
-#define DIM (2)
+#define DIM (5)
 
 /* Arrange systems of linear
    equations to be solved in
@@ -31,19 +31,26 @@
    and form equation for each
    unknown and define here
 */
-/* In this example we are solving
-   5x - 3y = 25
-   3x + 10y = 8
 
-   Isolation by hand Ans: x=1, y=-1, z=1
+/* Larger system test
+   c1 = (50.0/6.0 + c3*(1.0/6.0))
+   c2 = c1
+   c3 = 160.0/9.0 + c2*(1.0/9.0))
+   c4 = c2*(1.0/11.0) + c3*(8.0/11.0) - c4  + c5*(2.0/11.0)
+   c5 = c1*(3.0/4.0) + c2*(1.0/4.0)
 */
-#define f1(x,y)  (25+3*y)/5
-#define f2(x,y)  (8-3*x)/10
+#define f1(c1,c2,c3,c4,c5)  (50.0 + c3)/6.0
+#define f2(c1,c2,c3,c4,c5)  (c1)
+#define f3(c1,c2,c3,c4,c5)  (160.0 + c2)/9.0
+#define f4(c1,c2,c3,c4,c5)  (c2 + c3*8.0 +2*c5)/11.0
+#define f5(c1,c2,c3,c4,c5)  (3.0*c1 + c2)/4.0
 
 // For verification, enter the coefficients into this array to match equations
-double a[DIM][DIM] = {{5.0, -3.0}, {3.0, 10.0}};
-double b[DIM] = {25.0, 8.0};
-double x[DIM]={0.0, 0.0};
+double a[DIM][DIM] = {{6.0, 0.0, -1.0, 0.0, 0.0}, {-3.0, 3.0, 0.0, 0.0, 0.0}, {0.0, -1.0, 9.0, 0.0, 0.0}, {0.0, -1.0, -8.0, 11.0, -2.0}, {-3.0, -1.0, 0.0, 0.0, 4.0}};
+double b[DIM] = {50.0, 0.0, 160.0, 0.0, 0.0};
+double x[DIM]={0.0, 0.0, 0.0, 0.0, 0.0};
+//double sol[DIM]={3.0, -2.5, 7.0};
+double sol[DIM]={11.5094, 11.5094, 19.0566, 16.9982, 11.5094};
 int n = DIM;
 
 
@@ -53,7 +60,7 @@ void vector_print(int nr, double *x);
 
 int main(void)
 {
-    double x0=0, y0=0, x1, y1, e1, e2, e;
+    double x0=0, y0=0, z0=0, a0=0, b0=0, x1, y1, z1, a1, b1, e1, e2, e3, e4, e5, e;
     int count=1;
 
     printf("Enter tolerable error:\n");
@@ -69,29 +76,43 @@ int main(void)
     do
     {
         /* Calculation */
-        x1 = f1(x0,y0);
-        y1 = f2(x1,y0);
+        x1 = f1(x0,y0,z0, a0, b0);
+        y1 = f2(x1,y0,z0, a0, b0);
+        z1 = f3(x1,y1,z0, a0, b0);
+        a1 = f4(x1,y1,z1, a0, b0);
+        b1 = f5(x1,y1,z1, a1, b0);
 
         /* Error */
         e1 = fabs(x0-x1);
         e2 = fabs(y0-y1);
+        e3 = fabs(z0-z1);
+        e4 = fabs(a0-a1);
+        e5 = fabs(b0-b1);
 
-        printf("%d\t%0.4f\t%0.4f, e1=%16.15f, e2=%16.15ff\n",count, x1,y1,e1,e2);
+        printf("%d\t%0.4f\t%0.4f\t%0.4f\t%0.4f\t%04f, e1=%16.15f, e2=%16.15f, e3=%16.15f, e4=%16.15f, e5=%16.15f\n",count, x1,y1,z1,a1,b1,e1,e2,e3,e4,e5);
         count++;
 
         /* Set value for next iteration */
         x0 = x1;
         y0 = y1;
+        z0 = z1;
+        a0 = a1;
+        b0 = b1;
 
     //} while((e1>e) && (e2>e) && (e3>e));
-    } while((e1>e) || (e2>e));
+    } while((e1>e) || (e2>e) || (e3>e) || (e4>e) || (e5>e));
 
-    printf("\nGSIT Solution: x=%0.3f and y=%0.3f\n\n",x1,y1);
+    printf("\nGSIT Solution: x=%0.3f, y=%0.3f z = %0.3f, a = %0.3f, b=%03f\n\n",x1,y1,z1,a1,b1);
+    printf("Math Tool Solution:\n");
+    vector_print(n, sol);
 
     // Additional verification steps to assess error in answer.
     //
     x[0] = x1;
     x[1] = y1;
+    x[2] = z1;
+    x[3] = a1;
+    x[4] = b1;
 
     verify(a, b, x, n);
 
