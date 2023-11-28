@@ -26,10 +26,10 @@ pthread2: pthread2.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o -lpthread
 
 pthread3: pthread3.o
-	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o -lpthread
 
 pthread4: pthread4.o
-	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o -lpthread
 
 depend:
 
