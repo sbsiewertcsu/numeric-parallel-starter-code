@@ -1,1 +1,17 @@
-This code is some basic OpenMP starter code
+This set of starter/example programs uses OpenMP (built-into the GCC compiler) and Pthreads (using POSIX library).
+
+The focus is on OpenMP compiler pragma directives to generate threading to make C/C++ blocks execute in parallel.
+
+The POSIX thread example is provided to show a contrast between the abstraction of OpenMP and the more explicity use of the
+POSIX threading library.
+
+OpenMP makes "blocks", code between curly braces "{ code }" in C/C++ execute as concurrent threads (in parallel if you have multiple CPU cores).
+
+The Fibonacci sequences are perhaps the most interesting and demonstrate how it can be a challenge to make even code that appears
+simple into a parallel version that runs faster.
+
+For more details on Fibonacci and issues including loop-carried dependencies and dynamic programming see the Pacheco text:
+
+1) Page 240 - Introduction to fibonacci sequence and explanation of loop-carried dependency
+2) Page 271 to 273 -  Fibonacci sequence with OpenMP tasking
+
