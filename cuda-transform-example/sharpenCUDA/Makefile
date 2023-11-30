@@ -104,8 +104,6 @@ sharpen_gpu.o: sharpen_gpu.cu
 
 sharpen_gpu: sharpen_gpu.o
 	$(GCC) $(CCFLAGS) -o $@ $+ $(LDFLAGS) $(EXTRA_LDFLAGS)
-	mkdir -p ../../bin/$(OSLOWER)/$(TARGET)
-	cp $@ ../../bin/$(OSLOWER)/$(TARGET)
 
 run: build
 	./sharpen_gpu
