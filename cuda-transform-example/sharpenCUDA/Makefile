@@ -33,6 +33,8 @@
 #
 ################################################################################
 
+# Update by Sam Siewert, 11/29/23 for CSU cscigpu and Jetson Nano use
+#
 # OS Name (Linux or Darwin)
 OSUPPER = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
 OSLOWER = $(shell uname -s 2>/dev/null | tr [:upper:] [:lower:])
@@ -55,20 +57,18 @@ endif
 # Flags to detect either a Linux system (linux) or Mac OSX (darwin)
 DARWIN = $(strip $(findstring DARWIN, $(OSUPPER)))
 
-# Location of the CUDA Toolkit binaries and libraries
-#CUDA_PATH       ?= /usr/local/cuda-5.0
-CUDA_PATH       ?= /usr/local/cuda-11.4
-CUDA_INC_PATH   ?= $(CUDA_PATH)/include
+# Location of the CUDA Toolkit binaries and libraries on cscigpu
+CUDA_PATH       ?= /usr
+CUDA_INC_PATH   ?= /usr/include
 CUDA_BIN_PATH   ?= $(CUDA_PATH)/bin
-ifneq ($(DARWIN),)
-  CUDA_LIB_PATH  ?= $(CUDA_PATH)/lib
-else
-  ifeq ($(OS_SIZE),32)
-    CUDA_LIB_PATH  ?= $(CUDA_PATH)/lib
-  else
-    CUDA_LIB_PATH  ?= $(CUDA_PATH)/lib64
-  endif
-endif
+CUDA_LIB_PATH   ?= $(CUDA_PATH)/lib/nvidia-cuda-toolkit
+
+# Location of the CUDA Toolkit binaries and libraries on Jetson Nano 2g
+#CUDA_PATH       ?= /usr/local/cuda-11.4
+#CUDA_INC_PATH   ?= $(CUDA)PATH)/include
+#CUDA_BIN_PATH   ?= $(CUDA_PATH)/bin
+#CUDA_LIB_PATH   ?= $(CUDA_PATH)/lib
+
 
 # Common binaries
 NVCC            ?= $(CUDA_BIN_PATH)/nvcc
@@ -78,34 +78,8 @@ GCC             ?= g++
 EXTRA_NVCCFLAGS ?=
 EXTRA_LDFLAGS   ?=
 
-# CUDA code generation flags
-GENCODE_SM10    := -gencode arch=compute_10,code=sm_10
-GENCODE_SM20    := -gencode arch=compute_20,code=sm_20
-GENCODE_SM30    := -gencode arch=compute_30,code=sm_30 -gencode arch=compute_35,code=sm_35
-GENCODE_FLAGS   := $(GENCODE_SM10) $(GENCODE_SM20) $(GENCODE_SM30)
-
-# OS-specific build flags
-ifneq ($(DARWIN),) 
-      LDFLAGS   := -Xlinker -rpath $(CUDA_LIB_PATH) -L$(CUDA_LIB_PATH) -lcudart
-      CCFLAGS   := -arch $(OS_ARCH) 
-else
-  ifeq ($(OS_SIZE),32)
-      LDFLAGS   := -L$(CUDA_LIB_PATH) -lcudart
-#      CCFLAGS   := -m32
-      CCFLAGS   :=
-  else
-      LDFLAGS   := -L$(CUDA_LIB_PATH) -lcudart
-#      CCFLAGS   := -m64
-      CCFLAGS   :=
-  endif
-endif
-
-# OS-architecture specific flags
-#ifeq ($(OS_SIZE),32)
-#      NVCCFLAGS := -m32
-#else
-#      NVCCFLAGS := -m64
-#endif
+LDFLAGS		:= -L$(CUDA_LIB_PATH) -lcudart
+CCFLAGS   :=
 
 # Debug build flags
 ifeq ($(dbg),1)

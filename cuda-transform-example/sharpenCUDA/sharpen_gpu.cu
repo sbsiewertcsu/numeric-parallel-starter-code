@@ -26,6 +26,9 @@ Credit: Sam Siewert for the original image processing code segment.
 #define nCOL (320)
 #define SIZE (nROW*nCOL)
 #define USE_CUDA
+
+#define DEBUG (0)
+
 // Host memory for image pixels
 uint8_t r[SIZE];
 uint8_t g[SIZE];
@@ -47,7 +50,7 @@ struct timeval tv_start, tv_end;
 // The CUDA Kernel to perform the computations
 __global__ void image_process(uint8_t* r, uint8_t* g, uint8_t* b, size_t rP, size_t gP, size_t bP
 		,uint8_t* newR, uint8_t* newG, uint8_t* newB, size_t newRp, size_t newGp, size_t newBp){
-	int temp,ii;
+	int temp;
 	double K=4.0;
 	double PSF[9] = {-K/8.0, -K/8.0, -K/8.0, -K/8.0, K+1.0, -K/8.0, -K/8.0, -K/8.0, -K/8.0};
 	int th_row=blockIdx.y*blockDim.y+threadIdx.y;
@@ -110,7 +113,7 @@ __global__ void image_process(uint8_t* r, uint8_t* g, uint8_t* b, size_t rP, siz
 #endif
 
 int main(int argc, char *argv[]){
-	int i,j,test;
+	int i;
 	char infilename[128];
 	int infd,outfd;
 	char ppm_header[128];	
@@ -122,7 +125,7 @@ int main(int argc, char *argv[]){
 		printf("Usage:: ./filename imagefile.ppm\nExit\n");
 		return -1;
 	}
-//printf("size of uint8_t is %d\n",sizeof(uint8_t));
+        if(DEBUG) printf("size of uint8_t is %lu\n",sizeof(uint8_t));
 	sprintf(infilename,"%s",argv[1]);
 	infd=open(infilename, O_RDONLY,0644);
 	if(0>infd){
@@ -132,7 +135,9 @@ int main(int argc, char *argv[]){
 	outfd=open("sharpened.ppm",(O_RDWR | O_CREAT),0666);
 	read(infd, ppm_header,38);
 	ppm_header[38]='\0';
-//printf("HEADER is %s",ppm_header);	
+
+        if(DEBUG) printf("HEADER is %s",ppm_header);
+
 	// Read the image
 	for(i=0;i<SIZE;i++){
 		read(infd,(void*)&r[i],1);
@@ -142,40 +147,41 @@ int main(int argc, char *argv[]){
 	close(infd);
 #ifdef USE_CUDA		
 	// Allocate Device memory
-//printf("cuda_ret=%d; success=%d; error=%d\n",cuda_ret,cudaSuccess,cudaErrorMemoryAllocation);
+        if(DEBUG) printf("success=%d; error=%d\n",cudaSuccess,cudaErrorMemoryAllocation);
 	cuda_ret=cudaMallocPitch(&rdev,&rdevp,nCOL*sizeof(uint8_t),nROW);
-//if(cuda_ret==cudaSuccess) printf("CUDA MEM ALLOC SUCCESS\n");
-//else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");
+        if(cuda_ret==cudaSuccess && DEBUG) printf("CUDA MEM ALLOC SUCCESS\n");
+        else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");
 	cuda_ret=cudaMallocPitch(&gdev,&gdevp,nCOL*sizeof(uint8_t),nROW);
-//if(cuda_ret==cudaSuccess) printf("CUDA MEM ALLOC SUCCESS\n");
-//else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");	
+        if(cuda_ret==cudaSuccess && DEBUG) printf("CUDA MEM ALLOC SUCCESS\n");
+        else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");	
 	cuda_ret=cudaMallocPitch(&bdev,&bdevp,nCOL*sizeof(uint8_t),nROW);
-//if(cuda_ret==cudaSuccess) printf("CUDA MEM ALLOC SUCCESS\n");
-//else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");	
+        if(cuda_ret==cudaSuccess && DEBUG) printf("CUDA MEM ALLOC SUCCESS\n");
+        else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");	
 	cuda_ret=cudaMallocPitch(&sharpRdev,&sharpRdevp,nCOL*sizeof(uint8_t),nROW);
-//if(cuda_ret==cudaSuccess) printf("CUDA MEM ALLOC SUCCESS\n");
-//else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");
+        if(cuda_ret==cudaSuccess && DEBUG) printf("CUDA MEM ALLOC SUCCESS\n");
+        else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");
 	cuda_ret=cudaMallocPitch(&sharpGdev,&sharpGdevp,nCOL*sizeof(uint8_t),nROW);
-//if(cuda_ret==cudaSuccess) printf("CUDA MEM ALLOC SUCCESS\n");
-//else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");
+        if(cuda_ret==cudaSuccess && DEBUG) printf("CUDA MEM ALLOC SUCCESS\n");
+        else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");
 	cuda_ret=cudaMallocPitch(&sharpBdev,&sharpBdevp,nCOL*sizeof(uint8_t),nROW);
-//if(cuda_ret==cudaSuccess) printf("CUDA MEM ALLOC SUCCESS\n");
-//else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");
-printf("Pitch sizes: %d %d %d %d %d %d\n",rdevp,gdevp,bdevp,sharpRdevp,sharpGdevp,sharpBdevp);	
+        if(cuda_ret==cudaSuccess && DEBUG) printf("CUDA MEM ALLOC SUCCESS\n");
+        else if(cuda_ret==cudaErrorMemoryAllocation) printf("CUDA MEM ALLOC ERROR\n");
+
+        printf("Pitch sizes: %lu %lu %lu %lu %lu %lu\n",rdevp,gdevp,bdevp,sharpRdevp,sharpGdevp,sharpBdevp);	
 
 	gettimeofday(&tv_start,NULL);
 	// Copy from host to device memory
 	cuda_ret=cudaMemcpy2D((void*)rdev,rdevp,(const void*)r,nCOL*sizeof(uint8_t),nCOL*sizeof(uint8_t),nROW,cudaMemcpyHostToDevice);
-//printf("cudaMemcpy2D returns=%d\n");	
+        if(DEBUG) printf("cudaMemcpy2D returns=%d\n", cuda_ret);	
 	cuda_ret=cudaMemcpy2D((void*)gdev,gdevp,(const void*)g,nCOL*sizeof(uint8_t),nCOL*sizeof(uint8_t),nROW,cudaMemcpyHostToDevice);
-//printf("cudaMemcpy2D returns=%d\n");	
-	cuda_ret=cudaMemcpy2D((void*)bdev,bdevp,(const void*)b,nCOL*sizeof(uint8_t),nCOL*sizeof(uint8_t),nROW,cudaMemcpyHostToDevice);	
-//printf("cudaMemcpy2D returns=%d\n");
+        if(DEBUG) printf("cudaMemcpy2D returns=%d\n", cuda_ret);	
+	cuda_ret=cudaMemcpy2D((void*)bdev,bdevp,(const void*)b,nCOL*sizeof(uint8_t),nCOL*sizeof(uint8_t),nROW,cudaMemcpyHostToDevice);
+        if(DEBUG) printf("cudaMemcpy2D returns=%d\n", cuda_ret);
 
 printf("Host to device copy .. done\n");	
 	image_process<<<mainGrid,rowBlock>>>(rdev, gdev, bdev, rdevp, gdevp, bdevp
 		, sharpRdev, sharpGdev, sharpBdev, sharpRdevp, sharpGdevp, sharpBdevp);
-	cudaThreadSynchronize();	
+	//cudaThreadSynchronize();	
 		
 	// Copy processed RBG data from device to host memory	
 	cudaMemcpy2D((void*)sharpR,nCOL*sizeof(uint8_t),(const void*)sharpRdev,sharpRdevp,nCOL*sizeof(uint8_t),nROW,cudaMemcpyDeviceToHost);
@@ -183,12 +189,6 @@ printf("Host to device copy .. done\n");
 	cudaMemcpy2D((void*)sharpB,nCOL*sizeof(uint8_t),(const void*)sharpBdev,sharpBdevp,nCOL*sizeof(uint8_t),nROW,cudaMemcpyDeviceToHost);
 	gettimeofday(&tv_end,NULL);
 #endif
-/*	test=0;
-	for(i=0;i<nROW;i++){
-		test+=sharpR[i];
-	}
-	printf("SUM of R's is=%d\n",test);
-*/
 	
 	write(outfd, (void *)ppm_header, 38);	
 	for(i=0; i<SIZE; i++)
@@ -205,7 +205,7 @@ printf("Host to device copy .. done\n");
 	cudaFree(sharpRdev);
 	cudaFree(sharpGdev);
 	cudaFree(sharpBdev);
-	cudaThreadExit();	
+	//cudaThreadExit();	
 #endif
 	printf("Time elapsed= %f ms\n",(1000000*tv_end.tv_sec+tv_end.tv_usec-1000000*tv_start.tv_sec-tv_start.tv_usec)/1000.0);
 	
