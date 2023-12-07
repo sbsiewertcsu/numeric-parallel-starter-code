@@ -10,6 +10,8 @@
 //
 //  Note - be careful with DOUBLE range, smallest decimal, and inf
 //
+//  Updated by Justin Daugherty, Dec 2023 to fix transcendental
+//  periodicity computation error
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,15 +40,29 @@ int main(int argc, char* argv[])
 
     printf("x=%lf, cos(x)=%lf, n periods = %d, adjusted x = %lf\n", x, cos(x), (unsigned int)(x/(2.0*M_PI)), (x - (double)((unsigned int)(x/(2.0*M_PI)))*M_PI));
 
-    x = x - (double)((unsigned int)(x/(2.0*M_PI)))*M_PI;
+    // Corrected issue with parens and goal to subtract off the
+    // 2*Pi perodicity of the input
+    x = x - (double)(((unsigned int)(x/(2.0*M_PI)))*(2.0*M_PI));
 
   }
 
   printf("DBL_EPSILON = %le\n", DBL_EPSILON);
 
-// The goal of a series computation is to avoid use of the math library completely
-// and to use only basic arithmetic to compute transcendental and polynomial
-// functions.
+// The goal of a series computation is to avoid use of the math library
+// completely and to use only basic arithmetic to compute transcendental
+// and polynomial functions.
+//
+// Note that you need to modify the pragma to avoid data corruption for
+// variables that are read & write
+//
+// This can be done by careful specification of what is shared, what is
+// not, and use of reduction.
+//
+// E.g.,
+// #pragma omp parallel for num_threads(thread_count) default(none) reduction(+:sum) private(idx, term, cnt) shared(x, iterations)
+//
+// Alternatively, you can re-write this as a function like
+// hello_openmp/piseriesompfunct.c
 //
 #pragma omp parallel for reduction(+:sum) num_threads(thread_count)
   for(idx=2; idx < iterations*2; idx=idx+2) 
