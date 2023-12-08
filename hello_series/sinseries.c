@@ -37,11 +37,15 @@ int main(int argc, char* argv[])
     sscanf(argv[2], "%d", &thread_count);
     sscanf(argv[3], "%d", &iterations);
 
-    printf("x=%lf, sin(x)=%lf, n periods = %d, adjusted x = %lf\n", x, sin(x), (unsigned int)(x/(2.0*M_PI)), (x - (double)((unsigned int)(x/(2.0*M_PI)))*M_PI));
+    //Added these two variables to make things a little easier to read
+    unsigned int x_periods = (unsigned int)(x/(2.0*M_PI));
+    double x_adjusted = x - (double)(x_periods * 2.0 * M_PI);
+
+    printf("x=%lf, sin(x)=%lf, n periods = %d, adjusted x = %lf\n", x, sin(x), x_periods, x_adjusted);
 
     // Corrected issue with parens and goal to subtract off the
     // 2*Pi perodicity of the input
-    x = x - (double)(((unsigned int)(x/(2.0*M_PI)))*(2.0*M_PI));
+    x = x_adjusted;
   }
 
   term=x; sum=x;
