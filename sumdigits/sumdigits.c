@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdatomic.h>
 
 
 // Note that this starter code example (and all starter code in CSCI 551) should be modified for problem to be solved,
@@ -35,6 +36,7 @@ threadParams_t threadParams[NUM_THREADS];
 
 // Thread specific globals - static initializer must be updated for sub-ranges
 long int gsum[NUM_THREADS];
+_Atomic long int agsum[NUM_THREADS];
 
 void *sumThread(void *threadp)
 {
