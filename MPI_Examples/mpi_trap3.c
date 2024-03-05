@@ -43,6 +43,7 @@ double LeftRiemann(double left_endpt, double right_endpt, int rect_count,
 /* Function we're integrating */
 double ex3_accel(double time);
 double ex3_vel(double time);
+double ex3_pos(double time);
 double funct_to_integrate(double x); 
 
 int main(void) {
@@ -75,11 +76,11 @@ int main(void) {
    printf("my_rank=%d, start a=%lf, end b=%lf, number of quadratures = %d, step_size=%lf\n",
            my_rank, local_a, local_b, local_n, step_size);
 
-   //local_int_area = Trap(local_a, local_b, local_n, step_size);
-   local_int_area = LeftRiemann(local_a, local_b, local_n, step_size);
+   local_int_area = Trap(local_a, local_b, local_n, step_size);
+   //local_int_area = LeftRiemann(local_a, local_b, local_n, step_size);
 
-   printf("my_rank=%d, integrated area = %lf, step_size * number quadratures=%lf\n", 
-           my_rank, local_int_area, (step_size*local_n));
+   printf("After LeftRiemann: my_rank=%d, integrated area = %15.14lf, step_size %lf, number quadratures=%d\n", 
+           my_rank, local_int_area, step_size, local_n);
 
    /* Add up the integrals calculated by each process */
    MPI_Reduce(&local_int_area, &total_int_area, 1, MPI_DOUBLE, MPI_SUM, 0,
@@ -87,8 +88,8 @@ int main(void) {
 
    /* Print the result */
    if (my_rank == 0) {
-      printf("With n = %d quadratures, our estimate\n", n);
-      printf("of the integral from %f to %f = %15.14lf\n",
+      printf("After Reduce: with n = %d quadratures, our estimate\n", n);
+      printf("of the integral from %lf to %lf = %15.14lf\n",
           a, b, total_int_area);
    }
 
@@ -164,14 +165,15 @@ double LeftRiemann(
    int i;
 
    // estimate of function on left side to forward integrate
-   left_value = funct_to_integrate(left_endpt);
    x = left_endpt;
+   left_value = funct_to_integrate(x);
 
-   for (i = 1; i <= rect_count-1; i++) 
+   for (i = 1; i <= rect_count; i++) 
    {
+      // add area of each rectangle to overall area sum
       area += left_value * base_len;
 
-      // new values to add to area
+      // advance x by base length for new values to add to area
       x += base_len;
       left_value = funct_to_integrate(x);
    }
@@ -191,7 +193,9 @@ double funct_to_integrate(double x)
 {
     //return sin(x);
     //return(ex3_accel(x));
-    return(ex3_vel(x));
+    //return(ex3_vel(x));
+    //return(ex3_pos(x));
+    return 10.0;
 }
 
 
