@@ -10,7 +10,7 @@
 // rank as the initial condition of others at a later time, but adjusted after the computations are done in parallel!
 //
 // This is identical to what's done in the OpenMP version of this code, but information is shared via message passing rather
-// thank shared memory.
+// than shared memory.
 //
 // Note: this program will be helpful for the Ex #4 train problem where the anti-derivatives are unknown and all functions must
 //       be integrated numerically.
@@ -26,8 +26,12 @@
 #include <mpi.h>
 #include <unistd.h>
 
-// Symmetric function tables used in Ex #3 and #4 - first sum always cancels to zero, second is positive non-zero!
-#include "sine.h"
+//#define DEBUG_TRACE
+
+// Function tables used in Ex #3 and #4 as well as test profiles
+#include "ex4.h"
+//#include "ex3.h"
+//#include "sine.h"
 //#include "trap.h"
 
 const int MAX_STRING = 100;
@@ -138,15 +142,12 @@ int main(void)
     // TRACE: Just a double check on the FIRST MPI_Reduce and trace output of first phase
     if(my_rank == 0)
     {
-#ifdef SEQ_DEBUG
+#ifdef DEBUG_TRACE
         // Now rank zero has the data from each of the other ranks in one new table
-        local_sum=0;
-        for(int idx = 0; idx < tablelen; idx++) local_sum += default_sum[idx];
-        printf("Rank %d sum of default_sum = %lf\n", my_rank, local_sum);
+        printf("\nTRACE: Rank %d sum of default_sum = %lf\n", my_rank, g_sum);
+        for(int idx = 0; idx < tablelen; idx+=100)
+            printf("t=%d: a=%lf for v=%lf\n", idx, DefaultProfile[idx-1], default_sum[idx-1]);
 #endif
-        for(int idx = 0; idx < tablelen-1; idx+=100)
-            printf("t=%d: a=%lf for v=%lf\n", idx, DefaultProfile[idx], default_sum[idx]);
-         printf("t=%d: a=%lf for v=%lf\n", tablelen-2, DefaultProfile[tablelen-2], default_sum[tablelen-2]);
     }
 
 
@@ -206,15 +207,12 @@ int main(void)
     // TRACE: Final double check on the SECOND MPI_Reduce and trace output of second phase
     if(my_rank == 0)
     {
-#ifdef SEQ_DEBUG
+#ifdef DEBUG_TRACE
         // Now rank zero has the data from each of the other ranks in one new table
-        local_sum=0;
-        for(int idx = 0; idx < tablelen; idx++) local_sum += default_sum_of_sums[idx];
-        printf("Rank %d sum of default_sum = %lf\n", my_rank, local_sum);
+        printf("\nTRACE: Rank %d sum of default_sum = %lf\n", my_rank, g_sum);
+        for(int idx = 0; idx < tablelen; idx+=100)
+            printf("t=%d: a=%lf for v=%lf and p=%lf\n", idx, DefaultProfile[idx-1], default_sum[idx-1], default_sum_of_sums[idx-1]);
 #endif
-        for(int idx = 0; idx < tablelen-1; idx+=100)
-            printf("t=%d: a=%lf for v=%lf and p=%lf\n", idx, DefaultProfile[idx], default_sum[idx], default_sum_of_sums[idx]);
-        printf("t=%d: a=%lf for v=%lf and p=%lf\n", tablelen-2, DefaultProfile[tablelen-2], default_sum[tablelen-2], default_sum_of_sums[tablelen-2]);
     }
 
     MPI_Finalize();
