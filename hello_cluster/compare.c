@@ -28,11 +28,12 @@
 
 //#define DEBUG_TRACE
 
-// Function tables used in Ex #3 and #4 as well as test profiles
+// Function tables used in Ex #3 and #4 as well as test profiles for sine and a constant
+// All funcitons have 1801 entries for time = 0.0 to 1800.0
 #include "ex4.h"
 //#include "ex3.h"
 //#include "sine.h"
-//#include "trap.h"
+//#include "const.h"
 
 const int MAX_STRING = 100;
 
