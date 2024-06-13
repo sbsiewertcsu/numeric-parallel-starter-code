@@ -35,13 +35,14 @@
 //#include "sine.h"
 //#include "const.h"
 
-const int MAX_STRING = 100;
+const int MAX_STRING = 512;
 
 int main(void)
 {
     char greeting[MAX_STRING];
     char hostname[MAX_STRING];
-    char nodename[MPI_MAX_PROCESSOR_NAME];
+    char nodename[MAX_STRING];
+    //char nodename[MPI_MAX_PROCESSOR_NAME];
     int comm_sz;
     int my_rank, namelen;
 
