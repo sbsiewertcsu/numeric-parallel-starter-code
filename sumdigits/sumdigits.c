@@ -1,28 +1,25 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdatomic.h>
 
+#define COUNT  100
 
-// Note that this starter code example (and all starter code in CSCI 551) should be modified for problem to be solved,
-// well commented and explained, and you should "make it your own".
-//
-// You may be asked to walk-through and explain your code solution, so if it is adapted from starter code,
-// make sure you don't cut-and-paste or re-use whole-sale without understanding.
-//
-// Generally starter code has been tested and does not intentionally include bugs, but it is also not "solution"
-// code, so assume that you must adapt, improve, and even totally re-code (re-factor) for your solution.
-//
-// If you have questions about starter code, come to office hours, bring quesitons to class, and the instructor/author of this code
-// will gladly walk-through and explain what is here.
-//
-// C or C++ is equally acceptable for CSCI 551, despite the fact that most starter code is simple C
-//
+#define NUM_THREADS (3)
 
-#define COUNT  1000000ULL
-//#define COUNT  1000ULL
-
-#define NUM_THREADS (10)
+// Note that often the "digit sum" rather than "sum of the digits" or "sum of numbers in a sequence" is defined as the sum of the digit in each 10's place, but
+// that's not what we want to model here.  E.g., Wikipedia - https://en.wikipedia.org/wiki/Digit_sum
+//
+// What we want to model is an arithmetic series sum best referred to as the "sum or an arithmetic progression" - https://en.wikipedia.org/wiki/Arithmetic_progression
+//
+// This si what we mean summing numbers in the range 1...n, where we know based on series facts that sum(1...n) = n(n+1)/2
+//
+// We can now have threads sum sub-ranges of a series as a service and then have them add up  the result after a join so that sum(1...n) = sum(1...n/2-1) + sum(n/2...n-1) for
+// example.
+//
+// This sample code provides a simple example of an arithmetic progression sum (sometimes called sum of the digits for simplicity since we know sum(0...9)=9(10)/2=45.
+//
+// It should techically be called a sum of a series of numbers in an arithmetic progression.
+//
 
 typedef struct
 {
@@ -31,46 +28,31 @@ typedef struct
 
 
 // POSIX thread declarations and scheduling attributes
-pthread_t threads[NUM_THREADS];
-threadParams_t threadParams[NUM_THREADS];
+pthread_t threads[3];
+threadParams_t threadParams[3];
 
-// Thread specific globals - static initializer must be updated for sub-ranges
-long int gsum[NUM_THREADS];
-_Atomic long int agsum[NUM_THREADS];
+// Thread specific globals
+int gsum[3]={0, 100, 200};
 
 void *sumThread(void *threadp)
 {
-    int idx;
-    long int startval, endval, i;
+    int i, idx;
     threadParams_t *threadParams = (threadParams_t *)threadp;
+
     idx = threadParams->threadIdx;
 
-    startval=(idx*(COUNT/NUM_THREADS))+1;
-    endval=((idx*(COUNT/NUM_THREADS))+(COUNT/NUM_THREADS));
-
-    for(i=startval; i<=endval; i++)
+    for(i=1; i<COUNT; i++)
     {
-        // Simply sum the digits for this particular thread's assigned range
-        gsum[idx] = gsum[idx] + i;
-
-        // UNCOMMENTING THIS LINE - will give you tons of output and a full trace of each thread's progress
-        // Please do turn it on to see behavior, but for production code, we normally would not leave this
-        // type of tracing in the code since it will slow it down.
-        //printf("Increment %ld for thread idx=%d, gsum=%ld\n", i, idx, gsum[idx]);
+        gsum[idx] = gsum[idx] + (i + (idx*COUNT));
+        printf("Increment %d for thread idx=%d, gsum=%d\n", i, idx, gsum[idx]);
     }
-    printf("thread idx=%d for range %ld to %ld, gsum=%ld, should be %ld\n", idx, startval, endval, gsum[idx], 
-           ((endval*(endval+1))/2) - (((startval-1)*startval)/2) );
 }
 
 int main (int argc, char *argv[])
 {
-   int rc;
-   long int i=0;
-   long int testsum=0, gsumall=0;
-   long int startval, endval;
+   int rc, testsum=0; int i=0;
 
-
-   for(i=0; i<NUM_THREADS; i++)
+   for(i=0; i<3; i++)
    {
       threadParams[i].threadIdx=i;
       pthread_create(&threads[i], (void *)0, sumThread, (void *)&(threadParams[i]));
@@ -79,18 +61,12 @@ int main (int argc, char *argv[])
    for(i=0; i<NUM_THREADS; i++)
      pthread_join(threads[i], NULL);
 
-   for(i=0; i<NUM_THREADS; i++)
-   {
-       startval=(i*(COUNT/NUM_THREADS))+1;
-       endval=((i*(COUNT/NUM_THREADS))+(COUNT/NUM_THREADS));
-       printf("Thread %ld COMPLETE: gsum[%ld]=%ld for range %ld to %ld\n", i, i, gsum[i], startval, endval);
-       gsumall += gsum[i];
-   }
-   printf("TEST COMPLETE: gsumall=%ld\n", gsumall);
+   printf("TEST COMPLETE: gsum[0]=%d, gsum[1]=%d, gsum[2]=%d, gsumall=%d\n", 
+          gsum[0], gsum[1], gsum[2], (gsum[0]+gsum[1]+gsum[2]));
 
    // Verfiy with single thread version and (n*(n+1))/2
-   for(i=0; i<=COUNT; i++)
+   for(i=1; i<(3*COUNT); i++)
        testsum = testsum + i;
 
-   printf("TEST COMPLETE: COUNT=%llu, single thread testsum=%ld, [n[n+1]]/2=%llu\n", COUNT, testsum, (unsigned long long)((COUNT)*(COUNT+1))/2);
+   printf("TEST COMPLETE: testsum=%d, [n[n+1]]/2=%d\n", testsum, ((3*COUNT-1)*(3*COUNT))/2);
 }
