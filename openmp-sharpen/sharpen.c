@@ -18,7 +18,15 @@
 #define IMG_HEIGHT (960)
 #define IMG_WIDTH (1280)
 
+// You should verify that this works correctly
+// with you header comment length!
+//
+// Here it is hard-coded
+#define HEADER_LENGTH (40)
+//#define HEADER_LENGTH (22)
+
 #define ITERATIONS (90)
+//#define ITERATIONS (9000)
 
 #define FAST_IO
 
@@ -30,7 +38,7 @@ typedef unsigned char UINT8;
 
 // PPM Edge Enhancement Code
 //
-UINT8 header[22];
+UINT8 header[HEADER_LENGTH];
 UINT8 R[IMG_HEIGHT*IMG_WIDTH];
 UINT8 G[IMG_HEIGHT*IMG_WIDTH];
 UINT8 B[IMG_HEIGHT*IMG_WIDTH];
@@ -56,7 +64,7 @@ int main(int argc, char *argv[])
     UINT64 microsecs=0, millisecs=0;
     FLOAT temp, fstart, fnow;
     struct timespec start, now;
-    int thread_count=4;
+    int thread_count=16;
 
     clock_gettime(CLOCK_MONOTONIC, &start);
     fstart = (FLOAT)start.tv_sec  + (FLOAT)start.tv_nsec / 1000000000.0;
@@ -83,7 +91,7 @@ int main(int argc, char *argv[])
         //    printf("Output file=%s opened successfully\n", "sharpen.ppm");
     }
 
-    bytesLeft=21;
+    bytesLeft=HEADER_LENGTH-1;
 
     //printf("Reading header\n");
 
@@ -95,7 +103,7 @@ int main(int argc, char *argv[])
         bytesLeft -= bytesRead;
     } while(bytesLeft > 0);
 
-    header[21]='\0';
+    header[HEADER_LENGTH-1]='\0';
 
     printf("header = %s\n", header); 
 
@@ -204,9 +212,10 @@ int main(int argc, char *argv[])
 
     clock_gettime(CLOCK_MONOTONIC, &now);
     fnow = (FLOAT)now.tv_sec  + (FLOAT)now.tv_nsec / 1000000000.0;
-    printf("stop test at %lf for %d frames, fps=%lf, pps=%lf\n\n", fnow-fstart, ITERATIONS, ITERATIONS/(fnow-fstart), (ITERATIONS*IMG_HEIGHT*IMG_WIDTH)/(fnow-fstart));
+    //printf("stop test at %lf for %d frames, fps=%lf\n\n", fnow-fstart, ITERATIONS, ITERATIONS/(fnow-fstart));
+    printf("stop test at %lf for %d frames, fps=%lf, pps=%lf\n\n", fnow-fstart, ITERATIONS, ITERATIONS/(fnow-fstart), ((double)ITERATIONS*(double)IMG_HEIGHT*(double)IMG_WIDTH)/((double)(fnow-fstart)));
 
-    rc=write(fdout, (void *)header, 21);
+    rc=write(fdout, (void *)header, HEADER_LENGTH-1);
 
 #ifdef FAST_IO
 
