@@ -18,6 +18,8 @@
 #define IMG_HEIGHT (3000)
 #define IMG_WIDTH (4000)
 
+#define HEADER_SIZE (40)
+
 #define ITERATIONS (90)
 
 #define FAST_IO
@@ -30,7 +32,7 @@ typedef unsigned char UINT8;
 
 // PPM Edge Enhancement Code
 //
-UINT8 header[22];
+UINT8 header[HEADER_SIZE];
 UINT8 R[IMG_HEIGHT*IMG_WIDTH];
 UINT8 G[IMG_HEIGHT*IMG_WIDTH];
 UINT8 B[IMG_HEIGHT*IMG_WIDTH];
@@ -82,7 +84,7 @@ int main(int argc, char *argv[])
         //    printf("Output file=%s opened successfully\n", "sharpen.ppm");
     }
 
-    bytesLeft=21;
+    bytesLeft=HEADER_SIZE-1;
 
     //printf("Reading header\n");
 
@@ -94,7 +96,7 @@ int main(int argc, char *argv[])
         bytesLeft -= bytesRead;
     } while(bytesLeft > 0);
 
-    header[21]='\0';
+    header[HEADER_SIZE-1]='\0';
 
     printf("header = %s\n", header); 
 
@@ -202,7 +204,7 @@ int main(int argc, char *argv[])
     fnow = (FLOAT)now.tv_sec  + (FLOAT)now.tv_nsec / 1000000000.0;
     printf("stop test at %lf for %d frames\n\n", fnow-fstart, ITERATIONS);
 
-    rc=write(fdout, (void *)header, 21);
+    rc=write(fdout, (void *)header, HEADER_SIZE-1);
 
 #ifdef FAST_IO
 
