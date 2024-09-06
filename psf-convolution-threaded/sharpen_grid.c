@@ -64,7 +64,9 @@
 #define IMG_H_SLICE (IMG_HEIGHT/NUM_ROW_THREADS)
 #define IMG_W_SLICE (IMG_WIDTH/NUM_COL_THREADS)
 
-#define SHARPEN_GRID_ITERATIONS (90)  // Number of times threads are created to process one image
+#define HEADER_SIZE (40)
+
+#define SHARPEN_GRID_ITERATIONS (900)  // Number of times threads are created to process one image
 
 #define FAST_IO
 
@@ -92,7 +94,7 @@ typedef unsigned long long int UINT64;
 typedef unsigned char UINT8;
 
 // PPM Edge Enhancement Code in row x column format
-UINT8 header[22];
+UINT8 header[HEADER_SIZE];
 UINT8 R[IMG_HEIGHT][IMG_WIDTH];
 UINT8 G[IMG_HEIGHT][IMG_WIDTH];
 UINT8 B[IMG_HEIGHT][IMG_WIDTH];
@@ -207,7 +209,7 @@ int main(int argc, char *argv[])
         //    printf("Output file=%s opened successfully\n", "sharpen.ppm");
     }
 
-    bytesLeft=21;
+    bytesLeft=HEADER_SIZE-1;
 
     //printf("Reading header\n");
 
@@ -219,7 +221,7 @@ int main(int argc, char *argv[])
 
     } while(bytesLeft > 0);
 
-    header[21]='\0';
+    header[HEADER_SIZE-1]='\0';
 
     printf("header = %s\n", header); 
 
@@ -373,7 +375,7 @@ int main(int argc, char *argv[])
     printf("\nCompleted test at %lf for %d create-to-join and %lf FPS\n\n", fnow - fstart, runs, (FLOAT)SHARPEN_GRID_ITERATIONS/(fnow-fstart));
 
     printf("Starting output file %s write\n", argv[2]);
-    rc=write(fdout, (void *)header, 21);
+    rc=write(fdout, (void *)header, HEADER_SIZE-1);
 
 
 #ifdef FAST_IO
