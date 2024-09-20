@@ -17,8 +17,8 @@ int main()
 {
     struct dirent *dp;
     char *fullpath;
-    const char *path="/tmp/cards_3x4_ppm"; // Directory target in /tmp direct attach storage
-    //const char *path="./../cards_3x4_ppm"; // Directory target on NFS volume
+    //const char *path="/tmp/cards_3x4_ppm"; // Directory target in /tmp direct attach storage
+    const char *path="./../cards_3x4_ppm"; // Directory target on NFS volume
     DIR *dir = opendir(path); // Open the directory - dir contains a pointer to manage the dir
 
     printf("\nUse of readdir to find all card file names in a directory\n");
