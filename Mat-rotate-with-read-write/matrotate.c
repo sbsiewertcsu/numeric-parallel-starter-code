@@ -81,23 +81,28 @@ int main(int argc, char *argv[])
     readPGMDataFast(fdin, P);
     close(fdin);
 
+#if 0
+    // demonstrate rotation with a smaller verification size
+    //demoRotate(8);
+    //printf("Demonstration done\n");
+#endif
+
+    //zeroPixMat(P);
+    //zeroPixMat(RRP);
+
     // Update header to be square 920x920
     header[26]='9'; header[27]='2'; header[28]='0';
     printf("\nUpdated SQUARE HEADER:\n");
     printPGMHeader(header);
 
     // write out modified PGM data here
-    //writePGMSimple(fdout, header, P);
-    //writePGMFast(fdout, header, P);
+    //writePGMFastSquare(fdout, header, RRP);
     writePGMFastSquare(fdout, header, P);
     close(fdout);
 
     printf("Read and then write of unmodified PGM done\n");
 
-    // demonstrate rotation with a smaller verification size
-    demoRotate(8);
 
-    printf("Demonstration done\n");
 }
 
 
@@ -301,7 +306,7 @@ void writePGMFastSquare(int fdout, char *header, unsigned char Mat[][SQDIM])
 
     for(rowIdx = 0; rowIdx < SQDIM; rowIdx++)
     {
-        bytesWritten=write(fdout, (void *)&P[rowIdx][0], SQDIM);
+        bytesWritten=write(fdout, (void *)&Mat[rowIdx][0], SQDIM);
         if(bytesWritten < SQDIM)
         {
             printf("ERROR in write\n"); exit(-1);
