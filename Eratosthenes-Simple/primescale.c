@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
       max_n=MAX;
       printf ( "Using: %d threads for %llu range\n", thread_count, max_n);
     }
-    if (argc == 3)
+    else if (argc == 3)
     {
       sscanf(argv[1], "%d", &thread_count);
       sscanf(argv[2], "%llu", &max_n);
