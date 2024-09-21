@@ -87,7 +87,10 @@ int main(int argc, char *argv[])
     //printf("Demonstration done\n");
 #endif
 
+    // Zero out to test file output
     //zeroPixMat(P);
+    //
+    // Rotate Right zero out test - replace with correct rotation
     //zeroPixMat(RRP);
 
     // Update header to be square 920x920
@@ -100,8 +103,7 @@ int main(int argc, char *argv[])
     writePGMFastSquare(fdout, header, P);
     close(fdout);
 
-    printf("Read and then write of unmodified PGM done\n");
-
+    printf("Read and then write of unmodified or test PGM done\n");
 
 }
 
@@ -220,7 +222,6 @@ void readPGMDataSimple(int fdin, unsigned char Mat[][SQDIM])
     {
         for(colIdx = 0; colIdx < DIMX; colIdx++)
             bytesRead=read(fdin, (void *)&P[rowIdx][colIdx], 1);
-            bytesRead++;
     }
 
 }
@@ -264,7 +265,6 @@ void writePGMSimple(int fdout, char *header, unsigned char Mat[][SQDIM])
     {
         for(colIdx = 0; colIdx < DIMX; colIdx++)
             bytesWritten=write(fdout, (void *)&P[rowIdx][colIdx], 1);
-            bytesWritten++;
     }
 }
 
