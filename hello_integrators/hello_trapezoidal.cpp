@@ -10,6 +10,8 @@
 
 using namespace std;
 
+int thread_count=1;
+
 double function_to_integrate(double x);
 
 using namespace std;
@@ -19,6 +21,7 @@ double trapezoidal_rule(double a, double b, int n)
     double h = (b - a) / n;
     double sum = (function_to_integrate(a) + function_to_integrate(b)) / 2.0;
 
+#pragma omp parallel for num_threads(thread_count) reduction(+:sum)
     for (int i = 1; i < n; i++) 
     {
         double x = a + i * h;
@@ -28,11 +31,21 @@ double trapezoidal_rule(double a, double b, int n)
     return h * sum;
 }
 
-int main() 
+int main(int argc, char* argv[]) 
 {
     const double a = 0.0;
     const double b = RANGE;
     const int n = STEPS;
+
+    if(argc == 2)
+    {
+        sscanf(argv[1], "%d", &thread_count);
+        printf("Will run with: thread_count=%d\n", thread_count);
+    }
+    else
+    {
+        printf("Will run with default: thread_count=%d\n", thread_count);
+    }
 
     const double result = trapezoidal_rule(a, b, n);
 

@@ -5,8 +5,8 @@ CC = gcc
 CPP = g++
 
 CDEFS=
-CFLAGS= -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
-CFLAGS2= -O0 -g -Wall $(INCLUDE_DIRS) $(CDEFS)
+CFLAGS= -O3 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
+CFLAGS2= -O0 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
 PRODUCT= hello_riemann hello_trapezoidal hello_simpson

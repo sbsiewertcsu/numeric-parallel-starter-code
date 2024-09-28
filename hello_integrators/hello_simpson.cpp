@@ -15,11 +15,13 @@
 #include <iostream>
 #include <cmath>
 
+//#define RANGE (M_PI/2.0)
 #define RANGE (M_PI)
 #define STEPS (1000000)
 
 double function_to_integrate(double x);
 
+int thread_count=1;
 
 //////////////////////////////////////////////////////////////////////////////
 // Computes the definite integral of a given function using Simpson's rule. //
@@ -35,6 +37,7 @@ double simpsons_rule(double a, double b, int n)
     double h = (b - a) / n;
     double sum = 0.0;
 
+#pragma omp parallel for num_threads(thread_count) reduction(+:sum)
     for (int idx = 0; idx <= n; idx++) 
     {
         double x = a + idx * h;
@@ -68,10 +71,20 @@ double simpsons_rule(double a, double b, int n)
 }
 
 
-int main() 
+int main(int argc, char* argv[]) 
 {
     double a = 0.0;
     double b = RANGE;
+
+    if(argc == 2)
+    {
+        sscanf(argv[1], "%d", &thread_count);
+        printf("Will run with: thread_count=%d\n", thread_count);
+    }
+    else
+    {
+        printf("Will run with default: thread_count=%d\n", thread_count);
+    }
 
     int n = STEPS;
     double result = simpsons_rule(a, b, n);
