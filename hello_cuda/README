@@ -1,0 +1,5 @@
+CUDA Examples from 2nd Ed of "An Introduction to Parallel Programming" with
+a Makefile and some minor refactoring for use in CSCI 551 with our A100 system
+or NVIDIA Jetson Orin.
+
+Just type "make" to build
