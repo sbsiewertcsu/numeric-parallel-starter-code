@@ -26,7 +26,7 @@
 #include <mpi.h>
 #include <unistd.h>
 
-//#define DEBUG_TRACE
+#define DEBUG_TRACE
 
 // Function tables used in Ex #3 and #4 as well as test profiles for sine and a constant
 // All funcitons have 1801 entries for time = 0.0 to 1800.0
@@ -39,7 +39,7 @@ const int MAX_STRING = 512;
 
 int main(void)
 {
-    char greeting[MAX_STRING];
+    char resultmsg[MAX_STRING];
     char hostname[MAX_STRING];
     char nodename[MAX_STRING];
     //char nodename[MPI_MAX_PROCESSOR_NAME];
@@ -73,7 +73,9 @@ int main(void)
 
     printf("Went parallel: rank %d of %d doing work %d with residual %d\n", my_rank, comm_sz, subrange, residual);
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // START PARALLEL PHASE 1: Sum original DefaultProfile LUT by rank
+    //                         which is integration of accel(t) here.
     //
     if(my_rank != 0)
     {
@@ -87,8 +89,8 @@ int main(void)
             default_sum[idx] = local_sum; // Each rank has it's own subset of the data
         }
 
-        sprintf(greeting, "Sum of DefaultProfile for rank %d of %d on %s is %lf", my_rank, comm_sz, nodename, local_sum);
-        MPI_Send(greeting, strlen(greeting)+1, MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+        sprintf(resultmsg, "Sum of DefaultProfile for rank %d of %d on %s is %lf", my_rank, comm_sz, nodename, local_sum);
+        MPI_Send(resultmsg, strlen(resultmsg)+1, MPI_CHAR, 0, 0, MPI_COMM_WORLD);
     }
     else
     {
@@ -106,8 +108,8 @@ int main(void)
 
         for(int q=1; q < comm_sz; q++)
         {
-            MPI_Recv(greeting, MAX_STRING, MPI_CHAR, q, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            printf("%s\n", greeting);
+            MPI_Recv(resultmsg, MAX_STRING, MPI_CHAR, q, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            printf("%s\n", resultmsg);
         }
     }
 
@@ -134,11 +136,12 @@ int main(void)
                 default_sum[idx] += default_sum[((q-1)*subrange)+subrange-1];
         }
     }
-    // Make sure all ranks have the full new default table
+    // Make sure all ranks have the full new default table - overkill, so optimize by sending just what they need
     MPI_Bcast(&default_sum[0], tablelen, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
+    //
     //
     // END PARALLEL PHASE 1: Every rank has the same updated default_sum table now
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     // TRACE: Just a double check on the FIRST MPI_Reduce and trace output of first phase
@@ -153,9 +156,11 @@ int main(void)
     }
 
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // START PARALLEL PHASE 2: Now that all ranks have the new default_sum table, we can proceed to sum all of those sums as before
     //
-    // Do the next round of summing from the new table
+    // Do the next round of summing from the new table, which is velocity(t) here, at same resolution
+    // as the original accel(t) table with 1801 data points for time=0, ..., 1800.
     //
     local_sum=0;
 
@@ -199,11 +204,12 @@ int main(void)
                 default_sum_of_sums[idx] += default_sum_of_sums[((q-1)*subrange)+subrange-1];
         }
     }
-    // Make sure all ranks have the full new default table
+    // Make sure all ranks have the full new default table - overkill, so optimize by sending just what they need
     MPI_Bcast(&default_sum[0], tablelen, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
+    //
     //
     // END PHASE 2: Every rank has the same updated default_sum_of_sums table now
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     // TRACE: Final double check on the SECOND MPI_Reduce and trace output of second phase
