@@ -3,3 +3,21 @@ a Makefile and some minor refactoring for use in CSCI 551 with our A100 system
 or NVIDIA Jetson Orin.
 
 Just type "make" to build
+
+You must be on cscigpu, and build should look like:
+
+(ultralytics-env) sbsiewert@cscigpu:~/numeric-parallel-starter-code$ cd hello_cuda/
+(ultralytics-env) sbsiewert@cscigpu:~/numeric-parallel-starter-code/hello_cuda$ ls
+cuda_hello1.cu  cuda_hello.cu  deviceQuery.cpp  Makefile  README
+(ultralytics-env) sbsiewert@cscigpu:~/numeric-parallel-starter-code/hello_cuda$ make
+/usr/bin/nvcc   -I/usr/include -I. -I.. -I../../common/inc -I/home/sbsiewert/cuda-samples-a100/Common -o cuda_hello.o -c cuda_hello.cu
+g++  -o cuda_hello cuda_hello.o -L/usr/lib/nvidia-cuda-toolkit -lcudart
+/usr/bin/nvcc   -I/usr/include -I. -I.. -I../../common/inc -I/home/sbsiewert/cuda-samples-a100/Common -o cuda_hello1.o -c cuda_hello1.cu
+g++  -o cuda_hello1 cuda_hello1.o -L/usr/lib/nvidia-cuda-toolkit -lcudart
+/usr/bin/nvcc   -I/usr/include -I. -I.. -I../../common/inc -I/home/sbsiewert/cuda-samples-a100/Common -o deviceQuery.o -c deviceQuery.cpp
+g++  -o deviceQuery deviceQuery.o -L/usr/lib/nvidia-cuda-toolkit -lcudart
+(ultralytics-env) sbsiewert@cscigpu:~/numeric-parallel-starter-code/hello_cuda$ ls
+cuda_hello   cuda_hello1.cu  cuda_hello.cu  deviceQuery      deviceQuery.o  README
+cuda_hello1  cuda_hello1.o   cuda_hello.o   deviceQuery.cpp  Makefile
+(ultralytics-env) sbsiewert@cscigpu:~/numeric-parallel-starter-code/hello_cuda$
+
