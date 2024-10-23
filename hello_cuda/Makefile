@@ -60,6 +60,7 @@ DARWIN = $(strip $(findstring DARWIN, $(OSUPPER)))
 # Location of the CUDA Toolkit binaries and libraries on cscigpu
 CUDA_PATH       ?= /usr
 CUDA_INC_PATH   ?= /usr/include
+CUDA_SAMP_PATH	?= /home/sbsiewert/cuda-samples-a100/Common
 CUDA_BIN_PATH   ?= $(CUDA_PATH)/bin
 CUDA_LIB_PATH   ?= $(CUDA_PATH)/lib/nvidia-cuda-toolkit
 
@@ -92,12 +93,12 @@ endif
 
 
 # Common includes and paths for CUDA
-INCLUDES      := -I$(CUDA_INC_PATH) -I. -I.. -I../../common/inc
+INCLUDES      := -I$(CUDA_INC_PATH) -I. -I.. -I../../common/inc -I$(CUDA_SAMP_PATH)
 
 # Target rules
 all: build
 
-build: cuda_hello cuda_hello1
+build: cuda_hello cuda_hello1 deviceQuery
 
 cuda_hello.o: cuda_hello.cu
 	$(NVCC) $(NVCCFLAGS) $(EXTRA_NVCCFLAGS) $(INCLUDES) -o $@ -c $<
@@ -111,5 +112,11 @@ cuda_hello1.o: cuda_hello1.cu
 cuda_hello1: cuda_hello1.o
 	$(GCC) $(CCFLAGS) -o $@ $+ $(LDFLAGS) $(EXTRA_LDFLAGS)
 
+deviceQuery.o: deviceQuery.cpp
+	$(NVCC) $(NVCCFLAGS) $(EXTRA_NVCCFLAGS) $(INCLUDES) -o $@ -c $<
+
+deviceQuery: deviceQuery.o
+	$(GCC) $(CCFLAGS) -o $@ $+ $(LDFLAGS) $(EXTRA_LDFLAGS)
+
 clean:
-	rm -f cuda_hello cuda_hello.o cuda_hello1 cuda_hello1.o
+	rm -f cuda_hello cuda_hello.o cuda_hello1 cuda_hello1.o deviceQuery.o deviceQuery
