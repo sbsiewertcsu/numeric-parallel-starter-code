@@ -18,9 +18,10 @@
 // knowledge of the profile function as a linear, polynomial, or transcendental function or combination there-of, and
 // this may not be known.
 
-//#include "ex3accel.h"
-#include "ex3.h"
-//#include "ex4.h"
+//#include "ex3.h"
+#include "ex4.h"
+//#include "const.h"
+//#include "sine.h"
 //#include "ex6lin.h"
 //#include "ex6nonlin.h"
 
@@ -55,7 +56,7 @@ void main(int argc, char *argv[])
     unsigned long integration_steps=tsize;
     int steps_per_idx=integration_steps/tsize;
     unsigned long istep=0;
-    int thread_count=2;
+    int thread_count=1;
     double AccelStep, VelStep, PosStep;
     struct timespec start, end;
     double fstart, fend;
@@ -66,6 +67,8 @@ void main(int argc, char *argv[])
     if(argc == 2)
     {
         sscanf(argv[1], "%d", &thread_count);
+        integration_steps = (unsigned long) ((double)tsize / dt);
+        steps_per_idx=integration_steps/tsize;
         printf("Use: timeprofiles [thread_count] [dt]\n");
         printf("Will use default time profile and use thread_count=%d\n", thread_count);
     }
@@ -80,6 +83,8 @@ void main(int argc, char *argv[])
     }
     else
     {
+        integration_steps = (unsigned long) ((double)tsize / dt);
+        steps_per_idx=integration_steps/tsize;
         printf("Use: timeprofiles [thread_count] [dt]\n");
         printf("Will use default time profile\n");
     }
@@ -194,7 +199,6 @@ void main(int argc, char *argv[])
 	       (fend-fstart), tsize, VelProfile[tsize-1], PosProfile[tsize-1]);
 
     //exit(0);
-
 
     // Zero out VelProfile and PosProfile for next test
     for(idx=0; idx < tsize; idx++)
