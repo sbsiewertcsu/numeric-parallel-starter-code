@@ -276,7 +276,7 @@ ALL_LDFLAGS += $(addprefix -Xlinker ,$(LDFLAGS))
 ALL_LDFLAGS += $(addprefix -Xlinker ,$(EXTRA_LDFLAGS))
 
 # Common includes and paths for CUDA
-INCLUDES  := -I/home/sbsiewert/cuda-samples-a100/Common
+INCLUDES  := -I../cuda_common
 LIBRARIES :=
 
 ################################################################################
