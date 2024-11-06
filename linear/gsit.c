@@ -119,11 +119,19 @@
 #define f2(x,y,z)  (-19.3-0.1*x+0.3*z)/7
 #define f3(x,y,z)  (71.4-0.3*x+0.2*y)/10
 
+/* Activity example with no apparent best diagonally dominate form 
+3x + 7y  = 13
+ x + 3y  =  7
+
+ Adaptation of this code to different N left as an exercise for the
+ reader.
+
+*/
+
 // For verification, enter the coefficients into this array to match equations
 double a[DIM][DIM] = {{3.0, -0.1, -0.2}, {0.1, 7.0, -0.3}, {0.3, -0.2, 10.0}};
 double b[DIM] = {7.85, -19.3, 71.4};
 double x[DIM]={0.0, 0.0, 0.0};
-double sol[DIM]={3.0, -2.5, 7.0};
 int n = DIM;
 
 
@@ -133,13 +141,23 @@ void vector_print(int nr, double *x);
 
 int main(void)
 {
-    double x0=0, y0=0, z0=0, x1, y1, z1, e1, e2, e3, e;
+    // Default guess is all are zero
+    //
+    //double x0=0, y0=0, z0=0;
+
+    // Better guess is that all are just diagonal-only solution
+    //
+    double x0=(7.85/3.0), y0=(-19.3/7.0), z0=(71.4/10.0);
+
+    double x1, y1, z1, e1, e2, e3, e;
     int count=1;
 
     printf("Enter tolerable error:\n");
     scanf("%lf", &e);
 
     printf("\nCount\tx\ty\tz\n");
+
+    printf("%d\t%0.4f\t%0.4f\t%0.4f --- INITIAL GUESS\n", 0, x0,y0,z0);
 
     // if equations are arranged in diagonally dominate form and are not ill-conditioned, GSIT loop
     // should converge.
@@ -170,8 +188,6 @@ int main(void)
     } while((e1>e) || (e2>e) || (e3>e));
 
     printf("\nGSIT Solution: x=%0.3f, y=%0.3f and z = %0.3f\n\n",x1,y1,z1);
-    printf("Math Tool Solution:\n");
-    vector_print(n, sol);
 
     // Additional verification steps to assess error in answer.
     //
