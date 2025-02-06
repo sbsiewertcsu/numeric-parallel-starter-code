@@ -7,12 +7,13 @@
 // Has been tested up to 1 billion using - https://primes.utm.edu/howmany.html
 // to verify the expected # of primes in this range and each prime can be printed
 // and compared with this list - http://compoasso.free.fr/primelistweb/page/prime/liste_online_en.php
-//
 // Another good source to verify - https://en.wikipedia.org/wiki/Prime-counting_function
+// Yet another - https://t5k.org/howmany.html
 //
 // Should work as long as you have sufficent memory to malloc the bitmap.
 //
 #define MAX (4294967295ULL)
+#define DEMO (1000000ULL)
 #define CODE_LENGTH ((sizeof(unsigned char))*8ULL)
 
 // Static declaration replaced by malloc
@@ -83,13 +84,13 @@ int main(int argc, char *argv[])
     unsigned int cnt=0;
     unsigned int list_cnt=0;
     unsigned long long int thread_idx=0;
-    unsigned long long int sp=0, max_n=MAX;
+    unsigned long long int sp=0, max_n=DEMO;
 	int idx=0, ridx=0, primechk;
 
     if (argc == 2)
     {
       sscanf(argv[1], "%d", &thread_count);
-      max_n=MAX;
+      max_n=DEMO;
       printf ( "Using: %d threads for %llu range\n", thread_count, max_n);
     }
     else if (argc == 3)
@@ -102,7 +103,7 @@ int main(int argc, char *argv[])
     {
       printf ( "usage: primescale <number threads> <max n>\n");
       thread_count=8;
-      max_n=MAX;
+      max_n=DEMO;
       printf ( "Using defaults: %d threads for %llu range\n", thread_count, max_n);
     }
 
