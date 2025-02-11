@@ -8,10 +8,10 @@ CFLAGS= -O0 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 CFLAGS2= -O0 -g -Wall $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= hello_omp hello_pthread omppi fibsum fib piseries piseriesompfunct incdec fibgpt
+PRODUCT= hello_omp hello_pthread omppi fibsum fib piseries piseriesompfunct incdec fibgpt tasks
 
 HFILES= 
-CFILES= hello_omp.c omppi.c fibsum.c fib.c piseries.c piseriesompfunct.c incdec.c fibgpt.c
+CFILES= hello_omp.c omppi.c fibsum.c fib.c piseries.c piseriesompfunct.c incdec.c fibgpt.c tasks.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
@@ -36,6 +36,9 @@ piseriesompfunct:	piseriesompfunct.c
 
 piseries:	piseries.c
 	$(CC) $(CFLAGS) -o $@ piseries.c
+
+tasks:	tasks.c
+	$(CC) $(CFLAGS) -o $@ tasks.c
 
 fibsum:	fibsum.c
 	$(CC) $(CFLAGS) -o $@ fibsum.c
