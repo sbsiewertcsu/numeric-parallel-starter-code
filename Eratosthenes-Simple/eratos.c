@@ -10,7 +10,16 @@
 //
 // Should work as long as you have sufficent memory to malloc the bitmap.
 //
+// definte GIANT for range to 1 billion, otherwise range is to 1 million
+//
+//#define GIANT
+
+#ifdef GIANT
 #define MAX (1000000000ULL)
+#else
+#define MAX (1000000ULL)
+#endif
+
 #define CODE_LENGTH ((sizeof(unsigned char))*8ULL)
 
 // Static declaration replaced by malloc

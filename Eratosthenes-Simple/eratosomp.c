@@ -10,7 +10,16 @@
 //
 // Should work as long as you have sufficent memory to malloc the bitmap.
 //
+// definte GIANT for 1 billion, else will do range to 1 million
+//
+//#define GIANT
+
+#ifdef GIANT
 #define MAX (1000000000ULL)
+#else
+#define MAX (1000000ULL)
+#endif
+
 #define CODE_LENGTH ((sizeof(unsigned char))*8ULL)
 
 // Static declaration replaced by malloc
@@ -35,6 +44,22 @@ int chk_isprime(unsigned long long int i)
     return(((isprime[idx]) & (1<<bitpos))>0);
 }
 
+// Be careful wtih thread safety for set_isprime. You can get lucky, but
+// shared memory read, modify, write is in general unsafe.
+//
+// You can consider:
+//
+// 1) Not threading this one function - although it is one for which speed-up benefits are high
+// 2) Mapping threads to specific ranges so they do not index common locations (this is a chance to be
+//    creative with map and reduce). Look at cross out carefully and imagine launching threads from different
+//    starter primes to cross out multiples - note that crossing out the same non-prime is not a problem. The
+//    problem is reading a non-prime and treating it as prime because it should be crossed out, but has not been
+//    crossed out yet. This is a strategy for thread safety using thread indexing methods to avoid RMW or globally shared
+//    memory.
+// 3) Using atomic
+// 4) Using MUTEX omp critical - usually not work it, see option #1
+// 5) Coming up with a stack-based approach using map and reduce
+//
 int set_isprime(unsigned long long int i, unsigned char val)
 {
     unsigned long long int idx;
@@ -103,6 +128,9 @@ int main(void)
     // 0 & 1 not prime, 2 is prime, 3 is prime, assume others prime to start
     isprime[0]=0xFC; 
 
+// Be careful with threading set_isprime and thread safety for global
+// cross-out array of bits.
+//
 #pragma omp parallel for num_threads(thread_count)
     for(i=2; i<MAX; i++) 
     {
@@ -207,10 +235,18 @@ int main(void)
         if((i % 1000000) == 0) printf("%u\n", primelist[i]);
 
     // Let's now compute an example large semi-prime
+    //
+#ifdef GIANT
     sp = ((unsigned long long)primelist[1000000]) * ((unsigned long long)primelist[50000000]);
 
     printf("Example large SP is %llu, factored into p1=%u, p2=%u\n", 
            sp, primelist[1000000], primelist[50000000]);
+#else
+    sp = ((unsigned long long)primelist[10000]) * ((unsigned long long)primelist[50000]);
+
+    printf("Example large SP is %llu, factored into p1=%u, p2=%u\n", 
+           sp, primelist[10000], primelist[50000]);
+#endif
 
     printf("Now we could use the primelist and search for the first prime where (sp mod p1) == 0\n");
     printf("Once we find the first zero modulo, then p2 = sp / p1 and we have our factors!\n");

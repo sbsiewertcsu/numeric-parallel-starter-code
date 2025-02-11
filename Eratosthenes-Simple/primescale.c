@@ -38,6 +38,22 @@ int chk_isprime(unsigned long long int i)
     return(((isprime[idx]) & (1<<bitpos))>0);
 }
 
+// Be careful wtih thread safety for set_isprime. You can get lucky, but
+// shared memory read, modify, write is in general unsafe.
+//
+// You can consider:
+//
+// 1) Not threading this one function - although it is one for which speed-up benefits are high
+// 2) Mapping threads to specific ranges so they do not index common locations (this is a chance to be
+//    creative with map and reduce). Look at cross out carefully and imagine launching threads from different
+//    starter primes to cross out multiples - note that crossing out the same non-prime is not a problem. The
+//    problem is reading a non-prime and treating it as prime because it should be crossed out, but has not been
+//    crossed out yet. This is a strategy for thread safety using thread indexing methods to avoid RMW or globally shared
+//    memory.
+// 3) Using atomic
+// 4) Using MUTEX omp critical - usually not work it, see option #1
+// 5) Coming up with a stack-based approach using map and reduce
+//
 int set_isprime(unsigned long long int i, unsigned char val)
 {
     unsigned long long int idx;
@@ -126,6 +142,9 @@ int main(int argc, char *argv[])
     // 0 & 1 not prime, 2 is prime, 3 is prime, assume others prime to start
     isprime[0]=0xFC; 
 
+// Be careful with threading set_isprime and thread safety for global
+// cross-out array of bits.
+//
 #pragma omp parallel for num_threads(thread_count)
     for(i=2; i<max_n; i++) 
     {
