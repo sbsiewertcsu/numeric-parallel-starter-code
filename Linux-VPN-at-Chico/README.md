@@ -9,6 +9,8 @@ $ which globalprotect
 globalprotect not found
 ```
 
+If `globalprotect` is installed, be sure to remove it before continuing or it will cause errors.
+
 ## 2. Install GlobalProtect-openconnect
 
 Instructions [here](https://github.com/yuezk/GlobalProtect-openconnect), but I'll show the command for Debian/Ubuntu below:
@@ -37,9 +39,11 @@ Be sure to close the GUI vpn before attempting to connect via CLI. (check htop a
 I would recommend adding these to your `~/.bash_aliases` file or equivalent.
 
 ```{sh}
-# Connect to the VPN. `-qq` suppresses output. `&` runs it in the background.
-vpn_start() {
-    sudo -E gpclient --fix-openssl connect -qq vpn.csuchico.edu &
+# Connect to the VPN. 
+# `sudo -Eb` lets gpclient keep permissions and runs it in the background.
+# `-qq` suppresses output. 
+vpn_connect() {
+    sudo -Eb gpclient --fix-openssl connect -qq vpn.csuchico.edu
 }
 
 # Closes the VPN with SIGINT (same as ^C if it were running in foreground)
@@ -50,14 +54,19 @@ vpn_disconnect() {
 
 ## 5. Verify Connection
 
+Simplest way is to try and ssh into ecc. 
+
 ```{sh}
 ssh <user>@ecc-linux.csuchico.edu
 ```
 
+`<user>` should be the same prefix as your .csuchico.edu email. 
+For example, `ssh jbcollins@ecc-linux.csuchico.edu`
+
 If it hangs, you're not connected.
 
-To check for errors, run `sudo -E gpclient --fix-openssl connect vpn.csuchico.edu`
+To check for errors, run `sudo -E gpclient --fix-openssl connect vpn.csuchico.edu` (running in foreground without log suppression)
 
-You may need to instead run `sudo -E gpclient --fix-openssl connect --clean vpn.csuchico.edu`, or `sudo -E gpclient --fix-openssl connect --hip vpn.csuchico.edu`, though these are not guaranteed to work.
+You may need to instead run `sudo -E gpclient --fix-openssl connect --clean vpn.csuchico.edu` (clears cookies), or `sudo -E gpclient --fix-openssl connect --hip vpn.csuchico.edu` (accomodates hip, but stopped working for me), though these are not guaranteed to work.
 
 The version of GlobalProtect used by CSU Chico is outdated and no longer supported by the packages listed on the support page, hence the need for this project.
