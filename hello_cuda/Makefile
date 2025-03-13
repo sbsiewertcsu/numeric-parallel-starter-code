@@ -66,9 +66,19 @@ CUDA_LIB_PATH   ?= $(CUDA_PATH)/lib/nvidia-cuda-toolkit
 
 # Location of the CUDA Toolkit binaries and libraries on Jetson Nano 2g
 #CUDA_PATH       ?= /usr/local/cuda-11.4
-#CUDA_INC_PATH   ?= $(CUDA)PATH)/include
+#CUDA_INC_PATH   ?= $(CUDA_PATH)/include
 #CUDA_BIN_PATH   ?= $(CUDA_PATH)/bin
 #CUDA_LIB_PATH   ?= $(CUDA_PATH)/lib
+
+# Location of the CUDA Toolkit binaries and libraries on Jetson Nano Orin
+#CUDA_PATH       ?= /usr/local/cuda-12.6
+#CUDA_INC_PATH   ?= $(CUDA_PATH)/include
+#CUDA_BIN_PATH   ?= $(CUDA_PATH)/bin
+#CUDA_LIB_PATH   ?= $(CUDA_PATH)/lib64
+
+# Common includes and paths for CUDA
+INCLUDES      := -I$(CUDA_INC_PATH) -I. -I.. -I../cuda_common -I../../common/inc -I$(CUDA_SAMP_PATH)
+
 
 
 # Common binaries
@@ -91,9 +101,6 @@ else
       TARGET    := release
 endif
 
-
-# Common includes and paths for CUDA
-INCLUDES      := -I$(CUDA_INC_PATH) -I. -I.. -I../../common/inc -I$(CUDA_SAMP_PATH)
 
 # Target rules
 all: build
