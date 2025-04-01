@@ -86,7 +86,7 @@
 
 #define ICHAR 80  // Length of array holding description of the problem
 #define IDEBUG 1  // Flag to enable printing of intermediate results of decomposition =1 yes, =0 no.
-
+#define TRACE 1 
 
 // Function Prototypes
 void  matrix_print (int nr, int nc, double **A);
@@ -206,16 +206,19 @@ int main (int argc, char *argv[])
 
     fclose(finput); // Close the input file
 
-    // Now print out the problem to be solved in vector matrix form for n equations, n unknowns
-    printf("\nMatrices read from input file\n");
-    printf("\nMatrix A passed in\n");
-    matrix_print(n, n, a);
+    if(TRACE)
+    {
+        // Now print out the problem to be solved in vector matrix form for n equations, n unknowns
+        printf("\nMatrices read from input file\n");
+        printf("\nMatrix A passed in\n");
+        matrix_print(n, n, a);
 
-    printf("\nRHS Vector b\n\n");
-    vector_print(n, b);
+        printf("\nRHS Vector b\n\n");
+        vector_print(n, b);
 
-    printf("\nAugmented Coefficient Matrix A with RHS\n");
-    augmented_matrix_print(n, n, a, b);
+        printf("\nAugmented Coefficient Matrix A with RHS\n");
+        augmented_matrix_print(n, n, a, b);
+    }
 
     // Call the Gaussian elimination function with back-solve
     //
@@ -324,8 +327,11 @@ void gauss(double **a, double *b, double *x, int n)
     int   row_idx, col_jdx, coef_idx, search_idx, pivot_row, solve_idx, rowx;
     double xfac, temp, amax;
 
-    printf("\nAugmented Coefficient Matrix A with RHS passed to GEWPP\n");
-    augmented_matrix_print(n, n, a, b);
+    if(TRACE)
+    {
+        printf("\nAugmented Coefficient Matrix A with RHS passed to GEWPP\n");
+        augmented_matrix_print(n, n, a, b);
+    }
 
     //////////////////////////////////////////
     //
@@ -341,7 +347,7 @@ void gauss(double **a, double *b, double *x, int n)
          // Assume first row, first column coefficient is largest to start the
          // search for the true largest coefficient in the matrix "a"
          //
-         amax = (double) fabs(a[search_idx][search_idx]) ;
+         amax = (double) fabs(a[search_idx][search_idx]);
          pivot_row = search_idx; // assume first row is the pivot row to start
 
          // Find the row with largest pivot (coefficient)
@@ -355,10 +361,10 @@ void gauss(double **a, double *b, double *x, int n)
                  amax = xfac; pivot_row=row_idx;
              }
          }
-         printf("\nPivot row=%d\n", pivot_row);
+         if(TRACE) printf("\nPivot row=%d, Pivot coeff=%lf, Pivot factor=%lf\n", pivot_row, amax, xfac);
 
 
-         // Row interchanges for partial pivot to get lower diagonal form
+         // Row interchanges for partial pivot to get upper diagonal form
          if(pivot_row != search_idx) 
          {  
              printf("Row swaps with pivot_row=%d, search_idx=%d\n", pivot_row, search_idx);
@@ -375,14 +381,19 @@ void gauss(double **a, double *b, double *x, int n)
                  a[pivot_row][col_jdx] = temp;
              }
 
-             printf("\nAugmented Matrix A with RHS after row swaps\n");
-             augmented_matrix_print(n, n, a, b);
+             if(TRACE)
+             {
+                 printf("\nAugmented Matrix A with RHS after row swaps\n");
+                 augmented_matrix_print(n, n, a, b);
+             }
           }
 
           // Row scaling to get zero in corresponding column
           for (row_idx=search_idx+1; row_idx < n; ++row_idx) 
           {
               xfac = a[row_idx][search_idx] / a[search_idx][search_idx];
+
+              if(TRACE) printf("coeff1=%lf, coeff2=%lf, xfac=%lf\n", a[row_idx][search_idx], a[search_idx][search_idx], xfac);
 
               // Original solution from MIT did not inclue ZERO columns, and they are
               // assumed to be zero as was noted in the GEWPP tutorial videos.
@@ -395,12 +406,19 @@ void gauss(double **a, double *b, double *x, int n)
               for (col_jdx=search_idx; col_jdx < n; ++col_jdx) 
               {
                   a[row_idx][col_jdx] = a[row_idx][col_jdx] - (xfac*a[search_idx][col_jdx]);
+
+                  if(TRACE) printf("coeff for zero=%lf, coeff mult by xfac = %lf\n", a[row_idx][col_jdx], (xfac*a[search_idx][col_jdx]));
               }
               
               b[row_idx] = b[row_idx] - (xfac*b[search_idx]);
 
-              printf("\nAugmented Matrix A with RHS after row scaling with xfac=%lf\n", xfac);
-              augmented_matrix_print(n, n, a, b);
+              if(TRACE) printf("\ncoeff for RHS=%lf, coeff mult by xfac = %lf\n", b[row_idx], (xfac*b[search_idx]));
+
+              if(TRACE)
+              {
+                  printf("\nAugmented Matrix A with RHS after row scaling with xfac=%lf\n", xfac);
+                  augmented_matrix_print(n, n, a, b);
+              }
           }
 
         if(IDEBUG == 1) 
@@ -443,6 +461,8 @@ void gauss(double **a, double *b, double *x, int n)
       // based on lower diagonal form we always divide by a diagonal coefficient to
       // find the current unknown of interest
       x[solve_idx] = x[solve_idx] / a[solve_idx][solve_idx];
+
+      if(TRACE) printf("x[%d]=%lf\n", solve_idx, x[solve_idx]);
     }
 
     if(IDEBUG == 1) 
