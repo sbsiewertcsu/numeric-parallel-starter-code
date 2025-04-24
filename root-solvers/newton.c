@@ -21,36 +21,83 @@
 // model a function with desmos for example to "see" roots
 // 
 // https://www.desmos.com/calculator
+//
+// Make sure your derivative function df is in fact the derivative of f
+//
 double f(double x)
 {
-    //return x*log10(x) - 1.2;
 
+    // FUNCTION #1
+    //
     // PARABOLA that touches X-axis (root), but does not cross it
-    // where b^2 - 4ac =0, e.g., b=2, a=1, c=1 is a case like this
+    // where b^2 - 4ac =0, e.g., b=2, a=1, c=1 is a case like this.
+    //
     //return((x*x)+2.0*x+1.0);
 
+    // FUNCTION #2
     //return (-(x*x*x) + 9.7*(x*x) -1.3*x -105.7);
 
+    // FUNCTION #3
+    //return x*log10(x) - 1.2;
+
+    // FUNCTION #4
     //return (sin(x*x));
-    return (cos(x*x));
+
+
+    // FUNCTION #5
+    //return (cos(x*x));
+
+    // FUNCTION #6
+    //return cos(x);
+
+    // FUNCTION #7
+    return sin(x);
 }
 
 // model the derivative of that function using calculus and check your answer
 //
 // https://www.derivative-calculator.net/
+//
 double df (double x)
 {
-    //return log10(x) + 0.43429;
 
+    // FUNCTION #1 Slope
+    //
     // Derivative of PARABOLA that touches X-axis (root), but does not cross it
-    // where b^2 - 4ac =0, e.g., b=2, a=1, c=1 is a case like this
+    // where b^2 - 4ac =0, e.g., b=2, a=1, c=1 is a case like this.
+    //
     //return((2.0*x)+2.0);
 
+    // FUNCTION #2 Slope
     // As can be seen with Desmos, this example equation has roots near: -2.851, 4.758, and 7.792
     //return (-3.0*(x*x) + 19.4*(x) -1.3);
 
+    // FUNCTION #3 Slope
+    //return log10(x) + 0.43429;
+
+
+    // FUNCTION #4 Slope
     //return (2.0*x*cos(x*x));
-    return (-2.0*x*sin(x*x));
+
+    // FUNCTION #5 Slope
+    //return (-2.0*x*sin(x*x));
+
+    // FUNCTION #6 Slope
+    //return -sin(x);
+
+    // FUNCTION #7 Slope
+    return cos(x);
+
+    // BAD SLOPES - can cause divergence and failure of Newton method
+    //
+    // Undefined slope, zero, or huge positive or negative slope can cause issues for Newton 
+    // convergence as well as an INCORRECT derivative, although, sometimes an INCORRECT derivative will converge (more
+    // slowly most often).
+    //
+    //return (0.0);
+    //return (DBL_MAX);
+    //return (-DBL_MAX);
+
 }
 
 int main(void)
