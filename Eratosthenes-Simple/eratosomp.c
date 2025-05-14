@@ -16,7 +16,8 @@
 #define GIANT
 
 #ifdef GIANT
-#define MAX (1000000000ULL)
+//#define MAX (2000000000ULL)
+#define MAX (4000000000ULL)
 #else
 #define MAX (1000000ULL)
 #endif
@@ -29,7 +30,7 @@
 unsigned char *isprime;
 
 // List of the primes - assumes that at most 10% of numbers are prime
-#define MAX_PRIMES (100000000)
+#define MAX_PRIMES (500000000)
 unsigned int primelist[MAX_PRIMES];
 
 int chk_isprime(unsigned long long int i)
@@ -112,7 +113,7 @@ int main(int argc, char *argv[])
 
     // Instrumented time-stamps in code
     struct timespec now, start;
-    double fnow, fstart;
+    double fnow=0.0, fstart=0.0, faccum=0.0;
 
     if(argc == 2)
     {
@@ -177,6 +178,8 @@ int main(int argc, char *argv[])
     //print_isprime();
 
 
+    printf("Entering cross out loop\n"); faccum=0.0;
+
     while( (p*p) <=  MAX)
     {
         //printf("p=%llu\n", p);
@@ -196,6 +199,7 @@ int main(int argc, char *argv[])
         clock_gettime(CLOCK_MONOTONIC, &now);
         fstart = (double)start.tv_sec  + (double)start.tv_nsec / 1000000000.0;
         fnow = (double)now.tv_sec  + (double)now.tv_nsec / 1000000000.0;
+        faccum += (fnow-fstart);
         //printf("Cross out set_isprime(%llu) in %lf secs\n", MAX, (fnow-fstart));
   
 
@@ -210,6 +214,7 @@ int main(int argc, char *argv[])
         }
 
     }
+    printf("Done with cross out loop with set_isprime(%llu) time=%lf secs\n", MAX, faccum);
 
 
 // Note that a reduction on the global cnt variable is necessary for correct results
