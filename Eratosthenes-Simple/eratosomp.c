@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 // Simple code to implement the original Eratosthenes Sieve
@@ -12,7 +13,7 @@
 //
 // definte GIANT for 1 billion, else will do range to 1 million
 //
-//#define GIANT
+#define GIANT
 
 #ifdef GIANT
 #define MAX (1000000000ULL)
@@ -98,7 +99,7 @@ void print_isprime(void)
 }
 
 
-int main(void)
+int main(int argc, char *argv[])
 {
     int thread_count=8;
     unsigned long long int i, j;
@@ -108,6 +109,20 @@ int main(void)
     unsigned long long int thread_idx=0;
     unsigned long long int sp=0;
 	int idx=0, ridx=0, primechk;
+
+    // Instrumented time-stamps in code
+    struct timespec now, start;
+    double fnow, fstart;
+
+    if(argc == 2)
+    {
+        sscanf(argv[1], "%d", &thread_count);
+        printf("Setting thread_count to %d\n", thread_count);
+    }
+    else
+    {
+        printf("Using DEFAULT thread_count of %d\n", thread_count);
+    }
 
     printf("max uint = %u\n", (0xFFFFFFFF));
     printf("max long long = %llu\n", (0xFFFFFFFFFFFFFFFFULL));
@@ -131,18 +146,29 @@ int main(void)
 // Be careful with threading set_isprime and thread safety for global
 // cross-out array of bits.
 //
+    clock_gettime(CLOCK_MONOTONIC, &start);
 #pragma omp parallel for num_threads(thread_count)
     for(i=2; i<MAX; i++) 
     {
         set_isprime(i, 1); 
     }
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    fstart = (double)start.tv_sec  + (double)start.tv_nsec / 1000000000.0;
+    fnow = (double)now.tv_sec  + (double)now.tv_nsec / 1000000000.0;
+    printf("Initial set_isprime(%llu) in %lf secs\n", MAX, (fnow-fstart));
   
+    clock_gettime(CLOCK_MONOTONIC, &start);
 #pragma omp parallel for num_threads(thread_count)
     for(i=0; i<MAX; i++) 
     { 
         primechk = chk_isprime(i);
         //printf("isprime=%d\n", primechk); 
     }
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    fstart = (double)start.tv_sec  + (double)start.tv_nsec / 1000000000.0;
+    fnow = (double)now.tv_sec  + (double)now.tv_nsec / 1000000000.0;
+    printf("chk_isprime(%llu) in %lf secs\n", MAX, (fnow-fstart));
+  
 
     // will all be TRUE here or 0xFF for all except 0 & 1 so  0xFC for index=0
     //
@@ -160,12 +186,18 @@ int main(void)
         // simple to compose into a grid of invalidations
         //
 
+        clock_gettime(CLOCK_MONOTONIC, &start);
 #pragma omp parallel for num_threads(thread_count)
         for(j=2*p; j<MAX+1; j+=p)
         {
             //printf("j=%llu\n", j);
             set_isprime(j,0);
         }
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        fstart = (double)start.tv_sec  + (double)start.tv_nsec / 1000000000.0;
+        fnow = (double)now.tv_sec  + (double)now.tv_nsec / 1000000000.0;
+        //printf("Cross out set_isprime(%llu) in %lf secs\n", MAX, (fnow-fstart));
+  
 
         // find next lowest prime - sequential process
         for(j=p+1; j<MAX+1; j++)
@@ -199,6 +231,7 @@ int main(void)
 // fact commutative (can be applied to results arranged in any order).  If this is not true, the
 // results may be corrupted and we might need to use omp critical to serialize.
 //
+    clock_gettime(CLOCK_MONOTONIC, &start);
 #pragma omp parallel for num_threads(thread_count) reduction(+:cnt)
     for(i=0; i<MAX+1; i++)
     {
@@ -208,6 +241,11 @@ int main(void)
             //printf("i=%llu\n", i); 
         }
     }
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    fstart = (double)start.tv_sec  + (double)start.tv_nsec / 1000000000.0;
+    fnow = (double)now.tv_sec  + (double)now.tv_nsec / 1000000000.0;
+    printf("Total number of primes chk_isprime(%llu) in %lf secs", MAX, (fnow-fstart));
+  
 
     // Can't thread this as the cnt is global and indexes the list of primes
     // unless we use omp critical, but that would serialize
