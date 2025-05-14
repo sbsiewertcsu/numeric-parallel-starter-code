@@ -11,13 +11,12 @@
 //
 // Should work as long as you have sufficent memory to malloc the bitmap.
 //
-// definte GIANT for 1 billion, else will do range to 1 million
+// define GIANT for test up to 4 billion, else will do range to 1 million
 //
 #define GIANT
 
 #ifdef GIANT
-//#define MAX (2000000000ULL)
-#define MAX (4000000000ULL)
+#define MAX (4000000000ULL) // limit is 4 billion based on 32-bit primes, 64-bit SP
 #else
 #define MAX (1000000ULL)
 #endif
@@ -30,7 +29,8 @@
 unsigned char *isprime;
 
 // List of the primes - assumes that at most 10% of numbers are prime
-#define MAX_PRIMES (500000000)
+// E.g., 400 million primes or less in the range 0...4 billion
+#define MAX_PRIMES (400000000)
 unsigned int primelist[MAX_PRIMES];
 
 int chk_isprime(unsigned long long int i)
