@@ -1,7 +1,12 @@
+// Note that this code was created with help from ChatGPT
+//
+// See the README in this directory for the prompting
+//
 #include <iostream>
 #include <cmath>
 
-#define RANGE (M_PI)
+//#define RANGE (M_PI)
+#define RANGE (10.0)
 #define STEPS (1000000)
 
 using namespace std;
@@ -84,5 +89,6 @@ int main(int argc, char* argv[])
 
 double function_to_integrate(double x)
 {
-    return (sin(x));
+    return 10.0;
+    //return (sin(x));
 }
