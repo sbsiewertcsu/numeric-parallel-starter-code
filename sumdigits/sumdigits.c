@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define COUNT  (20)
+#define COUNT  (1000)
 
 // Note that this is hardcoded to work for just 2 threads below
-// Be very carefult about assumign you can just bump this up to make
+// Be very carefult about assuming you can just bump this up to make
 // everythign work for a larger scale (number of workers).
-#define NUM_THREADS (2)
+#define NUM_THREADS (10)
 
 // Note that often the "digit sum" rather than "sum of the digits" is defined as the sum of the digit in each 10's place, but
 // that's not what we want to model here.  E.g., Wikipedia - https://en.wikipedia.org/wiki/Digit_sum
@@ -68,6 +68,10 @@ int main (int argc, char *argv[])
 {
    int range=COUNT/NUM_THREADS, gsumall=0; int i=0;
 
+   // initialize gsum array to zero
+   for(i=0; i<NUM_THREADS; i++)
+       gsum[i]=0;
+
    printf("Each thread subrange is %d\n", range);
 
    for(i=0; i<NUM_THREADS; i++)
@@ -84,7 +88,10 @@ int main (int argc, char *argv[])
 
    // we add int COUNT here in the final reduction since each worker
    // summed up to n-1, so we have to add final value n
-   gsumall=gsum[0]+gsum[1]+COUNT;
+   for(i=0; i<NUM_THREADS; i++)
+       gsumall+=gsum[i];
+
+   gsumall+=COUNT;
 
    printf("TEST COMPLETE: gsum[0]=%d, gsum[1]=%d, gsumall=%d\n", 
           gsum[0], gsum[1], gsumall);
