@@ -122,7 +122,7 @@ int main(int argc, char *argv[]){
 	dim3 mainGrid(80,60); dim3 rowBlock(4,4);
 #endif	
 	if(2!=argc){
-		printf("Usage:: ./filename imagefile.ppm\nExit\n");
+		printf("Usage: ./sharpen_gpu input_imagefile.ppm\nExit\n");
 		return -1;
 	}
         if(DEBUG) printf("size of uint8_t is %lu\n",sizeof(uint8_t));
@@ -207,6 +207,7 @@ printf("Host to device copy .. done\n");
 	cudaFree(sharpBdev);
 	//cudaThreadExit();	
 #endif
+	printf("Wrote out transformed file sharpened.ppm\n");
 	printf("Time elapsed= %f ms\n",(1000000*tv_end.tv_sec+tv_end.tv_usec-1000000*tv_start.tv_sec-tv_start.tv_usec)/1000.0);
 	
 	return 0;
