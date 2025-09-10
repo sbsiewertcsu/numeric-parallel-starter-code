@@ -3,3 +3,21 @@ a Makefile and some minor refactoring for use in CSCI 551 with our A100 system
 or NVIDIA Jetson Orin.
 
 Just type "make" to build
+
+*** Note updates for A100 CUDA 12.9 on 9-10-2025
+
+sbsiewert@cscigpu:~/numeric-parallel-starter-code/cuda-integrators$ make
+/usr/local/cuda-12.9/bin/nvcc  -Wno-deprecated-gpu-targets -I/usr/include -I. -I.. -I../../common/inc -o cuda_trap1.o -c cuda_trap1.cu
+g++  -o cuda_trap1 cuda_trap1.o -L/usr/local/cuda-12.9/lib64 -lcudart -lm
+/usr/local/cuda-12.9/bin/nvcc  -Wno-deprecated-gpu-targets -I/usr/include -I. -I.. -I../../common/inc -o cuda_trap2.o -c cuda_trap2.cu
+g++  -o cuda_trap2 cuda_trap2.o -L/usr/local/cuda-12.9/lib64 -lcudart -lm
+/usr/local/cuda-12.9/bin/nvcc  -Wno-deprecated-gpu-targets -I/usr/include -I. -I.. -I../../common/inc -o cuda_trap3.o -c cuda_trap3.cu
+g++  -o cuda_trap3 cuda_trap3.o -L/usr/local/cuda-12.9/lib64 -lcudart -lm
+/usr/local/cuda-12.9/bin/nvcc  -Wno-deprecated-gpu-targets -I/usr/include -I. -I.. -I../../common/inc -o cuda_trap2b.o -c cuda_trap2b.cu
+g++  -o cuda_trap2b cuda_trap2b.o -L/usr/local/cuda-12.9/lib64 -lcudart -lm
+/usr/local/cuda-12.9/bin/nvcc  -Wno-deprecated-gpu-targets -I/usr/include -I. -I.. -I../../common/inc -o cuda_trap3b.o -c cuda_trap3b.cu
+g++  -o cuda_trap3b cuda_trap3b.o -L/usr/local/cuda-12.9/lib64 -lcudart -lm
+g++  -I/usr/include -I. -I.. -I../../common/inc -o trap.o -c trap.c
+g++  -o trap trap.o -L/usr/local/cuda-12.9/lib64 -lcudart -lm
+sbsiewert@cscigpu:~/numeric-parallel-starter-code/cuda-integrators$
+
