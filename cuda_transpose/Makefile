@@ -32,7 +32,10 @@
 ################################################################################
 
 # Location of the CUDA Toolkit
-CUDA_PATH ?= /usr/local/cuda
+#CUDA_PATH ?= /usr/local/cuda
+#CUDA_PATH ?= /usr/local/cuda-13.0
+CUDA_PATH ?= /usr/local/cuda-12.9
+
 
 ##############################
 # start deprecated interface #
@@ -285,7 +288,7 @@ LIBRARIES :=
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),armv7l aarch64 sbsa))
 SMS ?= 53 61 70 72 75 80 86 87 90
 else
-SMS ?= 50 52 60 61 70 75 80 86
+SMS ?= 75 80 86
 endif
 
 ifeq ($(SMS),)
@@ -304,7 +307,7 @@ GENCODE_FLAGS += -gencode arch=compute_$(HIGHEST_SM),code=compute_$(HIGHEST_SM)
 endif
 endif
 
-ALL_CCFLAGS += --threads 0 --std=c++11
+ALL_CCFLAGS += --threads 0 --std=c++17
 
 ifeq ($(SAMPLE_ENABLED),0)
 EXEC ?= @echo "[@]"
