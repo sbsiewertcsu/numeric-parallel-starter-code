@@ -1,3 +1,8 @@
+Code such as DeviceQuery comes from:
+https://github.com/NVIDIA/cuda-samples
+
+The reminaing code is starter code by Sam Siewert or from:
+
 CUDA Examples from 2nd Ed of "An Introduction to Parallel Programming" with
 a Makefile and some minor refactoring for use in CSCI 551 with our A100 system
 or NVIDIA Jetson Orin.
@@ -20,4 +25,19 @@ g++  -o deviceQuery deviceQuery.o -L/usr/lib/nvidia-cuda-toolkit -lcudart
 cuda_hello   cuda_hello1.cu  cuda_hello.cu  deviceQuery      deviceQuery.o  README
 cuda_hello1  cuda_hello1.o   cuda_hello.o   deviceQuery.cpp  Makefile
 (ultralytics-env) sbsiewert@cscigpu:~/numeric-parallel-starter-code/hello_cuda$
+
+
+Note that the A100 has been upgraded to CUDA 12.9 and corresponding driver as of 9/10/2025
+
+sbsiewert@cscigpu:~/numeric-parallel-starter-code/hello_cuda$ make
+/usr/local/cuda-12.9/bin/nvcc   -I/usr/include -I. -I.. -I../cuda_common -I../../common/inc -I../cuda_common -o cuda_hello.o -c cuda_hello.cu
+nvcc warning : Support for offline compilation for architectures prior to '<compute/sm/lto>_75' will be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+g++  -o cuda_hello cuda_hello.o -L/usr/local/cuda-12.9/lib64 -lcudart
+/usr/local/cuda-12.9/bin/nvcc   -I/usr/include -I. -I.. -I../cuda_common -I../../common/inc -I../cuda_common -o cuda_hello1.o -c cuda_hello1.cu
+nvcc warning : Support for offline compilation for architectures prior to '<compute/sm/lto>_75' will be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+g++  -o cuda_hello1 cuda_hello1.o -L/usr/local/cuda-12.9/lib64 -lcudart
+/usr/local/cuda-12.9/bin/nvcc   -I/usr/include -I. -I.. -I../cuda_common -I../../common/inc -I../cuda_common -o deviceQuery.o -c deviceQuery.cpp
+nvcc warning : Support for offline compilation for architectures prior to '<compute/sm/lto>_75' will be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+g++  -o deviceQuery deviceQuery.o -L/usr/local/cuda-12.9/lib64 -lcudart
+sbsiewert@cscigpu:~/numeric-parallel-starter-code/hello_cuda$
 
