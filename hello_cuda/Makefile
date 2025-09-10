@@ -90,7 +90,7 @@ NVCC            ?= $(CUDA_BIN_PATH)/nvcc
 GCC             ?= g++
 
 # Extra user flags
-EXTRA_NVCCFLAGS ?=
+EXTRA_NVCCFLAGS ?= -Wno-deprecated-gpu-targets
 EXTRA_LDFLAGS   ?=
 
 LDFLAGS		:= -L$(CUDA_LIB_PATH) -lcudart
