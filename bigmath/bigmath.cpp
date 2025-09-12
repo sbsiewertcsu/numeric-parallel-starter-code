@@ -1,7 +1,7 @@
 // Gneretated with Chat-GPT
 // https://chatgpt.com/share/66e5100e-1548-8011-bbbe-46481157c6aa
 //
-// For 256-bit, this is more more complex
+// For 256-bit, this is much more complex
 //
 // https://chatgpt.com/share/66e51324-172c-8011-b75c-0297b8c87873
 
