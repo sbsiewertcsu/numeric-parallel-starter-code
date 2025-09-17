@@ -18,8 +18,14 @@ int main()
     struct dirent *dp;
     char *fullpath;
     //const char *path="/tmp/cards_3x4_ppm"; // Directory target in /tmp direct attach storage
-    const char *path="./../cards_3x4_ppm"; // Directory target on NFS volume
+    //const char *path="./../cards_3x4_ppm"; // Directory target on NFS volume
+    const char *path="./.."; // Directory target on NFS volume
     DIR *dir = opendir(path); // Open the directory - dir contains a pointer to manage the dir
+
+    if (dir == (DIR *)0)
+        { printf("%s path not valid\n", path); exit(-1); }
+    else
+        printf("opening %s path\n", path);
 
     printf("\nUse of readdir to find all card file names in a directory\n");
     while (dp=readdir(dir)) // if dp is null, there's no more content to read
