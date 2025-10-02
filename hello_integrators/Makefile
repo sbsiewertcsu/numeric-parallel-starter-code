@@ -9,12 +9,12 @@ CFLAGS= -O3 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 CFLAGS2= -O0 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= hello_riemann hello_trapezoidal hello_simpson
+PRODUCT= hello_riemann hello_trapezoidal hello_simpson hello_rk4
 
 HFILES= 
 CFILES= 
 HPPFILES= 
-CPPFILES= hello_riemann.cpp hello_trapezoidal.cpp hello_simpson.cpp
+CPPFILES= hello_riemann.cpp hello_trapezoidal.cpp hello_simpson.cpp hello_rk4.cpp
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
@@ -33,3 +33,6 @@ hello_trapezoidal:	hello_trapezoidal.cpp
 
 hello_simpson:	hello_simpson.cpp
 	$(CPP) $(CFLAGS2) -o $@ hello_simpson.cpp -lm
+
+hello_rk4:	hello_rk4.cpp
+	$(CPP) $(CFLAGS2) -o $@ hello_rk4.cpp -lm
