@@ -11,22 +11,25 @@ CFLAGS= -O0 $(INCLUDE_DIRS) $(CDEFS)
 LIBS= -lm
 
 HFILES= 
-CFILES= timeprofiles.c timeprofiles_omp.c csvtostatic.c
+CFILES= simtrain_omp.c simtrainideal_omp.c csvtostatic.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	simtrain_omp csvtostatic
+all:	simtrain_omp simtrainideal_omp csvtostatic
 
 clean:
 	-rm -f *.o *.d
-	-rm -f simtrain_omp csvtostatic
+	-rm -f simtrain_omp simtrainideal_omp csvtostatic
 
 distclean:
 	-rm -f *.o *.d
 	-rm -f simtrain_omp csvtostatic
 
 simtrain_omp: simtrain_omp.c
+	$(CC) $(LDFLAGS) $(OMP_CFLAGS) -o $@ $@.c $(LIBS)
+
+simtrainideal_omp: simtrainideal_omp.c
 	$(CC) $(LDFLAGS) $(OMP_CFLAGS) -o $@ $@.c $(LIBS)
 
 csvtostatic: csvtostatic.c
