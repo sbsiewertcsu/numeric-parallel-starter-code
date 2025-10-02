@@ -101,10 +101,10 @@ void main(int argc, char *argv[])
     double time_a, time_b;
 
     // Overall simulation table loop
-    for(idx=1; idx < tsize; idx++)
+    for(idx=0; idx < tsize; idx++)
     {
-        time_a = (double)idx-1;
-        time_b = (double)idx;
+        time_a = (double)idx;
+        time_b = (double)idx+1;
 
         #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
         //VelStep += Local_Riemann(time_a, time_b, steps_per_idx, faccel);
