@@ -4,6 +4,8 @@
 #include <time.h>
 #include <omp.h>
 
+#include <mpi.h>
+
 // Coefficient of Rolling Resistance from https://youtu.be/-KAVJH_Dl80
 //
 // Force_rolling_resist = m*accel
@@ -19,8 +21,7 @@
 #define ACCEL_GRAVITY (9.81)
 
 // 0.002943 to 0.003924 m/s²
-//double rolling_deceleration = Crr_MIN * ACCEL_GRAVITY;
-double rolling_deceleration = 0.0;
+double rolling_deceleration = Crr_MIN * ACCEL_GRAVITY;
 
 double duration=1800.0;
 double tscale, ascale, vscale; //computed in main based on actual duration
@@ -41,6 +42,7 @@ char *integrator_names[]={"Riemann", "Trapezoidal", "Simpson", "Runge-Kutta-4"};
 #define SIMPSON 2
 #define RK4 3
 
+// mpiexec -n 4 ./simtrainideal 4 0.001 1800 0
 
 void main(int argc, char *argv[])
 {
@@ -48,13 +50,31 @@ void main(int argc, char *argv[])
     double time, dt=1.0; // dt=1.0 is the default to match spreadsheet
     unsigned long integration_steps;
     int integrator_selected=0;
-    int thread_count=1;
+    int thread_count=4;
     double AccelStep, VelStep, PosStep;
     struct timespec start, end;
     double fstart, fend;
     double TargetPos=122000.0;
+    double targetErr=0.0;
+    double leastErr=0.0;
 
-    printf("\nUse: simtrain [threads] [dt] [duration] [integrator is 0=Riemann, 1=Trap, 2=Simpsons, 3=RK4]\n");
+    struct {
+        double posErr;
+        int rank;
+        } global_err;
+
+    int comm_sz;
+    int my_rank, best_rank;
+    double aveVel=0.0;
+    double distLeft=0.0;
+    double estTime = 0.0;
+    double time_a, time_b;
+
+    MPI_Init(NULL, NULL);
+    MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+
+    if(my_rank == 0) printf("\nUse: simtrain [threads] [dt] [duration] [integrator is 0=Riemann, 1=Trap, 2=Simpsons, 3=RK4]\n");
 
     if(argc == 2)
     {
@@ -91,18 +111,119 @@ void main(int argc, char *argv[])
     //vscale=1.0;
     vscale=ascale*duration/(2.0*M_PI);
 
-    printf("Will simulate with thread_count=%d, with dt=%lf for %lu steps for %lf seconds with integrator %d\n",
-           thread_count, dt, integration_steps, duration, integrator_selected);
+
+    // Rank 0, runs a full simulation which wil come up short of the target distance
+    //
+    // This is used to estimate time to complete distance based on average velocity for the trial run
+    //
+    // All ranks will evenly divide the time between the original schedule and the estimated addtional time
+    //
+    // Reduce to find minimum error between the target distance and each rank's simulation distance will be used
+    // to determine the closest time to the actual time required given the rolling resistance.
+    //
+    if(my_rank == 0)
+    {
+        printf("Will simulate with thread_count=%d, with dt=%lf for %lu steps for %lf seconds with integrator %s\n",
+               thread_count, dt, integration_steps, duration, integrator_names[integrator_selected]);
+
+        printf("\n\nTHREADED INTEGRATOR %s: test for duration %lf seconds\n", integrator_names[integrator_selected], duration);
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        VelStep=0.0; PosStep=0.0;
+
+        // Integrate the whole simulation in parallel based upon Oracle antiderivative
+
+        time_a = 0.0;
+        time_b = duration;
+
+        switch(integrator_selected)
+        {
+            case RIEMANN:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_Riemann(time_a, time_b, integration_steps, ex3_accel);
+
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_Riemann(time_a, time_b, integration_steps, ex3_vel);
+
+                break;
+
+            case TRAPEZOIDAL:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_Trap(time_a, time_b, integration_steps, ex3_accel);
+
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_Trap(time_a, time_b, integration_steps, ex3_vel);
+
+                break;
+
+
+            case SIMPSON:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_Simpson(time_a, time_b, integration_steps, ex3_accel);
+
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_Simpson(time_a, time_b, integration_steps, ex3_vel);
+
+                break;
+
+            case RK4:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_RK4(time_a, time_b, integration_steps, ex3_accel);
+
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_RK4(time_a, time_b, integration_steps, ex3_vel);
+
+                break;
+
+            default:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_Riemann(time_a, time_b, integration_steps, ex3_accel);
+
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_Riemann(time_a, time_b, integration_steps, ex3_vel);
+        }
+
+
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        fstart=start.tv_sec + (start.tv_nsec / 1000000000.0);
+        fend=end.tv_sec + (end.tv_nsec / 1000000000.0);
+
+        aveVel=PosStep/duration;
+        distLeft=TargetPos-PosStep;
+        estTime = distLeft / aveVel;
+
+        printf("Train from function in %lf seconds: final velocity = %lf, final position = %lf, ave velocity=%lf, remaining dist=%lf, added time=%lf\n",
+               (fend-fstart), VelStep, PosStep, aveVel, distLeft, estTime);
+
+    } // end my_rank==0
+
+    // Wait for rank 0 to finish, then go on to simulate multiple cases in parallel
+    //
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Bcast(&estTime, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+    // Divide up duration search space between oringal duration and duration+estTime
+    duration=duration + (estTime*(double)((double)(my_rank+1)/(double)comm_sz));
+    printf("rank %d of %d, will run simulation for %lf time\n", my_rank, comm_sz, duration);
+
+    // Start parallel simulation here
+    //
+    integration_steps = duration / dt;
+    time_a = 0.0;
+    time_b = duration;
+
+    tscale=duration/(2.0*M_PI);
+    vscale=ascale*duration/(2.0*M_PI);
+
+
+    printf("rank %d will simulate with thread_count=%d, with dt=%lf for %lu steps from a=%lf to b=%lf, for %lf seconds with integrator %s\n",
+           my_rank, thread_count, dt, integration_steps, time_a, time_b, duration, integrator_names[integrator_selected]);
 
     printf("\n\nTHREADED INTEGRATOR %s: test for duration %lf seconds\n", integrator_names[integrator_selected], duration);
     clock_gettime(CLOCK_MONOTONIC, &start);
+
     VelStep=0.0; PosStep=0.0;
-    double time_a, time_b;
 
     // Integrate the whole simulation in parallel based upon Oracle antiderivative
-
-    time_a = 0.0;
-    time_b = duration;
 
     switch(integrator_selected)
     {
@@ -156,12 +277,26 @@ void main(int argc, char *argv[])
     fstart=start.tv_sec + (start.tv_nsec / 1000000000.0);
     fend=end.tv_sec + (end.tv_nsec / 1000000000.0);
 
-    double aveVel=PosStep/duration;
-    double distLeft=TargetPos-PosStep;
-    double estTime = distLeft / aveVel;
+    aveVel=PosStep/duration;
+    distLeft=TargetPos-PosStep;
+    estTime = distLeft / aveVel;
+    targetErr = fabs(TargetPos - PosStep);
 
-    printf("Train from function in %lf seconds: final velocity = %lf, final position = %lf, ave velocity=%lf, remaining dist=%lf, added time=%lf\n", 
-	       (fend-fstart), VelStep, PosStep, aveVel, distLeft, estTime);
+    global_err.posErr=targetErr;
+    global_err.rank=my_rank;
+
+    printf("Rank %d, simulated train from function in %lf seconds: final velocity = %lf, final position = %lf, ave velocity=%lf, remaining dist=%lf, added time=%lf\n",
+           my_rank, (fend-fstart), VelStep, PosStep, aveVel, distLeft, estTime);
+
+    MPI_Allreduce(&targetErr, &leastErr, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+    MPI_Allreduce(MPI_IN_PLACE, &global_err, 1, MPI_DOUBLE_INT, MPI_MINLOC, MPI_COMM_WORLD);
+
+    if(my_rank == 0) 
+    {
+        printf("rank = %d has leastErr=%lf, leastErr=%lf\n", global_err.rank, global_err.posErr, leastErr);
+    }
+
+    MPI_Finalize();
 
 }
 

@@ -24,6 +24,24 @@
 //#include "sine.h"
 
 
+// Coefficient of Rolling Resistance from https://youtu.be/-KAVJH_Dl80
+//
+// Force_rolling_resist = m*accel
+//
+// Crr(m)(g) = m*accel
+//
+// accel = Crr(g)
+//
+// Assumes wheels don't lock up during braking or slip during acceleration
+//
+#define Crr_MIN (0.0003)
+#define Crr_MAX (0.0004)
+#define ACCEL_GRAVITY (9.81)
+
+//double rolling_deceleration = Crr_MIN * ACCEL_GRAVITY;
+double rolling_deceleration = 0.0;
+
+
 // table look-up for acceleration profile given and velocity profile determined
 double table_accel(int timeidx);
 double table_vel(int timeidx);
@@ -42,21 +60,27 @@ double Local_Trap(double a, double b, int n, double func(double));
 double Local_Simpson(double a, double b, int n, double func(double));
 double Local_RK4(double a, double b, int n, double func(double));
 
+char *integrator_names[]={"Riemann", "Trapezoidal", "Simpson", "Runge-Kutta-4"};
+#define RIEMANN 0
+#define TRAPEZOIDAL 1
+#define SIMPSON 2
+#define RK4 3
+
 
 void main(int argc, char *argv[])
 {
     int idx;
-    double time, dt=1.0; // dt=1.0 is the default to match spreadsheet
+    double time, dt=0.1; // dt=0.1 takes 10 steps per step in spreadsheet
     int tsize = (int)(sizeof(DefaultProfile) / sizeof(double));
     unsigned long integration_steps=tsize;
     int steps_per_idx=integration_steps/tsize;
-    int thread_count=1;
+    int thread_count=1, integrator_selected=0;
     double AccelStep, VelStep, PosStep;
     struct timespec start, end;
     double fstart, fend;
 
 
-    printf("argc=%d, argv[0]=%s\n", argc, argv[0]);
+    printf("\nUse: simtrain [threads] [dt] [integrator is 0=Riemann, 1=Trap, 2=Simpsons, 3=RK4]\n");
 
     if(argc == 2)
     {
@@ -67,15 +91,19 @@ void main(int argc, char *argv[])
         sscanf(argv[1], "%d", &thread_count);
         sscanf(argv[2], "%lf", &dt);
     }
-    else
+    else if(argc == 4) 
     {
-        printf("Will match the spreadsheet design\n");
+        sscanf(argv[1], "%d", &thread_count);
+        sscanf(argv[2], "%lf", &dt);
+        sscanf(argv[3], "%d", &integrator_selected);
     }
+
+    printf("\n***** Will simulate with %d threads, using dt=%lf, integrator=%s\n", thread_count, dt, integrator_names[integrator_selected]);
 
     integration_steps = (unsigned long) ((double)(tsize-1) / dt);
     steps_per_idx=integration_steps/(tsize-1);
 
-    printf("Will use default time profile with thread_count=%d, with dt=%lf for %lu steps and %d steps per table entry\n",
+    printf("\n***** Will use default time profile with thread_count=%d, with dt=%lf for %lu steps and %d steps per table entry\n",
            thread_count, dt, integration_steps, steps_per_idx);
 
     // Zero out VelProfile and PosProfile for next test
@@ -85,11 +113,11 @@ void main(int argc, char *argv[])
         PosProfile[idx]=0.0;
     }
 
-    // Left Riemann sum test to match spreadsheet with abstracted integration function
+    // Integration to match spreadsheet with Look-up & interpolate integration function
     //
     // Potential to speed up with OpenMP or Pthreads
     //
-    printf("\n\nTHREADED INTEGRATOR FUNCTION: Left Riemann sum test for table with %d elements\n", tsize);
+    printf("\nTHREADED INTEGRATOR: integration with table with %d elements\n", tsize);
     clock_gettime(CLOCK_MONOTONIC, &start);
     VelStep=0.0; VelProfile[0]=VelStep;
     PosStep=0.0; PosProfile[0]=PosStep;
@@ -101,23 +129,64 @@ void main(int argc, char *argv[])
         time_a = (double)idx;
         time_b = (double)idx+1;
 
-        #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
-        //VelStep += Local_Riemann(time_a, time_b, steps_per_idx, faccel);
-        //VelStep += Local_Trap(time_a, time_b, steps_per_idx, faccel);
-        //VelStep += Local_Simpson(time_a, time_b, steps_per_idx, faccel);
-        VelStep += Local_RK4(time_a, time_b, steps_per_idx, faccel);
+        switch(integrator_selected)
+        {
+            case RIEMANN:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_Riemann(time_a, time_b, steps_per_idx, faccel);
+                VelProfile[idx+1]=VelStep;
+                
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_Riemann(time_a, time_b, steps_per_idx, fvel);
+                PosProfile[idx+1]=PosStep;
 
-        //printf("VelStep=%lf at time=%lf\n", VelStep, time_b);
-        VelProfile[idx+1]=VelStep;
+                break;
 
-        #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
-        //PosStep += Local_Riemann(time_a, time_b, steps_per_idx, fvel);
-        //PosStep += Local_Trap(time_a, time_b, steps_per_idx, fvel);
-        //PosStep += Local_Simpson(time_a, time_b, steps_per_idx, fvel);
-        PosStep += Local_RK4(time_a, time_b, steps_per_idx, fvel);
+            case TRAPEZOIDAL:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_Trap(time_a, time_b, steps_per_idx, faccel);
+                VelProfile[idx+1]=VelStep;
+                
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_Trap(time_a, time_b, steps_per_idx, fvel);
+                PosProfile[idx+1]=PosStep;
 
-        //printf("PosStep=%lf at time=%lf\n", PosStep, time_b);
-        PosProfile[idx+1]=PosStep;
+                break;
+
+
+            case SIMPSON:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_Simpson(time_a, time_b, steps_per_idx, faccel);
+                VelProfile[idx+1]=VelStep;
+                
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_Simpson(time_a, time_b, steps_per_idx, fvel);
+                PosProfile[idx+1]=PosStep;
+
+                break;
+
+            case RK4:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_RK4(time_a, time_b, steps_per_idx, faccel);
+                VelProfile[idx+1]=VelStep;
+                
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_RK4(time_a, time_b, steps_per_idx, fvel);
+                PosProfile[idx+1]=PosStep;
+
+                break;
+
+            default:
+                #pragma omp parallel num_threads(thread_count) reduction(+:VelStep)
+                VelStep += Local_Riemann(time_a, time_b, steps_per_idx, faccel);
+                VelProfile[idx+1]=VelStep;
+
+                #pragma omp parallel num_threads(thread_count) reduction(+:PosStep)
+                PosStep += Local_Riemann(time_a, time_b, steps_per_idx, fvel);
+                PosProfile[idx+1]=PosStep;
+
+                break;
+        }
     }
 
     clock_gettime(CLOCK_MONOTONIC, &end);
@@ -328,19 +397,29 @@ double faccel(double time)
     // If time in table is always 1 second apart, then we can simplify since (timeidx_next - timeidx) = 1.0 by definition here
     double delta_t = time - (double)((int)time);
 
-    return ( 
-               // The accel[time] is a linear value between accel[timeidx] and accel[timeidx_next]
-               // 
-               // The accel[time] is a value that can be determined by the slope of the interval and accel[timedix] 
-               //
-               // I.e. accel[time] = accel[timeidx] + ( (accel[timeidx_next] - accel[timeidx]) / ((double)(timeidx_next - timeidx)) ) * delta_t
-               //
-               //      ((double)(timeidx_next - timeidx)) = 1.0
-               // 
-               //      accel[time] = accel[timeidx] + (accel[timeidx_next] - accel[timeidx]) * delta_t
-               //
-               table_accel(timeidx) + ( (table_accel(timeidx_next) - table_accel(timeidx)) * delta_t)
-           );
+    // The accel[time] is a linear value between accel[timeidx] and accel[timeidx_next]
+    // 
+    // The accel[time] is a value that can be determined by the slope of the interval and accel[timedix] 
+    //
+    // I.e. accel[time] = accel[timeidx] + ( (accel[timeidx_next] - accel[timeidx]) / ((double)(timeidx_next - timeidx)) ) * delta_t
+    //
+    //      ((double)(timeidx_next - timeidx)) = 1.0
+    // 
+    //      accel[time] = accel[timeidx] + (accel[timeidx_next] - accel[timeidx]) * delta_t
+    //
+    double accel_input = table_accel(timeidx) + ( (table_accel(timeidx_next) - table_accel(timeidx)) * delta_t);
+
+    // if train is speeding up, assume motor adds acceleration to overcome rolling deceleration
+    if(accel_input > 0.0)
+        return(accel_input + rolling_deceleration);
+
+    // if train is braking, assume brakes are applied as needed over and above rolling deceleration
+    else if(accel_input < 0.0)
+        return(accel_input - rolling_deceleration);
+
+    // if the train is coasting, then just return what should be no acceleration
+    else
+        return(accel_input);
 }
 
 

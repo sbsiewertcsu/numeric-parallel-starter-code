@@ -1,6 +1,7 @@
-INCLUDE_DIRS = 
-LIB_DIRS = 
+INCLUDE_DIRS = -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/
+LIB_DIRS = -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib/debug -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib
 CC=gcc
+MPICC=mpicc
 #CC=icc
 
 CDEFS=
@@ -11,26 +12,29 @@ CFLAGS= -O0 $(INCLUDE_DIRS) $(CDEFS)
 LIBS= -lm
 
 HFILES= 
-CFILES= simtrain_omp.c simtrainideal_omp.c csvtostatic.c
+CFILES= simtrainideal.c simtrain_omp.c simtrainideal_omp.c csvtostatic.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	simtrain_omp simtrainideal_omp csvtostatic
+all:	simtrainideal simtrain_omp simtrainideal_omp csvtostatic
 
 clean:
 	-rm -f *.o *.d
-	-rm -f simtrain_omp simtrainideal_omp csvtostatic
+	-rm -f simtrainideal simtrain_omp simtrainideal_omp csvtostatic
 
 distclean:
 	-rm -f *.o *.d
-	-rm -f simtrain_omp csvtostatic
+	-rm -f simtrainideal simtrain_omp simtrainideal_omp csvtostatic
 
 simtrain_omp: simtrain_omp.c
 	$(CC) $(LDFLAGS) $(OMP_CFLAGS) -o $@ $@.c $(LIBS)
 
 simtrainideal_omp: simtrainideal_omp.c
 	$(CC) $(LDFLAGS) $(OMP_CFLAGS) -o $@ $@.c $(LIBS)
+
+simtrainideal: simtrainideal.c
+	$(MPICC) $(LDFLAGS) $(OMP_CFLAGS) -o $@ $@.c $(LIBS)
 
 csvtostatic: csvtostatic.c
 	$(CC) $(LDFLAGS) -o $@ $@.c $(LIBS)
