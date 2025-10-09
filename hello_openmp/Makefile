@@ -50,7 +50,8 @@ hello_omp:	hello_omp.c
 	$(CC) $(CFLAGS) -o $@ hello_omp.c
 
 hello_omp_simp:	hello_omp_simp.c
-	$(CC) $(CFLAGS) -o $@ hello_omp_simp.c
+	$(CC) $(CFLAGS) -DOMP_ENABLE -o $@ hello_omp_simp.c
+#	$(CC) $(CFLAGS) -o $@ hello_omp_simp.c
 
 hello_pthread:	hello_pthread.c
 	$(CC) $(CFLAGS2) -o $@ hello_pthread.c -lpthread -lrt
