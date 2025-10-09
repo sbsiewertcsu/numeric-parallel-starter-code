@@ -4,14 +4,14 @@ LIB_DIRS =
 CC = gcc
 
 CDEFS=
-CFLAGS= -O0 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
+CFLAGS= -O2 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 CFLAGS2= -O0 -g -Wall $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= hello_omp hello_omp_simp hello_pthread omppi fibsum fib piseries piseriesompfunct incdec fibgpt tasks
+PRODUCT= omp_add hello_omp hello_omp_simp hello_pthread omppi fibsum fib piseries piseriesompfunct incdec fibgpt tasks
 
 HFILES= 
-CFILES= hello_omp.c hello_omp_simp.c omppi.c fibsum.c fib.c piseries.c piseriesompfunct.c incdec.c fibgpt.c tasks.c
+CFILES= omp_add.c hello_omp.c hello_omp_simp.c omppi.c fibsum.c fib.c piseries.c piseriesompfunct.c incdec.c fibgpt.c tasks.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
@@ -49,9 +49,11 @@ omppi:	omppi.c
 hello_omp:	hello_omp.c
 	$(CC) $(CFLAGS) -o $@ hello_omp.c
 
+omp_add:	omp_add.c
+	$(CC) $(CFLAGS) -o $@ omp_add.c
+
 hello_omp_simp:	hello_omp_simp.c
-	$(CC) $(CFLAGS) -DOMP_ENABLE -o $@ hello_omp_simp.c
-#	$(CC) $(CFLAGS) -o $@ hello_omp_simp.c
+	$(CC) $(CFLAGS) -o $@ hello_omp_simp.c
 
 hello_pthread:	hello_pthread.c
 	$(CC) $(CFLAGS2) -o $@ hello_pthread.c -lpthread -lrt

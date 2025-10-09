@@ -14,9 +14,7 @@ int main(int argc, char *argv[])
         sscanf(argv[1], "%d", &thread_count);
     }
 
-#ifdef OMP_ENABLE
 #pragma omp parallel num_threads(thread_count)
-#endif
     Hello_thread();
 
     return 0;
