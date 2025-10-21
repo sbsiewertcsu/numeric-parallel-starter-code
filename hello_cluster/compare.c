@@ -151,7 +151,7 @@ int main(void)
         // Now rank zero has the data from each of the other ranks in one new table
         printf("\nTRACE: Rank %d sum of default_sum = %lf\n", my_rank, g_sum);
         for(int idx = 0; idx < tablelen; idx+=100)
-            printf("t=%d: a=%lf for v=%lf\n", idx, DefaultProfile[idx-1], default_sum[idx-1]);
+            printf("t=%d: a=%lf for v=%lf\n", idx, DefaultProfile[idx], default_sum[idx]);
 #endif
     }
 
@@ -219,7 +219,7 @@ int main(void)
         // Now rank zero has the data from each of the other ranks in one new table
         printf("\nTRACE: Rank %d sum of default_sum = %lf\n", my_rank, g_sum);
         for(int idx = 0; idx < tablelen; idx+=100)
-            printf("t=%d: a=%lf for v=%lf and p=%lf\n", idx, DefaultProfile[idx-1], default_sum[idx-1], default_sum_of_sums[idx-1]);
+            printf("t=%d: a=%lf for v=%lf and p=%lf\n", idx, DefaultProfile[idx], default_sum[idx], default_sum_of_sums[idx]);
 #endif
     }
 
