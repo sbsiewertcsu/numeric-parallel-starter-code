@@ -140,7 +140,12 @@ int main(void)
         {
             MPI_Recv(&default_sum[q*subrange], subrange, MPI_DOUBLE, q, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-            // Adjust so initial condition is ending conditon of prior sum - SUPER IMPORTANT to adjust initial condition offset
+            // ADJUST FOR INITIAL CONDITION: **** SUPER IMPORTANT to adjust initial condition offset ****
+            //
+            // Adjust so initial condition is ending conditon of prior sum
+            //
+            // Good candidate for OpenMP parallel loop for MPI+OpenMP
+            //
             for(int idx = q*subrange; idx < (q*subrange)+subrange; idx++)
                 default_sum[idx] += default_sum[((q-1)*subrange)+subrange-1];
         }
@@ -208,7 +213,12 @@ int main(void)
         {
             MPI_Recv(&default_sum_of_sums[q*subrange], subrange, MPI_DOUBLE, q, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-            // Adjust so initial condition is ending conditon of prior sum - SUPER IMPORTANT to adjust initial condition offset
+            // ADJUST FOR INITIAL CONDITION: **** SUPER IMPORTANT to adjust initial condition offset ****
+            //
+            // Adjust so initial condition is ending conditon of prior sum
+            //
+            // Good candidate for OpenMP parallel loop for MPI+OpenMP
+            //
             for(int idx = q*subrange; idx < (q*subrange)+subrange; idx++)
                 default_sum_of_sums[idx] += default_sum_of_sums[((q-1)*subrange)+subrange-1];
         }
