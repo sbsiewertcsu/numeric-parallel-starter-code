@@ -51,7 +51,8 @@ int main(void)
     double default_sum[sizeof(DefaultProfile)/sizeof(double)];
     double default_sum_of_sums[sizeof(DefaultProfile)/sizeof(double)];
     int tablelen = sizeof(DefaultProfile)/sizeof(double);
-    int subrange, residual;
+    int subrange;
+    //int residual;
 
     // Fill in default_sum array used to simulate a new table of values, such as
     // a velocity table derived by integrating acceleration
@@ -69,9 +70,17 @@ int main(void)
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
     subrange = tablelen / comm_sz;
-    residual = tablelen % comm_sz;
 
-    printf("Went parallel: rank %d of %d doing work %d with residual %d\n", my_rank, comm_sz, subrange, residual);
+    // For train, residual is one, but this is really just the first/last time index.
+    // In general, this extra work would be handled by the last rank for simplicity, but
+    // it is ignored here since we know 1801 table entries if for 1800 steps.
+    //
+    // This should be fixed for a more general solution or checked and user guided on correct input for
+    // division of work.
+    //
+    //residual = tablelen % comm_sz;
+
+    printf("Went parallel: rank %d of %d doing work for %d steps\n", my_rank, comm_sz, subrange);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // START PARALLEL PHASE 1: Sum original DefaultProfile LUT by rank
