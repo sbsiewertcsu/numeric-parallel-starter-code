@@ -44,7 +44,7 @@ double Trap(double left_endpt, double right_endpt, int trap_count,
    double base_len);    
 
 /* Function we're integrating */
-double f(double x); 
+double funct_to_integrate(double x); 
 
 int main(void) {
    int my_rank, comm_sz, n, local_n;   
@@ -170,10 +170,10 @@ double Trap(
    double estimate, x; 
    int i;
 
-   estimate = (f(left_endpt) + f(right_endpt))/2.0;
+   estimate = (funct_to_integrate(left_endpt) + funct_to_integrate(right_endpt))/2.0;
    for (i = 1; i <= trap_count-1; i++) {
       x = left_endpt + i*base_len;
-      estimate += f(x);
+      estimate += funct_to_integrate(x);
    }
    estimate = estimate*base_len;
 
@@ -216,7 +216,7 @@ double table_interp(double time)
  * Purpose:     Compute value of function to be integrated
  * Input args:  x
  */
-double f(double x /* in */) {
+double funct_to_integrate(double x /* in */) {
    //return x*x;
    //return sin(x);
 
