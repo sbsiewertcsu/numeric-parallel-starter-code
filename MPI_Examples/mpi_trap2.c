@@ -43,7 +43,7 @@ double f(double x);
 int main(void) {
    int my_rank, comm_sz, n, local_n;   
    double a, b, h, local_a, local_b;
-   double local_int, total_int;
+   double local_int = 0.0, total_int = 0.0;
    int source; 
 
    /* Let the system do what it needs to start up MPI */

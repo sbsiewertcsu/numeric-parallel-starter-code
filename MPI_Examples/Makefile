@@ -6,6 +6,7 @@ CC = gcc
 CDEFS=
 CFLAGS= -g -Wall $(INCLUDE_DIRS) $(CDEFS)
 MPIFLAGS= -g -Wall -O2 $(INCLUDE_DIRS) $(CDEFS)
+MPIFLAGS_NOWARN= -g -O2 $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
 PRODUCT= bubble odd_even vector_add trap mpi_many_msgs mpi_hello mpi_mat_vect_mult mpi_mat_vect_time mpi_odd_even mpi_output mpi_vector_add mpi_trap1 mpi_trap2 mpi_trap3 mpi_trap4 testex4
@@ -36,7 +37,7 @@ mpi_mat_vect_time:	mpi_mat_vect_time.c
 	$(MPICC) $(MPIFLAGS) -o $@ mpi_mat_vect_time.c $(LIB_DIRS)
 
 mpi_odd_even:	mpi_odd_even.c
-	$(MPICC) $(MPIFLAGS) -o $@ mpi_odd_even.c $(LIB_DIRS)
+	$(MPICC) $(MPIFLAGS_NOWARN) -o $@ mpi_odd_even.c $(LIB_DIRS)
 
 mpi_output:	mpi_output.c
 	$(MPICC) $(MPIFLAGS) -o $@ mpi_output.c $(LIB_DIRS)
