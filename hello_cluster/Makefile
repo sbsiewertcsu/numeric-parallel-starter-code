@@ -7,12 +7,13 @@ GCC = gcc
 
 CDEFS=
 CFLAGS= -g -Wall $(INCLUDE_DIRS) $(CDEFS)
+HYBRID_CFLAGS= -fopenmp -g -Wall $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= greetings greetingscpp ranksum ranksumfan ranksumtree ranksumbutterfly ranksumall ranksumreduce ranksumallreduce rankscattergather piseriesreduce piseriessimp compare chatgpttrain chatgptseqtrain mpi_array
+PRODUCT= greetings greetingscpp ranksum ranksumfan ranksumtree ranksumbutterfly ranksumall ranksumreduce ranksumallreduce rankscattergather piseriesreduce piseriessimp compare hybridcompare chatgpttrain chatgptseqtrain mpi_array
 
 HFILES= 
-CFILES= greetings.c ranksum.c ranksumfan.c ranksumtree.c ranksumbutterfly.c ranksumall.c ranksumreduce.c ranksumallreduce.c rankscattergather.c piseriesreduce.c piseriessimp.c compare.c chatgpttrain.c chatgptseqtrain.c mpi_array.c
+CFILES= greetings.c ranksum.c ranksumfan.c ranksumtree.c ranksumbutterfly.c ranksumall.c ranksumreduce.c ranksumallreduce.c rankscattergather.c piseriesreduce.c piseriessimp.c compare.c hybridcompare.c chatgpttrain.c chatgptseqtrain.c mpi_array.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
@@ -64,6 +65,9 @@ mpi_array:	mpi_array.c
 
 compare:	compare.c trap.h sine.h
 	$(CC) $(CFLAGS) -o $@ compare.c $(LIB_DIRS)
+
+hybridcompare:	hybridcompare.c trap.h sine.h
+	$(CC) $(HYBRID_CFLAGS) -o $@ hybridcompare.c $(LIB_DIRS)
 
 chatgpttrain:	chatgpttrain.c ex4.h
 	$(CC) $(CFLAGS) -o $@ chatgpttrain.c $(LIB_DIRS)
