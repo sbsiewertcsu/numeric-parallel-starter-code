@@ -82,6 +82,8 @@ int main (int argc, char *argv[])
     }
     else
     {
+        printf("***** USE: vmult [dimensions] [threads]\n");
+
         printf("Using DEFAULT %d x %d example vector and matrix\n", DEFAULT_DIM, DEFAULT_DIM);
         count=0;
 
