@@ -17,14 +17,16 @@
 #include<bits/stdc++.h> 
 using namespace std; 
 
-// Either define acceptable
+// Either define can be acceptable but consider digits you can trust!
 //#define EPSILON 0.000000000000001
+#define EPSILON 0.001
 //
 // OR
 // Use float.h defined smallest EPSILON for digits of precision
 //
 #include <float.h>
-#define EPSILON (DBL_EPSILON)
+// Note that if EPSILON is too small, you may have issues with finding zeros
+//#define EPSILON (DBL_EPSILON)
   
 // An example function whose solution is determined using 
 // Bisection Method. The function is x^3 - x^2  + 2 
