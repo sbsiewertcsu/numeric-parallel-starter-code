@@ -50,9 +50,11 @@ int chk_isprime(unsigned long long int i)
 //    problem is reading a non-prime and treating it as prime because it should be crossed out, but has not been
 //    crossed out yet. This is a strategy for thread safety using thread indexing methods to avoid RMW or globally shared
 //    memory.
-// 3) Using atomic
-// 4) Using MUTEX omp critical - usually not work it, see option #1
-// 5) Coming up with a stack-based approach using map and reduce
+// 3) Using atomic - applies to just one statement rather than a {} block of statements
+// 4) Using MUTEX omp critical for a block - usually not worth it, see option #1
+// 5) Coming up with a stack-based approach using map and reduce that does not corrupt by design (cross out overwrite ok)
+//    * corruption normally is caused by a read, modify, write where a stale read is written back that is wrong
+//    * e.g., with one-hot encoding, be careful that you don't undo a parallel cross-out
 //
 int set_isprime(unsigned long long int i, unsigned char val)
 {
