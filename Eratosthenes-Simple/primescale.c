@@ -77,7 +77,7 @@ int set_isprime(unsigned long long int i, unsigned char val)
 }
 
 
-// Debug utility to print otu the array of bits for cross out use
+// Debug utility to print out the array of bits for cross out use
 // for the range of the maximum number of primes in the table.
 void print_isprime(unsigned int max_n)
 {
