@@ -50,11 +50,9 @@ int chk_isprime(unsigned long long int i)
 //    problem is reading a non-prime and treating it as prime because it should be crossed out, but has not been
 //    crossed out yet. This is a strategy for thread safety using thread indexing methods to avoid RMW or globally shared
 //    memory.
-// 3) Using atomic - applies to just one statement rather than a {} block of statements
-// 4) Using MUTEX omp critical for a block - usually not worth it, see option #1
-// 5) Coming up with a stack-based approach using map and reduce that does not corrupt by design (cross out overwrite ok)
-//    * corruption normally is caused by a read, modify, write where a stale read is written back that is wrong
-//    * e.g., with one-hot encoding, be careful that you don't undo a parallel cross-out
+// 3) Using atomic
+// 4) Using MUTEX omp critical - usually not work it, see option #1
+// 5) Coming up with a stack-based approach using map and reduce
 //
 int set_isprime(unsigned long long int i, unsigned char val)
 {
@@ -79,13 +77,15 @@ int set_isprime(unsigned long long int i, unsigned char val)
 }
 
 
-void print_isprime(void)
+// Debug utility to print otu the array of bits for cross out use
+// for the range of the maximum number of primes in the table.
+void print_isprime(unsigned int max_n)
 {
     long long int idx=0;
 
-    printf("idx=%lld\n", (MAX/(CODE_LENGTH)));
+    printf("idx=%lld\n", (max_n/(CODE_LENGTH)));
 
-    for(idx=(MAX/(CODE_LENGTH)); idx >= 0; idx--)
+    for(idx=(max_n/(CODE_LENGTH)); idx >= 0; idx--)
     {
         printf("idx=%lld, %02X\n", idx, isprime[idx]);
     }
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
     //
     // for all other number bit array locations, we start out assuming they are prime,
     // so bit=1, and as we mark them non-prime, we flip that bit to bit=0
-    //print_isprime();
+    //print_isprime(max_n);
 
 
     while( (p*p) <=  max_n)
