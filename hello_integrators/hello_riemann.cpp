@@ -5,9 +5,9 @@
 #include <iostream>
 #include <cmath>
 
-//#define RANGE (M_PI)
-#define RANGE (10.0)
-#define STEPS (1000000)
+#define INTERVAL_FROM_ZERO (M_PI)
+//#define INTERVAL_FROM_ZERO (10.0)
+#define NUM_STEPS (100000000)
 
 using namespace std;
 
@@ -29,6 +29,8 @@ double left_riemann_sum(double a, double b, int n)
     double h = (b - a) / n;
     double sum = 0.0;
 
+    printf("Step size =%lf for %d steps over interval", h, n);
+
 #pragma omp parallel for num_threads(thread_count) reduction(+:sum)
     for (int idx = 0; idx < n; idx++) 
     {
@@ -43,11 +45,15 @@ double left_riemann_sum(double a, double b, int n)
 }
 
 
+// Simplified and refactored Riemann
+//
 double riemann_sum(double start, double end, int nstep) 
 {
     double stepSize = (end - start) / nstep;
     double sum = 0.0;
     double x=0.0, fx=0.0;
+
+    printf("Step size =%lf for %d steps over interval", stepSize, nstep);
 
 #pragma omp parallel for num_threads(thread_count) reduction(+:sum)
     for (int idx = 0; idx < nstep; idx++) 
@@ -66,8 +72,8 @@ double riemann_sum(double start, double end, int nstep)
 int main(int argc, char* argv[]) 
 {
     double a = 0.0;
-    double b = RANGE;
-    int n = 1000000;
+    double b = INTERVAL_FROM_ZERO;
+    int n = NUM_STEPS;
 
     if(argc == 2)
     {
@@ -79,7 +85,8 @@ int main(int argc, char* argv[])
         printf("Will run with default: thread_count=%d\n", thread_count);
     }
 
-    double result = left_riemann_sum(a, b, n);
+    //double result = left_riemann_sum(a, b, n);
+    double result = riemann_sum(a, b, n);
 
     cout.precision(15);
     cout << "The integral of f(x) from 0.0 to " << b << " with " << n << " steps is " << result << endl;
@@ -89,6 +96,6 @@ int main(int argc, char* argv[])
 
 double function_to_integrate(double x)
 {
-    return 10.0;
-    //return (sin(x));
+    //return 10.0;
+    return (sin(x));
 }
