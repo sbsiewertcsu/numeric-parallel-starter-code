@@ -29,7 +29,7 @@ double left_riemann_sum(double a, double b, int n)
     double h = (b - a) / n;
     double sum = 0.0;
 
-    printf("Step size =%lf for %d steps over interval", h, n);
+    printf("Step size =%21.15f for %d steps over interval %lf to %lf\n", h, n, b, a);
 
 #pragma omp parallel for num_threads(thread_count) reduction(+:sum)
     for (int idx = 0; idx < n; idx++) 
@@ -53,7 +53,7 @@ double riemann_sum(double start, double end, int nstep)
     double sum = 0.0;
     double x=0.0, fx=0.0;
 
-    printf("Step size =%lf for %d steps over interval", stepSize, nstep);
+    printf("Step size =%21.15f for %d steps over interval %lf to %lf\n", stepSize, nstep, end, start);
 
 #pragma omp parallel for num_threads(thread_count) reduction(+:sum)
     for (int idx = 0; idx < nstep; idx++) 
