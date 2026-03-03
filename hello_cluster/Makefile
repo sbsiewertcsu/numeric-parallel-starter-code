@@ -10,10 +10,10 @@ CFLAGS= -g -Wall $(INCLUDE_DIRS) $(CDEFS)
 HYBRID_CFLAGS= -fopenmp -g -Wall $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= greetings greetingscpp ranksum ranksumfan ranksumtree ranksumbutterfly ranksumall ranksumreduce ranksumallreduce rankscattergather piseriesreduce piseriessimp compare hybridcompare chatgpttrain chatgptseqtrain mpi_array
+PRODUCT= greetings greetingscpp ranksum ranksumfan ranksumtree ranksumbutterfly ranksumall ranksumreduce ranksumallreduce rankscattergather piseriesreduce piseriessimp compare hybridcompare chatgpttrain chatgptseqtrain mpi_array rankmul
 
 HFILES= 
-CFILES= greetings.c ranksum.c ranksumfan.c ranksumtree.c ranksumbutterfly.c ranksumall.c ranksumreduce.c ranksumallreduce.c rankscattergather.c piseriesreduce.c piseriessimp.c compare.c hybridcompare.c chatgpttrain.c chatgptseqtrain.c mpi_array.c
+CFILES= greetings.c ranksum.c ranksumfan.c ranksumtree.c ranksumbutterfly.c ranksumall.c ranksumreduce.c ranksumallreduce.c rankscattergather.c piseriesreduce.c piseriessimp.c compare.c hybridcompare.c chatgpttrain.c chatgptseqtrain.c mpi_array.c rankmul.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
@@ -53,6 +53,9 @@ ranksumbutterfly:	ranksumbutterfly.c
 
 ranksum:	ranksum.c
 	$(CC) $(CFLAGS) -o $@ ranksum.c $(LIB_DIRS)
+
+rankmul:	rankmul.c
+	$(CC) $(CFLAGS) -o $@ rankmul.c $(LIB_DIRS)
 
 greetingscpp:	greetings.cpp
 	$(CXX) $(CFLAGS) -o $@ greetings.cpp $(LIB_DIRS)
