@@ -29,7 +29,7 @@
 // https://www.youtube.com/watch?v=euIXYdyjlqo (above videos all in one)
 // ________________________________________________________________
 // 
-// Name:      Gauss_Pivot.c
+// Name:      gewpp.c -- Gaussian Elimination with Partial Pivoting
 // 
 // Purpose:   This program implements Gaussian Elimination
 //            with pivoting. The program will read multiple sets
@@ -85,8 +85,8 @@
 #include <math.h>
 
 #define ICHAR 80  // Length of array holding description of the problem
-#define IDEBUG 1  // Flag to enable printing of intermediate results of decomposition =1 yes, =0 no.
-#define TRACE 1 
+#define IDEBUG 0  // Flag to enable printing of intermediate results of decomposition =1 yes, =0 no.
+#define TRACE 0 
 
 // Function Prototypes
 void  matrix_print (int nr, int nc, double **A);

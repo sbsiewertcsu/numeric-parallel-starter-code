@@ -29,7 +29,7 @@
 // https://www.youtube.com/watch?v=euIXYdyjlqo (above videos all in one)
 // ________________________________________________________________
 // 
-// Name:      Gauss_Pivot.c
+// Name:      gewppoff.c -- ALL DEBUG and TRACE OFF by DEFAULT
 // 
 // Purpose:   This program implements Gaussian Elimination
 //            with pivoting. The program will read multiple sets

@@ -17,7 +17,7 @@ all:	gewpp gewppoff gewpporig gaussjord gaussjordomp lufact gsit gsit2 gsit5 gsi
 
 clean:
 	-rm -f *.o *.d
-	-rm -f gewpp gewppoff gaussjord gaussjordomp lufact gsit gewppomp vmult testgen gsit2 gsit5 gsitbad transpose
+	-rm -f gewpp gewppoff gewpporig gaussjord gaussjordomp lufact gsit gewppomp vmult testgen gsit2 gsit5 gsitbad transpose
 
 distclean:
 	-rm -f *.o *.d
