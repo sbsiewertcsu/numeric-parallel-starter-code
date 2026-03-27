@@ -8,12 +8,12 @@ CFLAGS= -O0 -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 LIBS= 
 
 HFILES= 
-CFILES= gewpp.c gewppoff.c gaussjord.c lufact.c gsit.c gsitbad.c
+CFILES= gewpp.c gewppoff.c gewpporig.c gaussjord.c lufact.c gsit.c gsitbad.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	gewpp gewppoff gaussjord gaussjordomp lufact gsit gsit2 gsit5 gsitbad gewppomp vmult testgen transpose
+all:	gewpp gewppoff gewpporig gaussjord gaussjordomp lufact gsit gsit2 gsit5 gsitbad gewppomp vmult testgen transpose
 
 clean:
 	-rm -f *.o *.d
@@ -30,6 +30,9 @@ gewpp: gewpp.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
 
 gewppoff: gewppoff.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
+
+gewpporig: gewpporig.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
 
 gaussjordomp: gaussjordomp.o
