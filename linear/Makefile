@@ -13,11 +13,11 @@ CFILES= gewpp.c gewppoff.c gewpporig.c gaussjord.c lufact.c gsit.c gsitbad.c
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	gewpp gewppoff gewpporig gaussjord gaussjordomp lufact gsit gsitet gsit2 gsit5 gsitbad gewppomp vmult testgen transpose
+all:	gewpp gewppoff gewpporig gaussjord gaussjordomp lufact gsit gsitet gsit2 gsitant gsit5 gsitbad gewppomp vmult testgen transpose
 
 clean:
 	-rm -f *.o *.d
-	-rm -f gewpp gewppoff gewpporig gaussjord gaussjordomp lufact gsit gsitet gewppomp vmult testgen gsit2 gsit5 gsitbad transpose
+	-rm -f gewpp gewppoff gewpporig gaussjord gaussjordomp lufact gsit gsitet gsitant gewppomp vmult testgen gsit2 gsit5 gsitbad transpose
 
 distclean:
 	-rm -f *.o *.d
@@ -44,16 +44,19 @@ gaussjord: gaussjord.o
 lufact: lufact.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
 
-gsitet: gsitet.o
-	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
-
-gsit5: gsit5.o
+gsit: gsit.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
 
 gsit2: gsit2.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
 
-gsit: gsit.o
+gsitant: gsitant.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
+
+gsitet: gsitet.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
+
+gsit5: gsit5.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
 
 gsitbad: gsitbad.o
