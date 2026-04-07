@@ -6,7 +6,7 @@
 // C Program to find transpose 
 // of a square matrix 
 #include <stdio.h> 
-#define N 4 
+#define N 1024 
   
 // This function stores transpose 
 // of A[][] in B[][] 
@@ -19,17 +19,19 @@ void transpose(int A[][N], int B[][N])
             // B[i][j] 
             B[i][j] = A[j][i]; 
 } 
-  
+
+
+// These are made global to avoid stack overflow
+int A[N][N] = { { 1, 2, 3, 4 }, 
+                { 5, 6, 7, 8 }, 
+                { 9, 0, 1, 2 }, 
+                { 3, 4, 5, 6 } }; 
+int B[N][N], i, j; 
+
+
 // Driver code 
 int main() 
 { 
-    int A[N][N] = { { 1, 2, 3, 4 }, 
-                    { 5, 6, 7, 8 }, 
-                    { 9, 0, 1, 2 }, 
-                    { 3, 4, 5, 6 } }; 
-  
-    int B[N][N], i, j; 
-  
     transpose(A, B); 
   
     printf("Result matrix is \n"); 
