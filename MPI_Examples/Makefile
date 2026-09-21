@@ -1,5 +1,7 @@
-INCLUDE_DIRS = -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/
-LIB_DIRS = -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib/debug -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib
+INCLUDE_DIRS = -I/opt/openmpi/include/openmpi -I/usr/lib/x86_64-linux-gnu/openmpi/include
+#INCLUDE_DIRS = -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/
+LIB_DIRS = -L/opt/openmpi/lib/openmpi
+#LIB_DIRS = -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib/debug -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib
 MPICC = mpicc
 CC = gcc
 
