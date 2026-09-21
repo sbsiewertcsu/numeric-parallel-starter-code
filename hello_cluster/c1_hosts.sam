@@ -12,21 +12,18 @@
 #o251-12
 #o251-13
 # my birthyear is odd, so I'm on cluster 251,
-# using my birthdate node and 7 adjacent nodes
+# using my birthdate node and 4 adjacent nodes
 o251-14
-# This node is down right now for MPI - but is responding to ping or SSH
-#o251-15
+o251-15
 o251-16
 o251-17
-# This node is down right now - not responding to ping or SSH
 #o251-18
-o251-19
-o251-20
-o251-21
-o251-22
-# This node is down right now for MPI - but is responding to ping or SSH
+#o251-19
+#o251-20
+#o251-21
+#o251-22
 #o251-23
-o251-24
+#o251-24
 #o251-25
 #o251-26
 #o251-27

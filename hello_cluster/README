@@ -34,6 +34,45 @@ ECC Cluster node use policies – Based on your birthday and year, if your year 
 
 If you have been succesful, test the MPI greetings and you should see processes created on multiple cluster nodes.
 
+NEW OpenMPI compiler and run-time test:
+--------------------------------------
+sbsiewert@o251-01:~/numeric-parallel-starter-code/hello_cluster$ mpirun --map-by ppr:4:node --hostfile c1_hosts.first4 ./greetings
+Hello from process 0 of 16 on o251-01
+Hello from process 1 of 16 on o251-01
+
+Hello from process 2 of 16 on o251-01
+
+Hello from process 3 of 16 on o251-01
+
+Hello from process 4 of 16 on o251-02
+
+Hello from process 5 of 16 on o251-02
+
+Hello from process 6 of 16 on o251-02
+
+Hello from process 7 of 16 on o251-02
+
+Hello from process 8 of 16 on o251-03
+
+Hello from process 9 of 16 on o251-03
+
+Hello from process 10 of 16 on o251-03
+
+Hello from process 11 of 16 on o251-03
+
+Hello from process 12 of 16 on o251-04
+
+Hello from process 13 of 16 on o251-04
+
+Hello from process 14 of 16 on o251-04
+
+Hello from process 15 of 16 on o251-04
+
+sbsiewert@o251-01:~/numeric-parallel-starter-code/hello_cluster$
+
+
+OLD Intel MPI compiler and run-time test:
+
 (base) sbsiewert@o251-14:~/code/hello_custer$ mpirun -n 16 -ppn 2 -f c2_hosts ./greetings
 Hello from process 0 of 16 on o244-01
 Hello from process 1 of 16 on o244-01
