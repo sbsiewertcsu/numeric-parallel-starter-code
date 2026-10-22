@@ -9,10 +9,10 @@ CFLAGS= -O3 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 CFLAGS2= -O0 -g -Wall -fopenmp -std=gnu11 $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= simplemath subtractive_cancel
+PRODUCT= simplemath subtractive_cancel simplemath_quad
 
 HFILES= 
-CFILES= simplemath.c subtractive_cancel.c
+CFILES= simplemath.c subtractive_cancel.c simplemath_quad.c
 HPPFILES= 
 CPPFILES=
 
@@ -27,6 +27,9 @@ clean:
 
 simplemath:	simplemath.c
 	$(CC) $(CFLAGS2) -o $@ simplemath.c -lm
+
+simplemath_quad:	simplemath_quad.c
+	$(CC) $(CFLAGS2) -o $@ simplemath_quad.c -lquadmath -lm
 
 # gcc -std=gnu11 subtractive_cancel.c -o subcan -lquadmath -lm
 subtractive_cancel:	subtractive_cancel.c
