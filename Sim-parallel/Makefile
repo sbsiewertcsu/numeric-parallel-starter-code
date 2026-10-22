@@ -1,46 +1,55 @@
-INCLUDE_DIRS = 
-LIB_DIRS = 
-#CC = icc
-CC = gcc
-CPP = g++
+INCLUDE_DIRS = -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/
+LIB_DIRS = -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib/debug -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib
+CC=gcc
+CPP=g++
+MPICC=mpicc
+#CC=icc
 
 CDEFS=
-CFLAGS= -O3 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
-CFLAGS2= -O0 -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
-LIBS=
-
-PRODUCT= hello_riemann hello_trapezoidal hello_simpson hello_rk4 hello_rk89 hello_rk87
+OMP_CFLAGS= -O0 -fopenmp $(INCLUDE_DIRS) $(CDEFS)
+#OMP_CFLAGS= -O0 -qopenmp $(INCLUDE_DIRS) $(CDEFS)
+CFLAGS= -O0 $(INCLUDE_DIRS) $(CDEFS)
+#CFLAGS= -O0 $(INCLUDE_DIRS) $(CDEFS)
+LIBS= -lm
 
 HFILES= 
-CFILES= 
-HPPFILES= 
-CPPFILES= hello_riemann.cpp hello_trapezoidal.cpp hello_simpson.cpp hello_rk4.cpp hello_rk89.cpp hello_rk87.cpp
+CFILES= simtrainideal.c simtrain_omp.c simtrainideal_omp.c csvtostatic.c hello_rk87.cpp hello_rk89.cpp
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	${PRODUCT}
+all:	simtrainideal simtrain_omp simtrainideal_omp csvtostatic hello_rk87 hello_rk89
 
 clean:
-	-rm -f *.o *.NEW *~
-	-rm -f ${PRODUCT} ${DERIVED} ${GARBAGE}
+	-rm -f *.o *.d
+	-rm -f simtrainideal simtrain_omp simtrainideal_omp csvtostatic hello_rk87 hello_rk89
 
-hello_riemann:	hello_riemann.cpp
-	$(CPP) $(CFLAGS2) -o $@ hello_riemann.cpp -lm
+distclean:
+	-rm -f *.o *.d
+	-rm -f simtrainideal simtrain_omp simtrainideal_omp csvtostatic
 
-hello_trapezoidal:	hello_trapezoidal.cpp
-	$(CPP) $(CFLAGS2) -o $@ hello_trapezoidal.cpp -lm
+simtrain_omp: simtrain_omp.c
+	$(CC) $(LDFLAGS) $(OMP_CFLAGS) -o $@ $@.c $(LIBS)
 
-hello_simpson:	hello_simpson.cpp
-	$(CPP) $(CFLAGS2) -o $@ hello_simpson.cpp -lm
+simtrainideal_omp: simtrainideal_omp.c
+	$(CC) $(LDFLAGS) $(OMP_CFLAGS) -o $@ $@.c $(LIBS)
 
-hello_rk4:	hello_rk4.cpp
-	$(CPP) $(CFLAGS2) -o $@ hello_rk4.cpp -lm
+simtrainideal: simtrainideal.c
+	$(MPICC) $(LDFLAGS) $(OMP_CFLAGS) -o $@ $@.c $(LIBS)
 
-hello_rk89:	hello_rk89.cpp rk89.hpp
-	$(CPP) $(CFLAGS2) -o $@ hello_rk89.cpp -lm
+hello_rk89: hello_rk89.cpp
+	$(CPP) $(LDFLAGS) -o $@ $@.cpp $(LIBS)
 
-hello_rk87:	hello_rk87.cpp rk87.hpp
-	$(CPP) $(CFLAGS2) -o $@ hello_rk87.cpp -lm
+hello_rk87: hello_rk87.cpp
+	$(CPP) $(LDFLAGS) -o $@ $@.cpp $(LIBS)
 
+csvtostatic: csvtostatic.c
+	$(CC) $(LDFLAGS) -o $@ $@.c $(LIBS)
 
+depend:
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+.cpp.o:
+	$(CPP) $(CFLAGS) -c $<
