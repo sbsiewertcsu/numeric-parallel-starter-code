@@ -21,7 +21,7 @@ clean:
 	-rm -f bigmath bigmathgmp
 
 bigmathgmp: bigmathgmp.o
-	$(CPP) $(LDFLAGS) $(CFLAGS) -lgmpxx -lgmp -o $@ $@.o
+	$(CPP) $(LDFLAGS) $(CFLAGS) -o $@ $@.o -lgmpxx -lgmp
 
 bigmath: bigmath.o
 	$(CPP) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
