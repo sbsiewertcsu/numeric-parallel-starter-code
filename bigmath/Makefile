@@ -14,11 +14,14 @@ CFILES= pthread.c
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	bigmath
+all:	bigmath bigmathgmp
 
 clean:
 	-rm -f *.o *.d
-	-rm -f bigmath
+	-rm -f bigmath bigmathgmp
+
+bigmathgmp: bigmathgmp.o
+	$(CPP) $(LDFLAGS) $(CFLAGS) -lgmpxx -lgmp -o $@ $@.o
 
 bigmath: bigmath.o
 	$(CPP) $(LDFLAGS) $(CFLAGS) -o $@ $@.o
