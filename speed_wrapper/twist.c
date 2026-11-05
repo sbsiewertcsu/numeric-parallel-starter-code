@@ -1,0 +1,124 @@
+#include <stdio.h>
+
+#define DIM (3)
+
+unsigned int P[DIM][DIM];
+unsigned int TP[DIM][DIM];
+unsigned int RRP[DIM][DIM];
+unsigned int RLP[DIM][DIM];
+
+void zeroIntMat(unsigned int Mat[][DIM]);
+void fillIntMat(unsigned int Mat[][DIM]);
+void printIntMat(unsigned int Mat[][DIM]);
+void transposeIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM]);
+void swapColIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM]);
+void swapRowIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM]);
+
+void main2(void);
+
+void main(void)
+{
+    fillIntMat(P);
+    transposeIntMat(P, TP);
+    printf("P=");printIntMat(P);
+    printf("TP=");printIntMat(TP);
+
+    main2();
+}
+
+
+void main2(void)
+{
+    fillIntMat(P);
+    transposeIntMat(P, TP);
+    swapColIntMat(TP, RRP);
+    swapRowIntMat(TP, RLP);
+    printf("P=");printIntMat(P);
+    printf("RRP=");printIntMat(RRP);
+    printf("RLP=");printIntMat(RLP);
+}
+
+
+
+void swapRowIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM])
+{
+    int idx, jdx;
+
+    for(idx=0; idx<DIM; idx++)       
+        for(jdx=0; jdx<DIM; jdx++)  
+        {
+            // copyt into TMat and swap column values         
+            TMat[idx][jdx]=Mat[DIM-1-idx][jdx];
+        }
+}
+
+
+void swapColIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM])
+{
+    int idx, jdx;
+
+    for(idx=0; idx<DIM; idx++)       
+        for(jdx=0; jdx<DIM; jdx++)  
+        {
+            // copyt into TMat and swap column values         
+            TMat[idx][jdx]=Mat[idx][DIM-1-jdx];
+        }
+}
+
+
+void fillIntMat(unsigned int Mat[][DIM])
+{
+    int cnt, idx, jdx;
+
+    for(idx=0; idx<DIM; idx++)       
+        for(jdx=0; jdx<DIM; jdx++)
+        {
+            Mat[idx][jdx]=cnt;
+            cnt++;
+        }
+}
+
+
+void zeroIntMat(unsigned int Mat[][DIM])
+{
+    int idx, jdx;
+
+    for(idx=0; idx<DIM; idx++)       
+        for(jdx=0; jdx<DIM; jdx++)
+        {
+            Mat[idx][jdx]=0;
+        }
+}
+
+
+
+void transposeIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM])
+{
+    int idx, jdx;
+
+    for(idx=0; idx<DIM; idx++)       
+        for(jdx=0; jdx<DIM; jdx++)  
+        {
+            // transpose row as column                      
+            TMat[jdx][idx]=Mat[idx][jdx]; 
+            
+            // transpose column as row                
+            //Y[idx][jdx]=X[jdx][idx]; 
+        }
+}
+
+
+void printIntMat(unsigned int Mat[][DIM])
+{
+    int idx, jdx;
+
+    for(idx=0; idx<DIM; idx++)
+    {
+         printf("\n");       
+         for(jdx=0; jdx<DIM; jdx++)
+             printf("%d ", Mat[idx][jdx]);
+    }
+    printf("\n\n");;
+}
+
+
