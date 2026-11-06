@@ -65,7 +65,7 @@ int main(void)
 
     Y=X; // aggregate assignment
 
-#if 0
+#if 1
     for(idx=0; idx<BIG; idx++)       
         for(jdx=0; jdx<BIG; jdx++)
         {
@@ -73,10 +73,10 @@ int main(void)
             //Y.W[idx][jdx]=X.W[idx][jdx];   
 
             // exact col-row copy                           
-            Y.W[jdx][idx]=X.W[jdx][idx]; 
+            // Y.W[jdx][idx]=X.W[jdx][idx]; 
 
             // transpose row as column                      
-            //Y.W[jdx][idx]=X.W[idx][jdx]; 
+            Y.W[jdx][idx]=X.W[idx][jdx]; 
             
             // transpose column as row                
             //Y.W[idx][jdx]=X.W[jdx][idx]; 
@@ -90,7 +90,7 @@ int main(void)
         for(jdx=0; jdx<BIG; jdx++)  
             Y[idx][jdx]=X[idx][jdx];
 
-#if 0
+#if 1
     for(idx=0; idx<BIG; idx++)       
         for(jdx=0; jdx<BIG; jdx++) 
         {
@@ -98,10 +98,10 @@ int main(void)
             //Y[idx][jdx]=X[idx][jdx];   
 
             // exact col-row copy                           
-            Y[jdx][idx]=X[jdx][idx]; 
+            //Y[jdx][idx]=X[jdx][idx]; 
 
             // transpose row as column                      
-            //Y[jdx][idx]=X[idx][jdx]; 
+            Y[jdx][idx]=X[idx][jdx]; 
             
             // transpose column as row                
             //Y[idx][jdx]=X[jdx][idx]; 
