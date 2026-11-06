@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define DIM (3)
+#define DIM (5)
 
 unsigned int P[DIM][DIM];
 unsigned int TP[DIM][DIM];
@@ -14,28 +14,18 @@ void transposeIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM]);
 void swapColIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM]);
 void swapRowIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM]);
 
-void main2(void);
-
-void main(void)
-{
-    fillIntMat(P);
-    transposeIntMat(P, TP);
-    printf("P=");printIntMat(P);
-    printf("TP=");printIntMat(TP);
-
-    main2();
-}
-
-
-void main2(void)
+int main(void)
 {
     fillIntMat(P);
     transposeIntMat(P, TP);
     swapColIntMat(TP, RRP);
     swapRowIntMat(TP, RLP);
     printf("P=");printIntMat(P);
+    printf("TP=");printIntMat(TP);
     printf("RRP=");printIntMat(RRP);
     printf("RLP=");printIntMat(RLP);
+
+    return(1);
 }
 
 
@@ -68,7 +58,7 @@ void swapColIntMat(unsigned int Mat[][DIM], unsigned int TMat[][DIM])
 
 void fillIntMat(unsigned int Mat[][DIM])
 {
-    int cnt, idx, jdx;
+    int cnt=0, idx, jdx;
 
     for(idx=0; idx<DIM; idx++)       
         for(jdx=0; jdx<DIM; jdx++)
@@ -116,7 +106,7 @@ void printIntMat(unsigned int Mat[][DIM])
     {
          printf("\n");       
          for(jdx=0; jdx<DIM; jdx++)
-             printf("%d ", Mat[idx][jdx]);
+             printf("%02d ", Mat[idx][jdx]);
     }
     printf("\n\n");;
 }
