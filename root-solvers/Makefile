@@ -8,10 +8,10 @@ CDEFS=
 CFLAGS= -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= bisection regulafalsi newton bruteroot
+PRODUCT= bisection regulafalsi newton bruteroot brents
 
 HFILES= 
-CFILES= regulafalsi.c newton.c bruteroot
+CFILES= regulafalsi.c newton.c bruteroot.c brents.c
 CPPFILES= bisection.cpp
 
 SRCS= ${HFILES} ${CFILES}
@@ -34,4 +34,8 @@ regulafalsi:	regulafalsi.c
 
 newton:	newton.c
 	$(CC) $(CFLAGS) -o $@ newton.c -lm
+
+brents:	brents.c
+	$(CC) $(CFLAGS) -o $@ brents.c -lm
+
 
