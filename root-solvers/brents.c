@@ -7,6 +7,16 @@
 //
 // Refactored and tested by Sam Siewert, 11/17/2026
 //
+// First version did not solve the simple Ex #6 problem 1 test case correctly
+//
+// Errant code temped out and replaced for swapping.
+//
+// ChatGPT claims - The problem is the point rotation in the Brent iteration.
+//
+// See the updated and original code below.
+//
+// Be careful too to bracket a sign change to get the root you want to find.
+//
 
 #include <stdio.h>
 #include <math.h>
@@ -26,10 +36,10 @@ double brent_root(Function f, double a, double b,
 double my_function(double x)
 {
     // As can be seen with Desmos, this example equation has roots near: -2.851, 4.758, and 7.792
-    //return (-(x*x*x) + 9.7*(x*x) -1.3*x -105.7);
+    return (-(x*x*x) + 9.7*(x*x) -1.3*x -105.7);
 
     //return x * x - 2.0;
-    return sin(x);
+    //return sin(x);
 }
 
 
@@ -37,15 +47,19 @@ int main(void)
 {
     double root = brent_root(
         my_function,
-        -10.0,       // Lower bound
-        +10.0,       // Upper bound
+        -3.0,      // Lower bound before sign change
+        +3.0,      // Upper bound after sign change
         1e-12,     // Tolerance
         1000000    // Maximum iterations
     );
 
-    if (isnan(root)) {
+    if (isnan(root)) 
+    {
         printf("Root finding failed.\n");
-    } else {
+    }
+
+    else 
+    {
         printf("Root = %.15f\n", root);
         printf("f(root) = %.15e\n", my_function(root));
     }
@@ -69,12 +83,14 @@ double brent_root(Function f, double a, double b,
     double fa = f(a);
     double fb = f(b);
 
-    if ((fa > 0 && fb > 0) || (fa < 0 && fb < 0)) {
+    if ((fa > 0 && fb > 0) || (fa < 0 && fb < 0)) 
+    {
+        printf("After 0 iterations ");
         return NAN;   // No guaranteed root in the interval
     }
 
-    if (fa == 0.0) return a;
-    if (fb == 0.0) return b;
+    if (fa == 0.0) { printf("After 0 iterations "); return a; }
+    if (fb == 0.0) { printf("After 0 iterations "); return b; }
 
     double c = b;
     double fc = fb;
@@ -85,22 +101,22 @@ double brent_root(Function f, double a, double b,
          iteration < max_iterations;
          iteration++)
     {
-        /*
-         * Ensure b and c bracket the root.
-         */
-        if ((fb > 0 && fc > 0) || (fb < 0 && fc < 0)) {
+        // Ensure b and c bracket the root.
+        if ((fb > 0 && fc > 0) || (fb < 0 && fc < 0)) 
+        {
             c = a;
             fc = fa;
             d = b - a;
             e = d;
         }
 
-        /*
-         * Rotate points so that |f(b)| is smallest.
-         */
-        if (fabs(fc) < fabs(fb)) {
+        // Point rotation in Brent iteration.
+        //
+        // Rotate points so that |f(b)| is smallest.
+        if (fabs(fc) < fabs(fb)) 
+        {
             double temp;
-
+#if 0
             temp = a;
             a = b;
             b = c;
@@ -110,36 +126,45 @@ double brent_root(Function f, double a, double b,
             fa = fb;
             fb = fc;
             fc = temp;
+#else
+            // Keep a unchanged; exchange b and c.
+            temp = b;
+            b = c;
+            c = temp;
+
+            temp = fb;
+            fb = fc;
+            fc = temp;
+#endif
         }
 
         double midpoint = 0.5 * (c - b);
         double tolerance_b =
             2.0 * DBL_EPSILON * fabs(b) + 0.5 * tolerance;
 
-        /*
-         * Convergence test.
-         */
-        if (fabs(midpoint) <= tolerance_b || fb == 0.0) {
+        // Convergence test.
+        if (fabs(midpoint) <= tolerance_b || fb == 0.0) 
+        {
+            printf("After %d iterations ", iteration); 
             return b;
         }
 
-        /*
-         * Attempt inverse quadratic interpolation or secant step.
-         */
-        if (fabs(e) >= tolerance_b && fabs(fa) > fabs(fb)) {
+        // Attempt inverse quadratic interpolation or secant step.
+        if (fabs(e) >= tolerance_b && fabs(fa) > fabs(fb)) 
+        {
             double s = fb / fa;
             double p, q;
 
-            if (a == c) {
-                /*
-                 * Secant method.
-                 */
+            if (a == c) 
+            {
+                // Secant method.
                 p = 2.0 * midpoint * s;
                 q = 1.0 - s;
-            } else {
-                /*
-                 * Inverse quadratic interpolation.
-                 */
+            }
+
+            else 
+            {
+                // Inverse quadratic interpolation.
                 double q1 = fa / fc;
                 double r = fb / fc;
 
@@ -149,34 +174,35 @@ double brent_root(Function f, double a, double b,
                 q = (q1 - 1.0) * (r - 1.0) * (s - 1.0);
             }
 
+
             if (p > 0.0)
                 q = -q;
             else
                 p = -p;
 
-            /*
-             * Accept interpolation only if it is safe.
-             */
-            if (2.0 * p < fmin(3.0 * midpoint * q
-                               - fabs(tolerance_b * q),
-                               fabs(e * q))) {
+            // Accept interpolation only if it is safe.
+            if (2.0 * p < fmin(3.0*midpoint*q - fabs(tolerance_b*q), fabs(e*q))) 
+            {
                 e = d;
                 d = p / q;
-            } else {
+            } 
+
+            else 
+            {
                 d = midpoint;
                 e = midpoint;
             }
-        } else {
-            /*
-             * Bisection step.
-             */
+
+        } // not within tolerance yet
+
+        else 
+        {
+            // Bisection step.
             d = midpoint;
             e = midpoint;
         }
 
-        /*
-         * Move to the next point.
-         */
+        // Move to the next point.
         a = b;
         fa = fb;
 
@@ -186,8 +212,10 @@ double brent_root(Function f, double a, double b,
             b += copysign(tolerance_b, midpoint);
 
         fb = f(b);
-    }
 
+    } // end for iterations less than max
+
+    printf("After %d iterations ", max_iterations); 
     return NAN;   // Did not converge
 }
 

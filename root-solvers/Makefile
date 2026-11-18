@@ -8,10 +8,10 @@ CDEFS=
 CFLAGS= -g -Wall -fopenmp $(INCLUDE_DIRS) $(CDEFS)
 LIBS=
 
-PRODUCT= bisection regulafalsi newton bruteroot brents
+PRODUCT= bisection regulafalsi newton bruteroot brents rf_compare
 
 HFILES= 
-CFILES= regulafalsi.c newton.c bruteroot.c brents.c
+CFILES= regulafalsi.c newton.c bruteroot.c brents.c rf_compare.c
 CPPFILES= bisection.cpp
 
 SRCS= ${HFILES} ${CFILES}
@@ -31,6 +31,9 @@ bisection:	bisection.cpp
 
 regulafalsi:	regulafalsi.c
 	$(CC) $(CFLAGS) -o $@ regulafalsi.c -lm
+
+rf_compare:	rf_compare.c
+	$(CC) $(CFLAGS) -o $@ rf_compare.c -lm
 
 newton:	newton.c
 	$(CC) $(CFLAGS) -o $@ newton.c -lm
